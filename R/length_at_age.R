@@ -1,19 +1,20 @@
 #' Calculates length at age
 #'
-#' @param rec_age
-#' @param max_age
-#' @param L1f
-#' @param L2f
-#' @param Kf
-#' @param a1f
-#' @param a2f
-#' @param all_ages
+#' @param rec_age numeric value, gives age at which fish has entered the fishery
+#' @param max_age numeric value
+#' @param L1f numeric value
+#' @param L2f numeric value
+#' @param Kf numeric value
+#' @param a1f numeric value
+#' @param a2f numeric value
+#' @param all_ages logical vector, if T, gives length at ages not included in
+#' population dynamics
 #'
-#' @return
+#' @return A vector of lengths at ages
 #' @export
 #'
 #' @examples
-#' length_at_age(3, 40, 17, 49, -0.17, 1, 25, F)
+#' length_at_age(3, 40, 17, 49, -0.17, 1, 25, FALSE)
 
 length_at_age = function(rec_age, max_age, L1f, L2f, Kf, a1f, a2f, all_ages = F) {
 
@@ -28,7 +29,3 @@ length_at_age = function(rec_age, max_age, L1f, L2f, Kf, a1f, a2f, all_ages = F)
   return(L)
 
 }
-
-
-
-
