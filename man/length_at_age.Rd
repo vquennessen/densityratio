@@ -2,34 +2,34 @@
 % Please edit documentation in R/length_at_age.R
 \name{length_at_age}
 \alias{length_at_age}
-\title{Calculates length at age}
+\title{Length at age}
 \usage{
-length_at_age(rec_age, max_age, L1f, L2f, Kf, a1f, a2f, all_ages = F)
+length_at_age(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F)
 }
 \arguments{
-\item{rec_age}{numeric value, gives age at which fish has entered the fishery}
+\item{Rec_age}{numeric, gives age at which fish has entered the fishery in years}
 
-\item{max_age}{numeric value}
+\item{Max_age}{numeric, gives maximum age of fish or total lifespan in years}
 
-\item{L1f}{numeric value}
+\item{A1}{numeric, age 1 of female fish in years}
 
-\item{L2f}{numeric value}
+\item{L1}{numeric, gives the length of females at age 1 in cm}
 
-\item{Kf}{numeric value}
+\item{A2}{numeric, age 2 of female fish in years}
 
-\item{a1f}{numeric value}
+\item{L2}{numeric, gives the length of females at age 2 in cm}
 
-\item{a2f}{numeric value}
+\item{K}{numeric, gives the von Bertalanffy growth parameter for females}
 
-\item{all_ages}{logical vector, if T, gives length at ages not included in
-population dynamics}
+\item{All_ages}{logical, determines if the returned vector should contain lengths for ages before recruitment}
 }
 \value{
-A vector of lengths at ages
+A vector of lengths at ages, from rec_age to max_age
 }
 \description{
-Calculates length at age
+\code{length_at_age} returns a vector of lengths at ages, in centimeters
 }
 \examples{
-length_at_age(3, 40, 17, 49, -0.17, 1, 25, FALSE)
+length_at_age(Rec_age = 3, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
+L2 = 47.95, K = 0.2022, All_ages = FALSE)
 }
