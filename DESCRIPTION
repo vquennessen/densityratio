@@ -1,6 +1,5 @@
 Package: densityratio
-Title: Explores How Density Ratios Can Help Manage Fisheries In And Around 
-Marine Reserves
+Title: Explores How Density Ratios Can Help Manage Fisheries In And Around Marine Reserves
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Victoria",
@@ -8,14 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "victoria.quennessen@oregonstate.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: This package runs a base model to explore the effects of different 
-control rules on fished stock yield, biomass, and spawning stock biomass. The 
-base model can be edited to run for different fished species, with different 
-areas in reserves, with different ways to allocate fishing effort, and for 
-different timespans. Control rules specifically can be edited to have different 
-target density ratios (for explanation of density ratios, see ...). For more 
-information regarding this package, see ... . More detailed information is in 
-the supplementary materials. 
+Description: This package runs a base model to explore the effects of different control rules on fished stock yield, biomass, and spawning stock biomass. The base model can be edited to run for different fished species, with different areas in reserves, with different ways to allocate fishing effort, and for different timespans. Control rules specifically can be edited to have different target density ratios (for explanation of density ratios, see ...). For more information regarding this package, see ... . More detailed information is in the supplementary materials. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
