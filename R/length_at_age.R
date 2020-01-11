@@ -25,8 +25,8 @@ length_at_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
     }
 
   L_inf <- L1 + (L2 - L1)/(1 - exp(-1*K*(A2 - A1)))
-  L <- L_inf + (L1 - L_inf)*exp(-1*K*(Ages - A1))
+  lengths <- L_inf + (L1 - L_inf)*exp(-1*K*(Ages - A1))
 
-  return(L)
+  return(lengths)
 
 }
