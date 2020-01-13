@@ -10,7 +10,7 @@
 #' @param L2 numeric, gives the length of females at age 2 in cm
 #' @param K numeric, gives the von Bertalanffy growth parameter for females
 #' @param All_ages logical, determines if the returned vector should contain lengths for ages before recruitment
-#' @return A vector of lengths at ages, from rec_age to max_age
+#' @return A vector of lengths at ages, from age at recruitment to maximum age
 #' @export
 #'
 #' @examples
