@@ -3,8 +3,8 @@
 #' \code{weight_at_age} returns a vector of weights at age, in kg.
 #'
 #' @param L numeric, gives length at age vector, in cm
-#' @param WA numeric, coefficient in weight at length equation, where W = WA * L ^ WB
-#' @param WB numeric, exponent in weight at length equation, where W = WA * L ^ WB
+#' @param WA numeric, coefficient in weight at length equation, where weight = WA * length ^ WB
+#' @param WB numeric, exponent in weight at length equation, where weight = WA * length ^ WB
 #'
 #' @return a numeric vector of weights at ages, from age at recruitment to maximum age
 #' @export
@@ -17,8 +17,8 @@ weight_at_age = function(L, WA, WB) {
 
   # Weight at age
   # Based on Babcock & MacCall (2011): Eq. (11)
-  W <- af*L^bf
+  weights <- WA*L^WB
 
-  return(W)
+  return(weights)
 
 }

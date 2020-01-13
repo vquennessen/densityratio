@@ -24,10 +24,10 @@ length_at_age(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F)
 \item{All_ages}{logical, determines if the returned vector should contain lengths for ages before recruitment}
 }
 \value{
-A vector of lengths at ages, from rec_age to max_age
+A vector of lengths at ages, from age at recruitment to maximum age
 }
 \description{
-\code{length_at_age} returns a vector of lengths at ages, in centimeters
+\code{length_at_age} returns a vector of lengths at ages, in centimeters.
 }
 \examples{
 length_at_age(Rec_age = 3, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
