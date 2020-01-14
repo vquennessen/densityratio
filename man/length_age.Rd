@@ -33,6 +33,6 @@ A vector of lengths at ages, from age at recruitment to maximum age
 \code{length_age} returns a vector of lengths at ages, in centimeters.
 }
 \examples{
-length_at_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
+length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
 L2 = 47.95, K = 0.2022, All_ages = FALSE)
 }

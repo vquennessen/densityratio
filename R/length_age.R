@@ -13,11 +13,12 @@
 #' @param K numeric value, gives the von Bertalanffy growth parameter for females
 #' @param All_ages logical value, determines if the returned vector should
 #'    contain lengths for ages before recruitment
+#'
 #' @return A vector of lengths at ages, from age at recruitment to maximum age
 #' @export
 #'
 #' @examples
-#' length_at_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
+#' length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
 #' L2 = 47.95, K = 0.2022, All_ages = FALSE)
 
 length_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
