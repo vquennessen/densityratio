@@ -1,6 +1,6 @@
 #' Length at age
 #'
-#' \code{length_at_age} returns a vector of lengths at ages, in centimeters.
+#' \code{length_age} returns a vector of lengths at ages, in centimeters.
 #'
 #' @param Rec_age numeric value, gives age at which fish has entered the fishery
 #'    in years
