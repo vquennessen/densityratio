@@ -20,7 +20,7 @@
 #' length_at_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
 #' L2 = 47.95, K = 0.2022, All_ages = FALSE)
 
-length_at_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
+length_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
 
   if (All_ages == T) {
     Ages <- 1:Max_age } else {
