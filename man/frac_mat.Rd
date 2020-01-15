@@ -17,7 +17,7 @@ years}
 
 \item{L}{numeric vector, gives length at age vector, in cm}
 
-\item{L50}{numeric value, gives length at 50% maturity, in cm}
+\item{L50}{numeric value, gives length at 50\% maturity, in cm}
 }
 \value{
 a numeric vector of fraction mature at ages, from age at recruitment

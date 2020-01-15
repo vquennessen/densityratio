@@ -10,7 +10,7 @@
 #'    years
 #' @param K_mat numeric value, gives slope of maturity curve
 #' @param L numeric vector, gives length at age vector, in cm
-#' @param L50 numeric value, gives length at 50% maturity, in cm
+#' @param L50 numeric value, gives length at 50\% maturity, in cm
 #'
 #' @return a numeric vector of fraction mature at ages, from age at recruitment
 #'    to maximum age, on the interval (0, 1)
