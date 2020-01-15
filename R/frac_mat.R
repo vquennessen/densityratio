@@ -1,7 +1,8 @@
 #' Fraction mature at age
 #'
-#' \code{frac_mat} calculates the proportion of individuals at each age class,
-#'    from age at recruitment to maximum age, that are expected to be mature.
+#' @description \code{frac_mat} calculates the proportion of individuals at each
+#'    age class, from age at recruitment to maximum age, that are expected to be
+#'    mature.
 #'
 #' @param Rec_age numeric value, gives age at which fish has entered the fishery
 #'    in years
