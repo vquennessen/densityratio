@@ -1,6 +1,6 @@
 #' Fishing mortality
 #'
-#' \code{fishing_mortality} returns a  numeric vector that represents the
+#' \code{f_mortality} returns a  numeric vector that represents the
 #'    fishing mortality for all ages, on the interval (0, 1) in a specific area,
 #'    at a specific time step, under a certain control rule, with a certain
 #'    estimate of natural mortality
@@ -34,8 +34,8 @@
 #' Fleets = c('sport', 'hook', 'trawl'), A50_up = c(2, 5, 10),
 #' A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #' F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
-#' fish_mort(a = 1, t = 1, cr = 1, nm = 1, FM, A = 5, Fb = 0.2, E, S)
-fish_mort <- function(a, t, cr, nm, FM, A, Fb, E, S) {
+#' f_mortality(a = 1, t = 1, cr = 1, nm = 1, FM, A = 5, Fb = 0.2, E, S)
+f_mortality <- function(a, t, cr, nm, FM, A, Fb, E, S) {
 
   # Catchability (Vulnerability to fishing gear)
   # Based on Babcock & MacCall (2011): Eq. (6)
