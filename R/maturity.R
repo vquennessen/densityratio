@@ -1,6 +1,6 @@
-#' Fraction mature at age
+#' Maturity at age
 #'
-#' @description \code{frac_mat} calculates the proportion of individuals at each
+#' @description \code{maturity} calculates the proportion of individuals at each
 #'    age class, from age at recruitment to maximum age, that are expected to be
 #'    mature.
 #'
@@ -19,8 +19,8 @@
 #' @examples
 #' L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
 #' L2 = 47.95, K = 0.2022, All_ages = FALSE)
-#' frac_mat(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
-frac_mat = function(Rec_age, Max_age, K_mat, L, L50) {
+#' maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
+maturity = function(Rec_age, Max_age, K_mat, L, L50) {
 
   # number of age classes
   ages <- Rec_age:Max_age
