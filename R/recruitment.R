@@ -34,7 +34,7 @@
 #' SSB <- array(rep(10, 5*70*6*3), c(5, 70, 6, 3))
 #' NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
 #' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
-#' recruitment(a = 1, t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.7,
+#' recruitment(a = 1, t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
 #'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool')
 recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
                        Rec_age, Recruitment_mode) {

@@ -83,7 +83,7 @@
 #'    A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' pop_dynamics(a = 1, t = 3, cr = 1, nm = 2, Rec_age = 2, Max_age = 35, SSB, N,
-#'    W, Mat, A = 5, R0 = 1e+5, H = 0.7, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5,
+#'    W, Mat, A = 5, R0 = 1e+5, H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5,
 #'    Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Abundance_all, Abundance_mature,
 #'    Biomass, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19),
 #'    Recruitment_mode = 'pool')
