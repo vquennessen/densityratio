@@ -77,10 +77,11 @@
 #' @param Fishing logical value, is fishing occurring? Default value is TRUE.
 #' @param Error numeric value, the error between estimated and correct natural
 #'    mortality.
-#' @param Recruitment_mode character value, values can be 'closed' (if the
-#'    recruits in each area originate from adults in that area) or 'pool' (if
-#'    the recruits in each area come from a pool of larvae produced by all
-#'    reproducing individuals in all areas). Default value is 'pool'.
+#' @param Recruitment_mode character value, values can be:
+#'    'closed' - the recruits in each area originate from adults in that area.
+#'    'pool' - the recruits in each area come from a pool of larvae produced by
+#'       adults in all areas.
+#'    Default value is 'pool'.
 #'
 #' @return initalizes arrays necessary for other functions in the base model,
 #'    including TimeT, L, W, S, Mat, A50_mat, CR, Nat_mortality, NM, N, SSB,

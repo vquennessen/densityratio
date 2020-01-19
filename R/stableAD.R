@@ -4,39 +4,40 @@
 #'    numbers at age from recruitment age to maximum age at equilibrium, after
 #'    enough years of no fishing for proportional numbers at age to stabilize
 #'
-#' @param Rec_age numeric value, gives age at which fish has entered the fishery
-#'    in years
-#' @param Max_age numeric value, gives maximum age of fish or total lifespan in
-#'    years
-#' @param W numeric vector, gives the estimated weight at age from age at
-#'    recruitment to maximum age
-#' @param R0 numeric value, set arbitrarily, the unfished recruitment
-#' @param Mat numeric vector, gives the estimated fraction of individuals mature
-#'    at each age, from age at recruitment to maximum age
-#' @param H numeric value, the steepness of the stock-recruitment curve
-#' @param B0 numeric value, set arbitrarily, the unfished biomass
-#' @param Sigma_R numeric value, recruitment standard deviation
-#' @param Fb numeric value, the historical fishing effort for the fished species
+#' @param Rec_age numeric value, the age at recruitment, in years.
+#' @param Max_age numeric value, the maximum age of fish or total lifespan, in
+#'    years.
+#' @param W numeric vector, the estimated weight at age from age at recruitment
+#'    to maximum age, in kg.
+#' @param R0 numeric value, set arbitrarily, the unfished recruitment.
+#' @param Mat numeric vector, the estimated fraction of individuals mature at
+#'    each age, from age at recruitment to maximum age, on the interval (0, 1).
+#' @param H numeric value, the steepness of the stock-recruitment curve.
+#' @param B0 numeric value, the unfished biomass, in kg.
+#' @param Sigma_R numeric value, the recruitment standard deviation.
+#' @param Fb numeric value, the historical fishing effort for the fished species.
 #' @param S numeric vector, the selectivities at age from age at recruitment to
-#'    maximum age, on the interval (0, 1)
-#' @param M numeric value, the natural mortality on the interval (0, 1)
-#' @param eq_time numeric value, the number of years to run the function
+#'    maximum age, on the interval (0, 1).
+#' @param M numeric value, the natural mortality on the interval (0, 1).
+#' @param eq_time numeric value, the number of years to run the function to
+#'    determine the stable age distribution.
 #' @param A50_mat numeric value, the first age at which 50\% or more individuals
-#'    are estimated to be mature
+#'    are estimated to be mature, on the interval (Rec_age, Max_age).
 #' @param Stochasticity logical vector, does recruitment contain a stochastic
-#'    component? Default value is set to TRUE.
+#'    component? Default value is TRUE.
 #' @param Rho_R numeric value, the recruitment autocorrelation on the interval
-#'    (-1, 1). The default value is set to 0.
-#' @param Nat_mortality numeric vector, the estimates of natural mortality
-#' @param Recruitment_mode character value, values can be 'closed' (if the
-#'    recruits in each area originate from adults in that area) or 'pool' (if
-#'    the recruits in each area come from a pool of larvae produced by all
-#'    reproducing individuals in all areas) - the default value is 'pool'
-#' @param A numeric value, the number of total areas in the model. The default
+#'    (-1, 1). Default value is 0.
+#' @param Nat_mortality numeric vector, the estimates of natural mortality.
+#' @param Recruitment_mode character value, values can be:
+#'    'closed' - the recruits in each area originate from adults in that area.
+#'    'pool' - the recruits in each area come from a pool of larvae produced by
+#'       adults in all areas.
+#'    Default value is 'pool'.
+#' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
 #'
 #' @return a numeric vector of numbers at age after enough years with no fishing
-#'    that proportions remain stable over time
+#'    that proportions remain stable over time.
 #' @export
 #'
 #' @examples

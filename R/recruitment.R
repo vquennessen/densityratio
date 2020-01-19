@@ -3,31 +3,31 @@
 #' \code{recruitment} calculates the number of new recruits entering the
 #'    population
 #'
-#' @param a temporary numeric value, the current area
-#' @param t temporary numeric value, the current time step
-#' @param cr temporary numeric value, the current control rule
-#' @param nm temporary numeric value, the current natural mortality estimate
-#' @param SSB numeric matrix, gives the spawning stock biomass of the whole
-#'    stock for each area, at each timestep, under each control rule, and for
-#'    each estimate of natural mortality
-#' @param A numeric value, the number of total areas in the model. The default
+#' @param a temporary numeric value, the current area.
+#' @param t temporary numeric value, the current time step .
+#' @param cr temporary numeric value, the current control rule .
+#' @param nm temporary numeric value, the current natural mortality estimate.
+#' @param SSB numeric array, the spawning stock biomass of the whole stock for
+#'    each area, at each timestep, under each control rule, and for each
+#'    estimate of natural mortality, in kg.
+#' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
-#' @param R0 numeric value, set arbitrarily, the unfished recruitment. The
-#'    default value is 1e+5.
-#' @param H numeric value, the steepness of the stock-recruitment curve
-#' @param B0 numeric value, set arbitrarily, the unfished biomass
-#' @param Eps numeric matrix, recruitment error terms
-#' @param Sigma_R numeric value, recruitment standard deviation
-#' @param Rec_age numeric value, gives age at which fish has entered the fishery
-#'    in years
-#' @param Recruitment_mode character value, values can be 'closed' (if the
-#'    recruits in each area originate from adults in that area) or 'pool' (if
-#'    the recruits in each area come from a pool of larvae produced by all
-#'    reproducing individuals in all areas) - the default value is 'pool'
+#' @param R0 numeric value, set arbitrarily, the unfished recruitment. Default
+#'    value is 1e+5.
+#' @param H numeric value, the steepness of the stock-recruitment curve.
+#' @param B0 numeric value, the unfished biomass, in kg.
+#' @param Eps numeric matrix, the recruitment error terms.
+#' @param Sigma_R numeric value, the recruitment standard deviation.
+#' @param Rec_age numeric value, the age at recruitment, in years.
+#' @param Recruitment_mode character value, values can be:
+#'    'closed' - the recruits in each area originate from adults in that area.
+#'    'pool' - the recruits in each area come from a pool of larvae produced by
+#'       adults in all areas.
+#'    Default value is 'pool'.
 #'
 #' @return a numeric value representing the number of new recruits coming into
 #'    the population in area a, at timestep t, under control rule cr, with an
-#'    estimate of natural mortality of nm
+#'    estimate of natural mortality of nm.
 #' @export
 #'
 #' @examples

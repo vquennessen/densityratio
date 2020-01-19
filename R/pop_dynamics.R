@@ -5,63 +5,63 @@
 #'    biomass in a specific area, at a specific time step, under a specific
 #'    control rule, and with a specific estimate of natural mortality
 #'
-#' @param a temporary numeric value, the current area
-#' @param t temporary numeric value, the current time step
-#' @param cr temporary numeric value, the current control rule
-#' @param nm temporary numeric value, the current natural mortality estimate
-#' @param Rec_age numeric value, gives age at which fish has entered the fishery
-#'    in years
-#' @param Max_age numeric value, gives maximum age of fish or total lifespan in
-#'    years
-#' @param SSB numeric matrix, gives the spawning stock biomass of the whole
-#'    stock for each area, at each timestep, under each control rule, and for
-#'    each estimate of natural mortality
-#' @param N numeric matrix, gives the number of individuals at each age, in each
+#' @param a temporary numeric value, the current area.
+#' @param t temporary numeric value, the current time step.
+#' @param cr temporary numeric value, the current control rule.
+#' @param nm temporary numeric value, the current natural mortality estimate.
+#' @param Rec_age numeric value, the age at recruitment, in years.
+#' @param Max_age numeric value, the maximum age or total lifespan, in years.
+#' @param SSB numeric matrix,  the spawning stock biomass of the whole stock for
+#'    each area, at each timestep, under each control rule, and for each
+#'    estimate of natural mortality.
+#' @param N numeric matrix, the number of individuals at each age, in each
 #'    area, at each timestep, under each control rule, and for each estimate of
 #'    natural mortality
-#' @param W numeric vector, gives the estimated weight at age from age at
-#'    recruitment to maximum age
-#' @param Mat numeric vector, gives the estimated fraction of individuals mature
-#'    at each age, from age at recruitment to maximum age
-#' @param A numeric value, the number of total areas in the model. The default
+#' @param W numeric vector, the estimated weight at age from age at recruitment
+#'    to maximum age, in kg.
+#' @param Mat numeric vector, the estimated fraction of individuals mature at
+#'    each age, from age at recruitment to maximum age, on the interval (0, 1).
+#' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
-#' @param R0 numeric value, set arbitrarily, the unfished recruitment
-#' @param H numeric value, the steepness of the stock-recruitment curve
-#' @param B0 numeric value, set arbitrarily, the unfished biomass
-#' @param Eps numeric matrix, recruitment error terms
-#' @param Sigma_R numeric value, recruitment standard deviation
-#' @param Fb numeric value, the historical fishing effort for the fished species
-#' @param E numeric matrix, the relative fishing effort displayed in each area,
+#' @param R0 numeric value, set arbitrarily, the unfished recruitment. Default
+#'    value is 1e+5.
+#' @param H numeric value, the steepness of the stock-recruitment curve.
+#' @param B0 numeric value, the unfished biomass.
+#' @param Eps numeric array, the recruitment error terms.
+#' @param Sigma_R numeric value, the recruitment standard deviation.
+#' @param Fb numeric value, the historical fishing effort for the fished species.
+#' @param E numeric array, the relative fishing effort displayed in each area,
 #'    at each time step, under each control rule, and for each natural mortality
-#'    estimate
+#'    estimate.
 #' @param S numeric vector, the selectivities at age from age at recruitment to
-#'    maximum age, on the interval (0, 1)
+#'    maximum age, on the interval (0, 1).
 #' @param NM numeric value, the total number of estimated values of natural
-#'    mortality. The default value is 3.
-#' @param FM numeric matrix that corresponds to the fishing mortality at each
+#'    mortality. Default value is 3.
+#' @param FM numeric array that corresponds to the fishing mortality at each
 #'    age in each area, at each timestep, under all control rules, with all
-#'    estimates of natural mortality
+#'    estimates of natural mortality.
 #' @param A50_mat numeric value, the first age at which 50\% or more individuals
-#'    are estimated to be mature
-#' @param Abundance_all numeric matrix, the total number of individuals in each
+#'    are estimated to be mature. on the interval (Rec_age, Max_age).
+#' @param Abundance_all numeric array, the total number of individuals in each
 #'    area, at each timestep, under all control rules, with all estimates of
-#'    natural mortality
-#' @param Abundance_mature numeric matrix, the number of mature individuals in
+#'    natural mortality.
+#' @param Abundance_mature numeric array, the number of mature individuals in
 #'    each area, at each timestep, under all control rules, with all estimates
-#'    of natural mortality
-#' @param Biomass numeric matrix, the total biomass in each area, at each time
+#'    of natural mortality.
+#' @param Biomass numeric array, the total biomass in each area, at each time
 #'    step, under all control rules, with all estimates of natural mortality,
-#'    in kg
-#' @param Fishing logical value, is fishing occurring? The default value is TRUE
-#' @param Nat_mortality numeric vector, the estimates of natural mortality
-#' @param Recruitment_mode character value, values can be 'closed' (if the
-#'    recruits in each area originate from adults in that area) or 'pool' (if
-#'    the recruits in each area come from a pool of larvae produced by all
-#'    reproducing individuals in all areas) - the default value is 'pool'
+#'    in kg.
+#' @param Fishing logical value, is fishing occurring? Default value is TRUE.
+#' @param Nat_mortality numeric vector, the estimates of natural mortality.
+#' @param Recruitment_mode character value, values can be:
+#'    'closed' - the recruits in each area originate from adults in that area.
+#'    'pool' - the recruits in each area come from a pool of larvae produced by
+#'       adults in all areas.
+#'    Default value is 'pool'.
 #'
-#' @return numeric matrix, with updated values of fishing mortality (FM),
+#' @return numeric arrays, with updated values of fishing mortality (FM),
 #'    numbers at age (N), Abundance_all, Abundance_mature, Biomass, and spawning
-#'    stock biomass (SSB)
+#'    stock biomass (SSB).
 #' @export
 #'
 #' @examples

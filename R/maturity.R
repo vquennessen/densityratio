@@ -4,21 +4,19 @@
 #'    age class, from age at recruitment to maximum age, that are expected to be
 #'    mature.
 #'
-#' @param Rec_age numeric value, gives age at which fish has entered the fishery
-#'    in years
-#' @param Max_age numeric value, gives maximum age of fish or total lifespan in
-#'    years
-#' @param K_mat numeric value, gives slope of maturity curve
-#' @param L numeric vector, gives length at age vector, in cm
-#' @param L50 numeric value, gives length at 50\% maturity, in cm
+#' @param Rec_age numeric value, the age at recruitment, in years.
+#' @param Max_age numeric value, the maximum age or total lifespan, in years.
+#' @param K_mat numeric value, the slope of the maturity curve.
+#' @param L numeric vector, the length at age vector, in cm.
+#' @param L50 numeric value, the length at 50\% maturity, in cm.
 #'
 #' @return a numeric vector of fraction mature at ages, from age at recruitment
-#'    to maximum age, on the interval (0, 1)
+#'    to maximum age, on the interval (0, 1).
 #' @export
 #'
 #' @examples
 #' L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
-#' L2 = 47.95, K = 0.2022, All_ages = FALSE)
+#'    L2 = 47.95, K = 0.2022, All_ages = FALSE)
 #' maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
 maturity = function(Rec_age, Max_age, K_mat, L, L50) {
 
