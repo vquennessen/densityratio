@@ -2,6 +2,7 @@
 
 export(epsilon)
 export(f_mortality)
+export(initialize_arrays)
 export(length_age)
 export(maturity)
 export(pop_dynamics)
