@@ -8,57 +8,58 @@ stableAD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M, eq_time,
   A50_mat, Stochasticity, Rho_R, Nat_mortality, Recruitment_mode, A)
 }
 \arguments{
-\item{Rec_age}{numeric value, gives age at which fish has entered the fishery
-in years}
+\item{Rec_age}{numeric value, the age at recruitment, in years.}
 
-\item{Max_age}{numeric value, gives maximum age of fish or total lifespan in
-years}
+\item{Max_age}{numeric value, the maximum age of fish or total lifespan, in
+years.}
 
-\item{W}{numeric vector, gives the estimated weight at age from age at
-recruitment to maximum age}
+\item{W}{numeric vector, the estimated weight at age from age at recruitment
+to maximum age, in kg.}
 
-\item{R0}{numeric value, set arbitrarily, the unfished recruitment}
+\item{R0}{numeric value, set arbitrarily, the unfished recruitment.}
 
-\item{Mat}{numeric vector, gives the estimated fraction of individuals mature
-at each age, from age at recruitment to maximum age}
+\item{Mat}{numeric vector, the estimated fraction of individuals mature at
+each age, from age at recruitment to maximum age, on the interval (0, 1).}
 
-\item{H}{numeric value, the steepness of the stock-recruitment curve}
+\item{H}{numeric value, the steepness of the stock-recruitment curve.}
 
-\item{B0}{numeric value, set arbitrarily, the unfished biomass}
+\item{B0}{numeric value, the unfished biomass, in kg.}
 
-\item{Sigma_R}{numeric value, recruitment standard deviation}
+\item{Sigma_R}{numeric value, the recruitment standard deviation.}
 
-\item{Fb}{numeric value, the historical fishing effort for the fished species}
+\item{Fb}{numeric value, the historical fishing effort for the fished species.}
 
 \item{S}{numeric vector, the selectivities at age from age at recruitment to
-maximum age, on the interval (0, 1)}
+maximum age, on the interval (0, 1).}
 
-\item{M}{numeric value, the natural mortality on the interval (0, 1)}
+\item{M}{numeric value, the natural mortality on the interval (0, 1).}
 
-\item{eq_time}{numeric value, the number of years to run the function}
+\item{eq_time}{numeric value, the number of years to run the function to
+determine the stable age distribution.}
 
 \item{A50_mat}{numeric value, the first age at which 50\% or more individuals
-are estimated to be mature}
+are estimated to be mature, on the interval (Rec_age, Max_age).}
 
 \item{Stochasticity}{logical vector, does recruitment contain a stochastic
-component? Default value is set to TRUE.}
+component? Default value is TRUE.}
 
 \item{Rho_R}{numeric value, the recruitment autocorrelation on the interval
-(-1, 1). The default value is set to 0.}
+(-1, 1). Default value is 0.}
 
-\item{Nat_mortality}{numeric vector, the estimates of natural mortality}
+\item{Nat_mortality}{numeric vector, the estimates of natural mortality.}
 
-\item{Recruitment_mode}{character value, values can be 'closed' (if the
-recruits in each area originate from adults in that area) or 'pool' (if
-the recruits in each area come from a pool of larvae produced by all
-reproducing individuals in all areas) - the default value is 'pool'}
+\item{Recruitment_mode}{character value, values can be:
+'closed' - the recruits in each area originate from adults in that area.
+'pool' - the recruits in each area come from a pool of larvae produced by
+   adults in all areas.
+Default value is 'pool'.}
 
-\item{A}{numeric value, the number of total areas in the model. The default
+\item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}
 }
 \value{
 a numeric vector of numbers at age after enough years with no fishing
-   that proportions remain stable over time
+   that proportions remain stable over time.
 }
 \description{
 \code{stableAD} produces the stable age distribution, or the proportional

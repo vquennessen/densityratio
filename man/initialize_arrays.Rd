@@ -110,10 +110,11 @@ TRUE.}
 \item{Error}{numeric value, the error between estimated and correct natural
 mortality.}
 
-\item{Recruitment_mode}{character value, values can be 'closed' (if the
-recruits in each area originate from adults in that area) or 'pool' (if
-the recruits in each area come from a pool of larvae produced by all
-reproducing individuals in all areas). Default value is 'pool'.}
+\item{Recruitment_mode}{character value, values can be:
+'closed' - the recruits in each area originate from adults in that area.
+'pool' - the recruits in each area come from a pool of larvae produced by
+   adults in all areas.
+Default value is 'pool'.}
 }
 \value{
 initalizes arrays necessary for other functions in the base model,

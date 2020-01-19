@@ -7,21 +7,19 @@
 maturity(Rec_age, Max_age, K_mat, L, L50)
 }
 \arguments{
-\item{Rec_age}{numeric value, gives age at which fish has entered the fishery
-in years}
+\item{Rec_age}{numeric value, the age at recruitment, in years.}
 
-\item{Max_age}{numeric value, gives maximum age of fish or total lifespan in
-years}
+\item{Max_age}{numeric value, the maximum age or total lifespan, in years.}
 
-\item{K_mat}{numeric value, gives slope of maturity curve}
+\item{K_mat}{numeric value, the slope of the maturity curve.}
 
-\item{L}{numeric vector, gives length at age vector, in cm}
+\item{L}{numeric vector, the length at age vector, in cm.}
 
-\item{L50}{numeric value, gives length at 50\% maturity, in cm}
+\item{L50}{numeric value, the length at 50\% maturity, in cm.}
 }
 \value{
 a numeric vector of fraction mature at ages, from age at recruitment
-   to maximum age, on the interval (0, 1)
+   to maximum age, on the interval (0, 1).
 }
 \description{
 \code{maturity} calculates the proportion of individuals at each
@@ -30,6 +28,6 @@ a numeric vector of fraction mature at ages, from age at recruitment
 }
 \examples{
 L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
-L2 = 47.95, K = 0.2022, All_ages = FALSE)
+   L2 = 47.95, K = 0.2022, All_ages = FALSE)
 maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
 }

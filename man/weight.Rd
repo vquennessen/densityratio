@@ -7,23 +7,21 @@
 weight(L, WA, WB)
 }
 \arguments{
-\item{L}{numeric vector, gives length at age vector, in cm}
+\item{L}{numeric vector, the length at age vector, in cm.}
 
-\item{WA}{numeric value, coefficient in weight at length equation, where
-weight = WA * length ^ WB}
+\item{WA}{numeric value, the coefficient in the weight at length equation.}
 
-\item{WB}{numeric value, exponent in weight at length equation, where
-weight = WA * length ^ WB}
+\item{WB}{numeric value, the exponent in the weight at length equation.}
 }
 \value{
 a numeric vector of weights at ages, from age at recruitment to
-   maximum age
+   maximum age, in kg.
 }
 \description{
 \code{weight} returns a vector of weights at age, in kg.
 }
 \examples{
 L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
-L2 = 47.95, K = 0.2022, All_ages = FALSE)
+   L2 = 47.95, K = 0.2022, All_ages = FALSE)
 weight(L, WA = 1.68e-5, WB = 3)
 }

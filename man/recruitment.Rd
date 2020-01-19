@@ -8,44 +8,44 @@ recruitment(a, t, cr, nm, SSB, A = 5, R0 = 1e+05, H, B0, Eps, Sigma_R,
   Rec_age, Recruitment_mode)
 }
 \arguments{
-\item{a}{temporary numeric value, the current area}
+\item{a}{temporary numeric value, the current area.}
 
-\item{t}{temporary numeric value, the current time step}
+\item{t}{temporary numeric value, the current time step .}
 
-\item{cr}{temporary numeric value, the current control rule}
+\item{cr}{temporary numeric value, the current control rule .}
 
-\item{nm}{temporary numeric value, the current natural mortality estimate}
+\item{nm}{temporary numeric value, the current natural mortality estimate.}
 
-\item{SSB}{numeric matrix, gives the spawning stock biomass of the whole
-stock for each area, at each timestep, under each control rule, and for
-each estimate of natural mortality}
+\item{SSB}{numeric array, the spawning stock biomass of the whole stock for
+each area, at each timestep, under each control rule, and for each
+estimate of natural mortality, in kg.}
 
-\item{A}{numeric value, the number of total areas in the model. The default
+\item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}
 
-\item{R0}{numeric value, set arbitrarily, the unfished recruitment. The
-default value is 1e+5.}
+\item{R0}{numeric value, set arbitrarily, the unfished recruitment. Default
+value is 1e+5.}
 
-\item{H}{numeric value, the steepness of the stock-recruitment curve}
+\item{H}{numeric value, the steepness of the stock-recruitment curve.}
 
-\item{B0}{numeric value, set arbitrarily, the unfished biomass}
+\item{B0}{numeric value, the unfished biomass, in kg.}
 
-\item{Eps}{numeric matrix, recruitment error terms}
+\item{Eps}{numeric matrix, the recruitment error terms.}
 
-\item{Sigma_R}{numeric value, recruitment standard deviation}
+\item{Sigma_R}{numeric value, the recruitment standard deviation.}
 
-\item{Rec_age}{numeric value, gives age at which fish has entered the fishery
-in years}
+\item{Rec_age}{numeric value, the age at recruitment, in years.}
 
-\item{Recruitment_mode}{character value, values can be 'closed' (if the
-recruits in each area originate from adults in that area) or 'pool' (if
-the recruits in each area come from a pool of larvae produced by all
-reproducing individuals in all areas) - the default value is 'pool'}
+\item{Recruitment_mode}{character value, values can be:
+'closed' - the recruits in each area originate from adults in that area.
+'pool' - the recruits in each area come from a pool of larvae produced by
+   adults in all areas.
+Default value is 'pool'.}
 }
 \value{
 a numeric value representing the number of new recruits coming into
    the population in area a, at timestep t, under control rule cr, with an
-   estimate of natural mortality of nm
+   estimate of natural mortality of nm.
 }
 \description{
 \code{recruitment} calculates the number of new recruits entering the

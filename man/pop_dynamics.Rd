@@ -10,91 +10,91 @@ pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   Recruitment_mode = "pool")
 }
 \arguments{
-\item{a}{temporary numeric value, the current area}
+\item{a}{temporary numeric value, the current area.}
 
-\item{t}{temporary numeric value, the current time step}
+\item{t}{temporary numeric value, the current time step.}
 
-\item{cr}{temporary numeric value, the current control rule}
+\item{cr}{temporary numeric value, the current control rule.}
 
-\item{nm}{temporary numeric value, the current natural mortality estimate}
+\item{nm}{temporary numeric value, the current natural mortality estimate.}
 
-\item{Rec_age}{numeric value, gives age at which fish has entered the fishery
-in years}
+\item{Rec_age}{numeric value, the age at recruitment, in years.}
 
-\item{Max_age}{numeric value, gives maximum age of fish or total lifespan in
-years}
+\item{Max_age}{numeric value, the maximum age or total lifespan, in years.}
 
-\item{SSB}{numeric matrix, gives the spawning stock biomass of the whole
-stock for each area, at each timestep, under each control rule, and for
-each estimate of natural mortality}
+\item{SSB}{numeric matrix,  the spawning stock biomass of the whole stock for
+each area, at each timestep, under each control rule, and for each
+estimate of natural mortality.}
 
-\item{N}{numeric matrix, gives the number of individuals at each age, in each
+\item{N}{numeric matrix, the number of individuals at each age, in each
 area, at each timestep, under each control rule, and for each estimate of
 natural mortality}
 
-\item{W}{numeric vector, gives the estimated weight at age from age at
-recruitment to maximum age}
+\item{W}{numeric vector, the estimated weight at age from age at recruitment
+to maximum age, in kg.}
 
-\item{Mat}{numeric vector, gives the estimated fraction of individuals mature
-at each age, from age at recruitment to maximum age}
+\item{Mat}{numeric vector, the estimated fraction of individuals mature at
+each age, from age at recruitment to maximum age, on the interval (0, 1).}
 
-\item{A}{numeric value, the number of total areas in the model. The default
+\item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}
 
-\item{R0}{numeric value, set arbitrarily, the unfished recruitment}
+\item{R0}{numeric value, set arbitrarily, the unfished recruitment. Default
+value is 1e+5.}
 
-\item{H}{numeric value, the steepness of the stock-recruitment curve}
+\item{H}{numeric value, the steepness of the stock-recruitment curve.}
 
-\item{B0}{numeric value, set arbitrarily, the unfished biomass}
+\item{B0}{numeric value, the unfished biomass.}
 
-\item{Eps}{numeric matrix, recruitment error terms}
+\item{Eps}{numeric array, the recruitment error terms.}
 
-\item{Sigma_R}{numeric value, recruitment standard deviation}
+\item{Sigma_R}{numeric value, the recruitment standard deviation.}
 
-\item{Fb}{numeric value, the historical fishing effort for the fished species}
+\item{Fb}{numeric value, the historical fishing effort for the fished species.}
 
-\item{E}{numeric matrix, the relative fishing effort displayed in each area,
+\item{E}{numeric array, the relative fishing effort displayed in each area,
 at each time step, under each control rule, and for each natural mortality
-estimate}
+estimate.}
 
 \item{S}{numeric vector, the selectivities at age from age at recruitment to
-maximum age, on the interval (0, 1)}
+maximum age, on the interval (0, 1).}
 
 \item{NM}{numeric value, the total number of estimated values of natural
-mortality. The default value is 3.}
+mortality. Default value is 3.}
 
-\item{FM}{numeric matrix that corresponds to the fishing mortality at each
+\item{FM}{numeric array that corresponds to the fishing mortality at each
 age in each area, at each timestep, under all control rules, with all
-estimates of natural mortality}
+estimates of natural mortality.}
 
 \item{A50_mat}{numeric value, the first age at which 50\% or more individuals
-are estimated to be mature}
+are estimated to be mature. on the interval (Rec_age, Max_age).}
 
-\item{Abundance_all}{numeric matrix, the total number of individuals in each
+\item{Abundance_all}{numeric array, the total number of individuals in each
 area, at each timestep, under all control rules, with all estimates of
-natural mortality}
+natural mortality.}
 
-\item{Abundance_mature}{numeric matrix, the number of mature individuals in
+\item{Abundance_mature}{numeric array, the number of mature individuals in
 each area, at each timestep, under all control rules, with all estimates
-of natural mortality}
+of natural mortality.}
 
-\item{Biomass}{numeric matrix, the total biomass in each area, at each time
+\item{Biomass}{numeric array, the total biomass in each area, at each time
 step, under all control rules, with all estimates of natural mortality,
-in kg}
+in kg.}
 
-\item{Fishing}{logical value, is fishing occurring? The default value is TRUE}
+\item{Fishing}{logical value, is fishing occurring? Default value is TRUE.}
 
-\item{Nat_mortality}{numeric vector, the estimates of natural mortality}
+\item{Nat_mortality}{numeric vector, the estimates of natural mortality.}
 
-\item{Recruitment_mode}{character value, values can be 'closed' (if the
-recruits in each area originate from adults in that area) or 'pool' (if
-the recruits in each area come from a pool of larvae produced by all
-reproducing individuals in all areas) - the default value is 'pool'}
+\item{Recruitment_mode}{character value, values can be:
+'closed' - the recruits in each area originate from adults in that area.
+'pool' - the recruits in each area come from a pool of larvae produced by
+   adults in all areas.
+Default value is 'pool'.}
 }
 \value{
-numeric matrix, with updated values of fishing mortality (FM),
+numeric arrays, with updated values of fishing mortality (FM),
    numbers at age (N), Abundance_all, Abundance_mature, Biomass, and spawning
-   stock biomass (SSB)
+   stock biomass (SSB).
 }
 \description{
 \code{pop_dynamics} returns updated values for fishing mortality, numbers at

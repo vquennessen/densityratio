@@ -4,27 +4,27 @@
 \alias{epsilon}
 \title{Epsilon}
 \usage{
-epsilon(A = 5, TimeT, CR = 6, NM = 3, NuR, Rho_R = 0)
+epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
 }
 \arguments{
-\item{A}{numeric value, the number of total areas in the model. The default
-value is 5.}
+\item{A}{numeric value, the number of total areas in the model. Default value
+is 5.}
 
-\item{TimeT}{numeric value, the total number of years the model is run, both
-before and after reserve implementation.}
+\item{TimeT}{numeric value, the number of years to run the model total.
+Default value is 70.}
 
-\item{CR}{numeric value, the number of control rules to be compared. The
-default value is 6 control rules.}
+\item{CR}{numeric value, the number of control rules to be compared. Default
+value is 6.}
 
 \item{NM}{numeric value, the total number of estimated values of natural
-mortality. The default value is 3.}
+mortality. Default value is 3.}
 
 \item{NuR}{numeric vector, the recruitment random normal variable, pulled
 from a normal distribution of mean 0 and standard deviation equal to
 Sigma_R.}
 
 \item{Rho_R}{numeric value, the recruitment autocorrelation on the interval
-(-1, 1). The default value is set to 0.}
+(-1, 1). Default value is 0.}
 }
 \value{
 a numeric vector of recruitment error terms, of dimensions
@@ -35,6 +35,6 @@ a numeric vector of recruitment error terms, of dimensions
 equation 4 in Babcock & MacCall (2011).
 }
 \examples{
-NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
+NuR <- array(stats::rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
 epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
 }
