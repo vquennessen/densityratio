@@ -22,13 +22,13 @@ pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
 
 \item{Max_age}{numeric value, the maximum age or total lifespan, in years.}
 
-\item{SSB}{numeric matrix,  the spawning stock biomass of the whole stock for
+\item{SSB}{numeric array,  the spawning stock biomass of the whole stock for
 each area, at each timestep, under each control rule, and for each
 estimate of natural mortality.}
 
-\item{N}{numeric matrix, the number of individuals at each age, in each
+\item{N}{numeric array, the number of individuals at each age, in each
 area, at each timestep, under each control rule, and for each estimate of
-natural mortality}
+natural mortality.}
 
 \item{W}{numeric vector, the estimated weight at age from age at recruitment
 to maximum age, in kg.}

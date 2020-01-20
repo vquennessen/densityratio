@@ -11,12 +11,12 @@
 #' @param nm temporary numeric value, the current natural mortality estimate.
 #' @param Rec_age numeric value, the age at recruitment, in years.
 #' @param Max_age numeric value, the maximum age or total lifespan, in years.
-#' @param SSB numeric matrix,  the spawning stock biomass of the whole stock for
+#' @param SSB numeric array,  the spawning stock biomass of the whole stock for
 #'    each area, at each timestep, under each control rule, and for each
 #'    estimate of natural mortality.
-#' @param N numeric matrix, the number of individuals at each age, in each
+#' @param N numeric array, the number of individuals at each age, in each
 #'    area, at each timestep, under each control rule, and for each estimate of
-#'    natural mortality
+#'    natural mortality.
 #' @param W numeric vector, the estimated weight at age from age at recruitment
 #'    to maximum age, in kg.
 #' @param Mat numeric vector, the estimated fraction of individuals mature at
