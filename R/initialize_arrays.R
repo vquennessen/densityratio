@@ -108,6 +108,11 @@ initialize_arrays <- function(A = 5, Time1 = 50, Time2 = 20, R0 = 1e+5, Rec_age,
                               D, Transects = 24, H, Surveys = TRUE,
                               Fishing = TRUE, Error, Recruitment_mode = 'pool') {
 
+  # set areas in and out of marine reserves
+  Areas <- 1:A
+  Inside <- MPAs
+  Outside <- Areas[-MPAs]
+
   # total amount of timesteps (years)
   TimeT <- Time1 + Time2
 
@@ -265,10 +270,10 @@ initialize_arrays <- function(A = 5, Time1 = 50, Time2 = 20, R0 = 1e+5, Rec_age,
   # Dimensions = timeT * CR
   Density_ratio <- array(rep(0, (Time2 + 1)*CR), c(Time2 + 1, CR))
 
-  output <- list(TimeT, L, W, S, Mat, A50_mat, CR, Nat_mortality, NM, N, SSB,
-                 Abundance_all, Abundance_mature, Biomass, Eps, B0, Count,
-                 Sigma_S, NuS, Delta, Gamma, FM, E, Catch, Yield,
-                 Rel_biomass, Rel_yield, Rel_SSB,  Density_ratio)
+  output <- list(Inside, Outside, TimeT, L, W, S, Mat, A50_mat, CR,
+                 Nat_mortality, NM, N, SSB, Abundance_all, Abundance_mature,
+                 Biomass, Eps, B0, Count, Sigma_S, NuS, Delta, Gamma, FM, E,
+                 Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,  Density_ratio)
 
   return(output)
 
