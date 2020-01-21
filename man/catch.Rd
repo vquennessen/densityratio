@@ -52,7 +52,7 @@ simultaneously  and uniformly throughout the year, i.e. dN/dt = -(M+F)*N.
 FM <- array(rep(0.2, 34*5*70*6*3), c(34, 5, 70, 6, 3))
 N <- array(rep(10, 34*5*70*6*3), c(34, 5, 70, 6, 3))
 E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
-Catch <- array(rep(0, 34*5*70*6*3), c(34, 5, 70, 6, 3))
+Catch <- array(rep(2, 34*5*70*6*3), c(34, 5, 70, 6, 3))
 catch(a = 1, t = 1, cr = 1, nm = 1, FM, Nat_mortality = c(0.09, 0.14, 0.19),
    N, A = 5, Fb = 0.2, E, Catch)
 }
