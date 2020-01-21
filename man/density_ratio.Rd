@@ -28,7 +28,8 @@ which to base the estimate of density ratio. Default value is 1.}
 \item{Areas_sampled}{character value, the areas to be sampled to calculate
 density ratio. Values can be:
 'all' - sample all areas.
-'far' - sample only areas farthest from the marine reserve.
+'far' - sample only the first and last areas (assuming the reserve is
+   somewhere in the middle.
 Default value is 'all'.}
 
 \item{Ind_sampled}{character value, the individuals to be sampled to

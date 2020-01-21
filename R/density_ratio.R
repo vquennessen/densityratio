@@ -16,7 +16,8 @@
 #' @param Areas_sampled character value, the areas to be sampled to calculate
 #'    density ratio. Values can be:
 #'    'all' - sample all areas.
-#'    'far' - sample only areas farthest from the marine reserve.
+#'    'far' - sample only the first and last areas (assuming the reserve is
+#'       somewhere in the middle.
 #'    Default value is 'all'.
 #' @param Ind_sampled character value, the individuals to be sampled to
 #'    calculate density ratio. Values can be:
