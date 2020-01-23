@@ -236,7 +236,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 
   # Stable age distribution, derived from equilibrium conditions with Fb = 0
   # Dimensions age
-  SAD <- stableAD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
+  SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
                   Nat_mortality, Recruitment_mode, A)
 

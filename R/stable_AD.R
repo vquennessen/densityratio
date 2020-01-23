@@ -49,11 +49,11 @@
 #'    Fleets = c('sport', 'hook', 'trawl'), A50_up = c(2, 5, 10),
 #'    A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
-#' stableAD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65, B0 = 1e+5/1.1,
+#' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65, B0 = 1e+5/1.1,
 #'    Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150, A50_mat = 8,
 #'    Stochasticity = TRUE, Rho_R = 0, Nat_mortality = 0.14,
 #'    Recruitment_mode = 'pool', A = 5)
-stableAD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
+stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                      eq_time, A50_mat, Stochasticity, Rho_R, Nat_mortality,
                      Recruitment_mode, A) {
 
@@ -87,14 +87,15 @@ stableAD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   Eps2 <- epsilon(A = 1, eq_time, CR = 1, NM = 1, nuR2, Rho_R)
 
   # Start each age class with 10 individuals
-  # Enter FM, N, abundance, and biomasses for time = 1 to rec_age
+  # Enter FM, N, abundance, and biomasses for time = 1 to Rec_age
   # Dimensions = age * area * time * CR * M values (3)
+  start_age <- A50_mat - Rec_age + 1
   for (t in 1:(Rec_age + 1)) {
     N2[, 1, t, 1, 1] <- rep(100, num)
     biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1] * W)
     SSB2[1] <- sum(N2[, 1, t, 1, 1]*W*Mat)
     abundance_all2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1])
-    abundance_mature2[1, t, 1, 1] <- sum(N2[A50_mat:num, 1, t, 1, 1])
+    abundance_mature2[1, t, 1, 1] <- sum(N2[start_age:num, 1, t, 1, 1])
   }
 
   # Step population forward in time with set fishing level
