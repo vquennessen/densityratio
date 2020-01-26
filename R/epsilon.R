@@ -19,7 +19,6 @@
 #'
 #' @return a numeric vector of recruitment error terms, of dimensions
 #'    A \* timeT \* CR \* NM.
-#' @export
 #'
 #' @examples
 #' NuR <- array(stats::rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))

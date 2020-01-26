@@ -34,7 +34,6 @@
 #' @return numeric value, the calculated density ratio for a specific timestep,
 #'    under a specific control rule, with a specific estimate of natural
 #'    mortality.
-#' @export
 #'
 #' @examples
 #' Count <- array(rep(5, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))

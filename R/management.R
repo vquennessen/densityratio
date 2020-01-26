@@ -23,7 +23,6 @@
 #'
 #' @return a numeric vector of fishing effort for the next timestep, under the
 #'    specific control rule, with a specific estimate of natural mortality.
-#' @export
 #'
 #' @examples
 #' E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))

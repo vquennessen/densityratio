@@ -62,7 +62,6 @@
 #' @return numeric arrays, with updated values of fishing mortality (FM),
 #'    numbers at age (N), Abundance_all, Abundance_mature, Biomass, and spawning
 #'    stock biomass (SSB).
-#' @export
 #'
 #' @examples
 #' SSB <- array(rep(548, 5*70*6*3), c(5, 70, 6, 3))
