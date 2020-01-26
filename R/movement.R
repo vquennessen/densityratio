@@ -16,6 +16,7 @@
 #'
 #' @return numeric array of updated N (numbers at age, area, timestep, control
 #'    rule, and estimate of natural mortality)
+#' @export
 #'
 #' @examples
 #' N <- array(rep(10, 34*5*70*6*3), c(34, 5, 70, 6, 3))
