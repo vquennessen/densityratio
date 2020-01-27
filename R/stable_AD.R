@@ -40,6 +40,8 @@
 #'    that proportions remain stable over time.
 #' @export
 #'
+#' @importFrom stats rnorm
+#'
 #' @examples
 #' L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
 #'    L2 = 47.95, K = 0.2022, All_ages = FALSE)
@@ -77,7 +79,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   # Recruitment normal variable
   # Dimensions = area * timeT * CR * 1
   if (Stochasticity == T) {
-    nuR2 <- array(stats::rnorm(eq_time, 0, Sigma_R), c(1, eq_time, 1, 1))
+    nuR2 <- array(rnorm(eq_time, 0, Sigma_R), c(1, eq_time, 1, 1))
   } else if (Stochasticity == F) {
     nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
   }

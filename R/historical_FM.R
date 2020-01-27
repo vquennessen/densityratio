@@ -26,8 +26,10 @@
 #'    result in the estimated depletion value, on the interval (0, 1).
 #' @export
 #'
+#' @importFrom graphics plot abline
+#'
 #' @examples
-#' historical_FM(Species = 'BR.OR.2003', eq_time = 150, R0 = 1e+5, A = 5,
+#' historical_FM(Species = 'BR.CA.2003', eq_time = 150, R0 = 1e+5, A = 5,
 #'    Stochasticity = FALSE, Recruitment_mode = 'pool',
 #'    Nat_mortality = c(0.14))
 historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, A = 5,
@@ -55,13 +57,13 @@ D                      <- par[[19]]
 SP                     <- par[[23]]       # std of positive transects
 
 ####### selectivity parameters #######
-Fleets                 <- par[[26]]       # fishery fleet names
-Alpha                  <- par[[27]]       # slope for upcurve
-Beta                   <- par[[28]]       # slope for downcurve
-F_fin                  <- par[[29]]       # F_fin for fishery, 0 if asymptotic
-A50_up                 <- par[[30]]       # L50 for upcurve
-A50_down               <- par[[31]]       # L50 for downcurve
-Cf                     <- par[[32]]       # fraction of fishery caught / fleet
+Fleets                 <- par[[24]]       # fishery fleet names
+Alpha                  <- par[[25]]       # slope for upcurve
+Beta                   <- par[[26]]       # slope for downcurve
+F_fin                  <- par[[27]]       # F_fin for fishery, 0 if asymptotic
+A50_up                 <- par[[28]]       # L50 for upcurve
+A50_down               <- par[[29]]       # L50 for downcurve
+Cf                     <- par[[30]]       # fraction of fishery caught / fleet
 
 ##### Calculate set values #####
 ages <- Rec_age:Max_age                            # applicable ages
@@ -179,9 +181,9 @@ for (i in 2:fn) {
 
 closest_FM <- FM_values[which.min(abs(dep - D))]
 
-graphics::plot(FM_values, dep)
-graphics::abline(v = closest_FM, col = 'red')
-graphics::abline(h = D, col = 'green')
+plot(FM_values, dep)
+abline(v = closest_FM, col = 'red')
+abline(h = D, col = 'green')
 
 return(closest_FM)
 

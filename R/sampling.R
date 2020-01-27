@@ -35,6 +35,8 @@
 #'    natural mortality.
 #' @export
 #'
+#' @importFrom stats rbinom
+#'
 #' @examples
 #' Abundance_all <- array(rep(340, 5*70*6*3), c(5, 70, 6, 3))
 #' Abundance_mature <- array(rep(280, 5*70*6*3), c(5, 70, 6, 3))
@@ -61,8 +63,8 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
 
   # Determine if species is seen at least once
   # Dimensions = 1 * transects
-  presence_all <- stats::rbinom(Transects, 1, p_all)
-  presence_mature <- stats::rbinom(Transects, 1, p_mature)
+  presence_all <- rbinom(Transects, 1, p_all)
+  presence_mature <- rbinom(Transects, 1, p_mature)
 
   # Calculate species count given transects with positive visuals
   Count[a, t, , 1, cr, nm] <- presence_all*(Gamma*Abundance_all[a, t, cr, nm]*exp(NuS[a, t, cr, nm]))

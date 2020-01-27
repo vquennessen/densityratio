@@ -38,7 +38,8 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0) {
     for (t in 2:TimeT) {
       for (cr in 1:CR) {
         for (nm in 1:NM) {
-        Eps[a, t, cr, nm] <- Rho_R*Eps[a, t-1, cr, nm] + NuR[a, t, cr, nm]*sqrt(1 + Rho_R^2)
+        Eps[a, t, cr, nm] <- Rho_R*Eps[a, t-1, cr, nm] +
+          NuR[a, t, cr, nm]*sqrt(1 + Rho_R^2)
         }
       }
     }

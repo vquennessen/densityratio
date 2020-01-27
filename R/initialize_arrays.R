@@ -92,6 +92,8 @@
 #'    Density_ratio
 #' @export
 #'
+#' @importFrom stats rnorm
+#'
 #' @examples
 #' initialize_arrays(A = 5,  MPAs = c(3), Time1 = 50, Time2 = 20, R0 = 1e+5,
 #'    Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
@@ -170,7 +172,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Recruitment normal variable
   # Dimensions = area * timeT * CR * M values (3)
   if (Stochasticity == T) {
-    NuR <- array(stats::rnorm(A*TimeT*CR*NM, 0, Sigma_R), c(A, TimeT, CR, NM))
+    NuR <- array(rnorm(A*TimeT*CR*NM, 0, Sigma_R), c(A, TimeT, CR, NM))
   } else if (Stochasticity == F) {
     NuR <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
   }
@@ -194,7 +196,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Sampling normal variable
   # Dimensions = area * timeT * CR * M values (3)
   if (Stochasticity == T) {
-    NuS <- array(stats::rnorm(A*TimeT*CR*NM, 0, Sigma_S), c(A, TimeT, CR, NM))
+    NuS <- array(rnorm(A*TimeT*CR*NM, 0, Sigma_S), c(A, TimeT, CR, NM))
   } else if (Stochasticity == F) {
     NuS <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
   }
