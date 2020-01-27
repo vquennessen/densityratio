@@ -9,7 +9,7 @@ parameters(Species)
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
 the format species abbreviation.state or stock.year assessed. Example:
-BR.OR.2003 is the Oregon black rockfish stock assessed in 2003.}
+BR.CA.2003 is the California black rockfish stock assessed in 2003.}
 }
 \value{
 a list of numeric values and vectors required to run the base model
@@ -20,5 +20,5 @@ a list of numeric values and vectors required to run the base model
    stock.
 }
 \examples{
-parameters(Species = 'BR.OR.2003')
+parameters(Species = 'BR.CA.2003')
 }

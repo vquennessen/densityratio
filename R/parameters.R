@@ -5,14 +5,15 @@
 #'
 #' @param Species character value, the species to analyze. Species names are in
 #'    the format species abbreviation.state or stock.year assessed. Example:
-#'    BR.OR.2003 is the Oregon black rockfish stock assessed in 2003.
+#'    BR.CA.2003 is the California black rockfish stock assessed in 2003.
 #'
 #' @return a list of numeric values and vectors required to run the base model
 #'    and supporting functions.
 #' @export
 #'
 #' @examples
-#' parameters(Species = 'BR.OR.2003')
+#' parameters(Species = 'BR.CA.2003')
+
 parameters = function(Species) {
 
   # Error handling
@@ -21,7 +22,7 @@ parameters = function(Species) {
     stop("Study species must be a character string.")
   }
 
-  if (Species == 'BR.OR.2003') {
+  if (Species == 'BR.CA.2003') {
     # Black Rockfish 2003 assessment
     # Source: Ralston & Dick 2003
     Max_age  <- 35                          # maximum age
@@ -45,9 +46,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
-
-    B        <- 0.2747                      # eggs produced per kg, intercept
-    C        <- 0.0941                      # eggs produced per kg, slope
 
                                             #### selectivity parameters ####
     Fleets   <- c('sport', 'hook', 'trawl') # names of fleets
@@ -84,10 +82,7 @@ parameters = function(Species) {
   #   X <- 15.42                              # mean of positive transects
   #   SP <- 16.97                             # std of positive transects
   #
-  #   B <- 0.2747                             # eggs produced per kg, intercept
-  #   C <- 0.0941                             # eggs produced per kg, slope
-  #    #####
-  #   #### selectivity parameters ####
+  #                                           #### selectivity parameters ####
   #   Fleets <- c('trawl', 'live', 'dead',    # names of fleets
   #               'ocean', 'shore')
   #   Alpha <- c(0.325, 0.4, 0.35,
@@ -124,9 +119,6 @@ parameters = function(Species) {
   #                                           #       in PISCO monitoring data
   #   X <- 3.27                               # mean of positive transects
   #   SP <- 3.32                              # std of positive transects
-  #
-  #   B <- 0.0273                             # eggs produced per kg, intercept
-  #   C <- 1.53e-4                            # eggs produced per kg, slope
   #
   #   #### selectivity parameters ####
   #   Fleets <- c('dead', 'live', 'man.made',
@@ -166,9 +158,6 @@ parameters = function(Species) {
   #   X <-                                # mean of positive transects
   #   SP <-                               # std of positive transects
   #
-  #   B <- 0.0273                             # eggs produced per kg, intercept
-  #   C <- 1.53e-4                            # eggs produced per kg, slope
-  #
   #   #### selectivity parameters ####
   #   Fleets <- c('live', 'dead', 'ocean', 'shore') # names of fleets
   #   Alpha <- c(0.4, 0.33, 0.35, 0.9)              # slope of upcurve per fleet
@@ -204,9 +193,6 @@ parameters = function(Species) {
   #   X <-                                # mean of positive transects
   #   SP <-                               # std of positive transects
   #
-  #   B <- -7.46                              # eggs produced per kg, intercept
-  #   C <- 1.335                              # eggs produced per kg, slope
-  #
   #   #### selectivity parameters ####
   #   Fleets <- c('trawl', 'fixed_gear', 'WArec', 'ORrec') # names of fleets
   #   Alpha <- c(0.25, 0.25, 0.55, 1)         # slope of upcurve per fleet
@@ -219,7 +205,7 @@ parameters = function(Species) {
   # }
 
   output = list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, R, X, SP, B, C, Fleets,
+                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, R, X, SP, Fleets,
                 Alpha, Beta, F_fin, A50_up, A50_down, Cf)
 
   return(output)
