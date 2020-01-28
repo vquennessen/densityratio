@@ -23,7 +23,7 @@ transient_DR <- function(Time1 = 50, TimeT = 70, Final_DR, Nat_mortality, nm) {
   # calculate target_DR based on transient timescales
 
   # set timesteps
-  years <- Time1:TimeT
+  years <- 0:(TimeT - Time1)
 
   # calculate moving DR vector
   target_DR <- 1 - (1 - Final_DR)*(1 - exp(-1 * Nat_mortality[nm] * years))
