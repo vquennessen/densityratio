@@ -617,7 +617,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
   }
 
-  output <- list(Rel_yield, Rel_biomass, Rel_SSB, Density_ratio, y_DR)
+  output <- list(Rel_yield, Rel_biomass, Rel_SSB, Density_ratio)
 
   return(output)
 
