@@ -4,7 +4,7 @@
 #'    stock.
 #'
 #' @param Species character value, the species to analyze. Species names are in
-#'    the format species abbreviation.state or stock.year assessed. Example:
+#'    the format species abbreviation_state or stock_year assessed. Example:
 #'    BR.CA.2003 is the California black rockfish stock assessed in 2003.
 #'
 #' @return a list of numeric values and vectors required to run the base model
@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' parameters(Species = 'BR.CA.2003')
+#' parameters(Species = 'BR_CA_2003')
 
 parameters = function(Species) {
 
@@ -22,7 +22,7 @@ parameters = function(Species) {
     stop("Study species must be a character string.")
   }
 
-  if (Species == 'BR.CA.2003') {
+  if (Species == 'BR_CA_2003') {
     # Black Rockfish 2003 assessment
     # Source: Ralston & Dick 2003
     Max_age  <- 35                          # maximum age
@@ -59,7 +59,7 @@ parameters = function(Species) {
 
   }
 
-  ##### if (Species == 'BR2015') { #####
+  ##### if (Species == 'BR_OR_2015') { #####
   #   # source: Cope et al. 2016
   #   Max_age <- 40                           # maximum age
   #   M <- 0.17                               # natural mortality
@@ -134,7 +134,7 @@ parameters = function(Species) {
   #
   # }
   #
-  # if (Species == 'CAB2019') {
+  # if (Species == 'CAB_OR_2019') {
   #   # Black Rockfish 2003 assessment
   #   # Source: Ralston & Dick 2003
   #   Max_age <- 20                           # maximum age
@@ -169,7 +169,7 @@ parameters = function(Species) {
   #
   # }
   #
-  # if (Species == 'LING2017') {
+  # if (Species == 'LING_OR_2017') {
   #   # Black Rockfish 2003 assessment
   #   # Source: Ralston & Dick 2003
   #   Max_age <- 25                           # maximum age
@@ -203,6 +203,44 @@ parameters = function(Species) {
   #   Cf <- c(0.2872, 0.1379, 0.3253, 0.2496) # fraction of fishery
   #
   # }
+
+  if (Species == 'CR_OR_2015') {
+    # Canary Rockfish 2015 assessment
+    # Source: Thorson & Wetzel 2015
+    Max_age  <- 84                          # maximum age
+    M        <- 0.0521                      # natural mortality
+    Rec_age  <- 3                           # age at recruitment
+    WA       <- 1.18e-5;   WB   <- 3.094    # weight at length parameters (f)
+    A1       <- 1;         L1   <- 9.05;    # growth parameters (f)
+    A2       <- 20;        L2   <- 60.05;
+    K        <- 0.129
+    L50      <- 42                          # length at 50% maturity
+    K_mat    <-                             # slope of maturity curve
+    LDP      <- 0.1                         # larval drift proportion
+    H        <- 0.773                       # steepness
+    Phi      <- 1.1                         # unfished recruits per spawner
+    Sigma_R  <- 0.5                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.555                       # depletion
+    Fb       <-                             # fishing mortality to cause D
+    R        <-                             # Proportion of positive transects
+                                            #       in PISCO monitoring data
+    X        <-                             # mean of positive transects
+    SP       <-                             # std of positive transects
+
+    #### selectivity parameters ####
+    Fleets   <- c('trawl', 'non-trawl',     # names of fleets
+                  'rec', 'hake', 'research')
+    Alpha    <- c()                         # slope of upcurve per fleet
+    Beta     <- c()                         # slope of downcurve per fleet
+    F_fin    <- c()                         # final selectivity if dome-shaped
+    A50_up   <- c()                         # A50 value for upcurve
+    A50_down <- c()                         # A50 value for downcurve
+    Cf       <- c()                         # fraction of fishery caught / fleet
+                                            #       from upcurve to 1
+
+  }
 
   output = list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
                 LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, R, X, SP, Fleets,
