@@ -215,7 +215,7 @@ parameters = function(Species) {
     A2       <- 20;        L2   <- 60.05;
     K        <- 0.129
     L50      <- 42                          # length at 50% maturity
-    K_mat    <-                             # slope of maturity curve
+    K_mat    <- -0.25                       # slope of maturity curve
     LDP      <- 0.1                         # larval drift proportion
     H        <- 0.773                       # steepness
     Phi      <- 1.1                         # unfished recruits per spawner
