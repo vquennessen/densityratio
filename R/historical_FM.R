@@ -29,10 +29,10 @@
 #' @importFrom graphics plot abline
 #'
 #' @examples
-#' historical_FM(Species = 'BR.CA.2003', eq_time = 150, R0 = 1e+5, A = 5,
+#' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, A = 1,
 #'    Stochasticity = FALSE, Recruitment_mode = 'pool',
 #'    Nat_mortality = c(0.14))
-historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, A = 5,
+historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, A = 1,
                           Stochasticity = FALSE, Recruitment_mode = 'pool',
                           Nat_mortality) {
 
@@ -112,45 +112,14 @@ SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
                                              c(1, eq_time, 1, 1))
 
-rec_biomass <- array(rep(NA, fn*eq_time), c(fn, eq_time))
+# rec_biomass <- array(rep(NA, fn*eq_time), c(fn, eq_time))
 
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                  eq_time = 150, A50_mat, Stochasticity, Rho_R, Nat_mortality,
                  Recruitment_mode, A)
 
-# Enter N, abundance, catch, and biomasses for time = 1 to rec_age
-start_age <- A50_mat - Rec_age + 1
-for (t in 1:Rec_age) {
-  N2[, 1, t, 1, 1] <- SAD
-  biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1] * W)
-  catch2[, 1, t, 1, 1] <- rep(0, num)
-  SSB2[1, t, 1, 1] <- sum(N2[, 1, t - Rec_age, 1, 1]*W*Mat)
-  abundance_all2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1])
-  abundance_mature2[1, t, 1, 1] <- sum(N2[start_age:Max_age - 1, 1, t, 1, 1])
-}
-
-# Initialize FM matrix
-FM2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1))
-
-# Step population forward in time with set fishing level
-for (t in (Rec_age + 1):eq_time) {
-
-  PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
-                     N2, W, Mat, A = 1, R0, H, B0, Eps2, Sigma_R, Fb = 0, E2,
-                     S, NM, FM2, A50_mat, abundance_all2, abundance_mature2,
-                     biomass2, Fishing = T, Nat_mortality = M, Recruitment_mode)
-
-  FM2[, 1, t, 1, 1]               <- rep(0, num)
-  N2[, 1, t, 1, 1]                <- PD[[2]]
-  abundance_all2[1, t, 1, 1]      <- PD[[3]]
-  abundance_mature2[1, t, 1, 1]   <- PD[[4]]
-  biomass2[1, t, 1, 1]            <- PD[[5]]
-  SSB2[1, t, 1, 1]                <- PD[[6]]
-
-}
-
-# Calculate final biomass given zero fishing
-FM0_biomass <- biomass2[1, eq_time, 1, 1]
+# initial final biomass with no fishing
+FM0_biomass <- sum(W*SAD)
 
 # Substitute in values for Fb to get depletion level
 for (i in 2:fn) {
