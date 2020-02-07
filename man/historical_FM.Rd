@@ -29,8 +29,6 @@ component? Default value is FALSE.}
 'pool' - the recruits in each area come from a pool of larvae produced by
    adults in all areas.
 Default value is 'pool'.}
-
-\item{Nat_mortality}{numeric vector, the estimates of natural mortality.}
 }
 \value{
 a numeric value, the historical value of fishing mortality that would
@@ -43,6 +41,5 @@ a numeric value, the historical value of fishing mortality that would
 }
 \examples{
 historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, A = 1,
-   Stochasticity = FALSE, Recruitment_mode = 'pool',
-   Nat_mortality = c(0.14))
+   Stochasticity = FALSE, Recruitment_mode = 'pool')
 }
