@@ -20,7 +20,6 @@
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
 #'    Default value is 'pool'.
-#' @param Nat_mortality numeric vector, the estimates of natural mortality.
 #'
 #' @return a numeric value, the historical value of fishing mortality that would
 #'    result in the estimated depletion value, on the interval (0, 1).
@@ -30,8 +29,7 @@
 #'
 #' @examples
 #' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, A = 1,
-#'    Stochasticity = FALSE, Recruitment_mode = 'pool',
-#'    Nat_mortality = c(0.14))
+#'    Stochasticity = FALSE, Recruitment_mode = 'pool')
 historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, A = 1,
                           Stochasticity = FALSE, Recruitment_mode = 'pool') {
 
@@ -78,8 +76,8 @@ A50_mat <- ages[min(which(Mat > 0.5))]
 # unfished biomass
 B0 <- R0/Phi
 # selectivity at age
-S <- selectivity(Rec_age, Max_age, L, Fleets, A50_up, A50_down, Alpha, F_fin,
-                 Beta, Cf)
+S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
+                 A50_down, Alpha, F_fin, Beta, Cf)
 # NM - number of estimates of natural mortality
 NM <- 1
 
@@ -120,7 +118,7 @@ FM0_biomass <- sum(W*SAD)
 
 for (t in 1:Rec_age) {
   N2[, 1, t, 1, 1] <- SAD
-  abundance_all2[1, t, 1, 1] <- sum(N[, 1, t, 1, 1])
+  abundance_all2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1])
   abundance_mature2[1, t, 1, 1] <- sum(N2[A50_mat:(Max_age-Rec_age + 1), 1, t, 1, 1])
   biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1] * W)
   SSB2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1]*W*Mat)
