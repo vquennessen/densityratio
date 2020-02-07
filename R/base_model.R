@@ -68,7 +68,7 @@
 #' @importFrom graphics axis layout legend lines plot
 #'
 #' @examples
-#' base_model(Species = 'BR.CA.2003', R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
+#' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 #'    Time2 = 20, Recruitment_mode = 'pool', Error = 0.05, Stochasticity = TRUE,
 #'    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DR = 0.6, Years_sampled = 1,
