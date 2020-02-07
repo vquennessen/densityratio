@@ -19,23 +19,27 @@
 #' @param Beta numeric vector, the beta values for each fishing fleet in Fleets,
 #'    the relative slope of the downcurve if dome-shaped on the interval (0, 1).
 #' @param Cf numeric vector, the fraction of the whole fishery represented by
+#' @param A1 numeric value, age 1 of female fish in years.
+#' @param L1 numeric value, the length of females at age 1, in cm.
+#' @param A2 numeric value, age 2 of female fish in years.
+#' @param L2 numeric value, the length of females at age 2, in cm.
+#' @param K numeric value, the von Bertalanffy growth parameter for females.
 #'    each fleet, on the interval (0, 1).
-#' @param L numeric vector, the length at age vector, in cm.
-#'
 #' @return A numeric vector of selectivities at age, from recruitment to maximum
 #'    age, on the interval (0, 1).
 #' @export
 #'
 #' @examples
-#' L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
-#'    L2 = 47.95, K = 0.2022, All_ages = FALSE)
-#' selectivity(Rec_age = 2, Max_age = 35, L,
-#'    Fleets = c('sport', 'hook', 'trawl'), A50_up = c(2, 5, 10),
-#'    A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
+#' selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
+#'    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
+#'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 
-selectivity <- function(Rec_age, Max_age, L, Fleets, A50_up, A50_down, Alpha,
-                        F_fin, Beta, Cf) {
+selectivity <- function(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
+                        A50_down, Alpha, F_fin, Beta, Cf) {
+
+  # length at age for all ages
+  L <- length_age(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = T)
 
   # Calculated values
   ages <- Rec_age:Max_age
@@ -46,8 +50,8 @@ selectivity <- function(Rec_age, Max_age, L, Fleets, A50_up, A50_down, Alpha,
   l <- length(L)
 
   # translate A50_up and A50_down to lengths instead of ages
-  L50up <- L[A50_up - Rec_age + 1]
-  L50down <- L[A50_down - Rec_age + 1]
+  L50up <- L[A50_up]
+  L50down <- L[A50_down]
 
   # initialize upcurves and downcurves
   upcurve <- array(rep(NA, f*num), c(f, num))
@@ -58,10 +62,10 @@ selectivity <- function(Rec_age, Max_age, L, Fleets, A50_up, A50_down, Alpha,
   S <- array(rep(0, f*num), c(f, num))
 
   for (i in 1:f) {
-    upcurve[i, ages - Rec_age + 1] <- 1 / (1 + exp(-1*Alpha[i]*(L - L50up[i])))
+    upcurve[i, ages - Rec_age + 1] <- 1 / (1 + exp(-1*Alpha[i]*(L[Rec_age:Max_age] - L50up[i])))
 
     downcurve[i, ages - Rec_age + 1] <- 1 -
-      (1 - F_fin[i]) / (1 + exp(-1*Beta[i]*(L - L50down[i])))
+      (1 - F_fin[i]) / (1 + exp(-1*Beta[i]*(L[Rec_age:Max_age] - L50down[i])))
 
     # if (Beta[i] == 0) { downcurve[i, ages + 1] <- rep(1, num + 1) }
 

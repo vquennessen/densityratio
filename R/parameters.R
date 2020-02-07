@@ -41,7 +41,7 @@ parameters = function(Species) {
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.488                       # depletion
-    Fb       <- 0.2                         # fishing mortality to cause D
+    Fb       <- 0.07                        # fishing mortality to cause D
     R        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
@@ -77,7 +77,7 @@ parameters = function(Species) {
     Rho_R <- 0                              # recruitment autocorrelation
     AMP <- 0.1                              # adult movement proportion
     D <- 0.604                              # depletion
-    Fb <- 0.02                              # fishing mortality to cause D
+    Fb <- 0.16                              # fishing mortality to cause D
     R <- 0.77                               # Proportion of positive transects
                                             #       in PISCO monitoring data
     X <- 15.42                              # mean of positive transects
@@ -97,7 +97,7 @@ parameters = function(Species) {
 
   ##### Cabezon (CA) 2005 assessment #####
   # source: Cope & Punt 2005
-  if (Species == 'CAB2005') {
+  if (Species == 'CAB_CA_2005') {
     Max_age <- 17                           # maximum age
     M <- 0.275                              # natural mortality
     Rec_age <- 1                            # age at recruitment
@@ -113,7 +113,7 @@ parameters = function(Species) {
     Rho_R <- 0                              # recruitment autocorrelation
     AMP <- 0.1                              # adult movement proportion
     D <- 0.4                                # depletion
-    Fb <- 1.1                               # fishing mortality to cause D
+    Fb <- 0.08                              # fishing mortality to cause D
     R <- 0.27                               # Proportion of positive transects
                                             #       in PISCO monitoring data
     X <- 3.27                               # mean of positive transects

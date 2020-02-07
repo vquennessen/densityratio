@@ -33,8 +33,7 @@
 #'    Stochasticity = FALSE, Recruitment_mode = 'pool',
 #'    Nat_mortality = c(0.14))
 historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, A = 1,
-                          Stochasticity = FALSE, Recruitment_mode = 'pool',
-                          Nat_mortality) {
+                          Stochasticity = FALSE, Recruitment_mode = 'pool') {
 
 ##### load species parameters #####
 par <- parameters(Species)
@@ -82,7 +81,7 @@ B0 <- R0/Phi
 S <- selectivity(Rec_age, Max_age, L, Fleets, A50_up, A50_down, Alpha, F_fin,
                  Beta, Cf)
 # NM - number of estimates of natural mortality
-NM <- length(Nat_mortality)
+NM <- 1
 
 # Recruitment error = 0 without stochasticity
 Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
@@ -112,14 +111,20 @@ SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
                                              c(1, eq_time, 1, 1))
 
-# rec_biomass <- array(rep(NA, fn*eq_time), c(fn, eq_time))
-
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                 eq_time = 150, A50_mat, Stochasticity, Rho_R, Nat_mortality,
-                 Recruitment_mode, A)
+                 eq_time = 150, A50_mat, Stochasticity, Rho_R,
+                 Nat_mortality = c(M), Recruitment_mode, A)
 
 # initial final biomass with no fishing
 FM0_biomass <- sum(W*SAD)
+
+for (t in 1:Rec_age) {
+  N2[, 1, t, 1, 1] <- SAD
+  abundance_all2[1, t, 1, 1] <- sum(N[, 1, t, 1, 1])
+  abundance_mature2[1, t, 1, 1] <- sum(N2[A50_mat:(Max_age-Rec_age + 1), 1, t, 1, 1])
+  biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1] * W)
+  SSB2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1]*W*Mat)
+}
 
 # Substitute in values for Fb to get depletion level
 for (i in 2:fn) {
@@ -132,7 +137,7 @@ for (i in 2:fn) {
     PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
                        N2, W, Mat, A = 1, R0, H, B0, Eps2, Sigma_R, Fb = 0, E2,
                        S, NM, FM2, A50_mat, abundance_all2, abundance_mature2,
-                       biomass2, Fishing = T, Nat_mortality = M,
+                       biomass2, Fishing = T, Nat_mortality = c(M),
                        Recruitment_mode)
 
     FM2[, 1, t, 1, 1]               <- rep(FM_values[i], num)

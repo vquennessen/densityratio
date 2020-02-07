@@ -113,15 +113,14 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   }
 
   # Final age bin
-  N[num, a, t, cr, nm] <- N[num - 1, a, t - 1, cr, nm] * exp(-1 * (FM[num - 1, a, t - 1, cr, nm] +
-                                                                     Nat_mortality[nm])) +
+  N[num, a, t, cr, nm] <- N[num - 1, a, t - 1, cr, nm] * exp(-1 * (FM[num - 1, a, t - 1, cr, nm] + Nat_mortality[nm])) +
     N[num, a, t - 1, cr, nm] * exp(-1 * (FM[num, a, t - 1, cr, nm] + Nat_mortality[nm]))
 
   # Calculate abundance of all fish
   Abundance_all[a, t, cr, nm] <- sum(N[, a, t, cr, nm])
 
   # Calculate abundance of mature fish
-  Abundance_mature[a, t, cr, nm] <- sum(N[A50_mat:Max_age - 1, a, t, cr, nm])
+  Abundance_mature[a, t, cr, nm] <- sum(N[A50_mat:(Max_age - Rec_age + 1), a, t, cr, nm])
 
   # Calculate biomass of all fish
   Biomass[a, t, cr, nm] <- sum(N[, a, t, cr, nm] * W)

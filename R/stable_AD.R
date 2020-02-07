@@ -78,11 +78,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
   # Recruitment normal variable
   # Dimensions = area * timeT * CR * 1
-  if (Stochasticity == T) {
-    nuR2 <- array(rnorm(eq_time, 0, Sigma_R), c(1, eq_time, 1, 1))
-  } else if (Stochasticity == F) {
-    nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
-  }
+  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 
   # Recruitment error
   # Dimensions = area * timeT * CR * 1
@@ -107,7 +103,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
     PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
                        N2, W, Mat, A, R0, H, B0, Eps2, Sigma_R, Fb, E2, S,
                        NM = 1, FM2, A50_mat, abundance_all2, abundance_mature2,
-                       biomass2, Fishing = F, Nat_mortality = c(0.14),
+                       biomass2, Fishing = F, Nat_mortality = c(M),
                        Recruitment_mode)
 
     FM2[, 1, t, 1, 1]               <- PD[[1]]
