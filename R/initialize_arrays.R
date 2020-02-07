@@ -135,8 +135,8 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 
   # Selectivity at age (updated)
   # Dimensions = 1 * age
-  S <- selectivity(Rec_age, Max_age, L, Fleets, A50_up, A50_down, Alpha,
-                          F_fin, Beta, Cf)
+  S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
+                   A50_down, Alpha, F_fin, Beta, Cf)
 
   # Maturity at age
   # Dimensions = 1 * age
