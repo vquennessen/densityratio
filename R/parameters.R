@@ -16,11 +16,20 @@
 
 parameters = function(Species) {
 
-  # Error handling
+  species_list <- c('BR_CA_2003', 'BR_OR_2015', 'CAB_CA_2005', 'CAB_OR_2019',
+                    'LING_OR_2017', 'CR_OR_2015')
+
+  ###### Error handling ########################################################
 
   if (!is.character(Species)) {
-    stop("Study species must be a character string.")
+    stop('Study species must be a character string.')
   }
+
+  if (!is.element(Species, species_list)) {
+    stop('Desired species parameters are not known.')
+  }
+
+  ##############################################################################
 
   ##### Black Rockfish (CA) 2003 assessment #####
   # source: Ralston & Dick 2003
