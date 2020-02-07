@@ -153,7 +153,8 @@ for (i in 2:fn) {
 
 closest_FM <- FM_values[which.min(abs(dep - D))]
 
-plot(FM_values, dep)
+plot(FM_values, dep, main = Species, ylim = c(0, 1),
+     ylab = 'Depletion', xlab = 'FM value')
 abline(v = closest_FM, col = 'red')
 abline(h = D, col = 'green')
 
