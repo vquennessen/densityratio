@@ -16,6 +16,20 @@
 #' weight(L, WA = 1.68e-5, WB = 3)
 weight = function(L, WA, WB) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (!is.numeric(WA)) {stop('WA must be a numeric value.')}
+  if (!is.numeric(WB)) {stop('WB must be a numeric value.')}
+  if (!is.numeric(L)) {stop('L must be a numeric vector.')}
+
+  # acceptable values
+  if (WA <= 0) {stop('WA must be greater than 0.')}
+  if (WB <= 0) {stop('WB must be greater than 0.')}
+  if (sum(L <= 0) > 0) {stop('All values in L must be greater than 0.')}
+
+  ##############################################################################
+
   # Weight at age
   # Based on Babcock & MacCall (2011): Eq. (11)
   weights <- WA*L^WB
