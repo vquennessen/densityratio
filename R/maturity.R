@@ -20,6 +20,24 @@
 #' maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
 maturity = function(Rec_age, Max_age, K_mat, L, L50) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (!is.numeric(Rec_age)) {stop('Rec_age must be a numeric value.')}
+  if (!is.numeric(Max_age)) {stop('Max_age must be a numeric value.')}
+  if (!is.numeric(K_mat)) {stop('K_mat must be a numeric value.')}
+  if (!is.numeric(L)) {stop('L must be a numeric vector.')}
+  if (!is.numeric(L50)) {stop('L50 must be a numeric value.')}
+
+  # acceptable values
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (K_mat >= 0) {stop('K_mat must be less than 0.')}
+  if (sum(L <= 0) > 0) {stop('All values in L must be greater than 0.')}
+  if (L50 <= 0) {stop('L50 must be greater than 0.')}
+
+  # relational values
+  if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
+
   # number of age classes
   ages <- Rec_age:Max_age
   num <- length(ages)
