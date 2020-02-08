@@ -28,7 +28,6 @@ weight = function(L, WA, WB) {
   if (WB <= 0) {stop('WB must be greater than 0.')}
   if (sum(L <= 0) > 0) {stop('All values in L must be greater than 0.')}
 
-  ##############################################################################
 
   # Weight at age
   # Based on Babcock & MacCall (2011): Eq. (11)
