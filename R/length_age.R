@@ -22,6 +22,32 @@
 
 length_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (!is.numeric(Rec_age)) {stop('Rec_age must be a numeric value.')}
+  if (!is.numeric(Max_age)) {stop('Max_age must be a numeric value.')}
+  if (!is.numeric(A1)) {stop('A1 must be a numeric value.')}
+  if (!is.numeric(L1)) {stop('L1 must be a numeric value.')}
+  if (!is.numeric(A2)) {stop('A2 must be a numeric value.')}
+  if (!is.numeric(L2)) {stop('L2 must be a numeric value.')}
+  if (!is.numeric(K)) {stop('K must be a numeric value.')}
+  if (!is.logical(All_ages)) {stop('All_ages must be a logical value.')}
+
+  # acceptable values
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (A1 <= 0) {stop('A1 must be greater than 0.')}
+  if (L1 <= 0) {stop('L1 must be greater than 0.')}
+  if (K <= 0) {stop('K must be greater than 0.')}
+
+  # relational values
+  if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
+  if (A1 >= A2) {stop('A1 must be less than A2')}
+  if (L1 >= L2) {stop('L1 must be less than L2')}
+
+  ##############################################################################
+
+
   # should the lengths vector include ages before recruitment?
   if (All_ages == T) {
     ages <- 1:Max_age } else {
