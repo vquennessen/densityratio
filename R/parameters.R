@@ -26,7 +26,8 @@ parameters = function(Species) {
   }
 
   if (!is.element(Species, species_list)) {
-    stop('Desired species parameters are not known.')
+    stop('Desired stock parameters are not known. Try a different species,
+         region, and/or year.')
   }
 
   ##############################################################################
