@@ -50,8 +50,8 @@ catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
   if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
   if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
   if (!is.numeric(N)) {stop('N must be a numeric array.')}
-  if (!is.logical(A)) {stop('A must be a numeric value.')}
-  if (!is.logical(Fb)) {stop('Fb must be a numeric value.')}
+  if (!is.numeric(A)) {stop('A must be a numeric value.')}
+  if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(Catch)) {stop('Catch must be a numeric array.')}
 
