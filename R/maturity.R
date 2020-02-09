@@ -35,6 +35,8 @@ maturity = function(Rec_age, Max_age, K_mat, L, L50) {
   if (sum(L <= 0) > 0) {stop('All values in L must be greater than 0.')}
   if (L50 <= 0) {stop('L50 must be greater than 0.')}
 
+  ##############################################################################
+
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
 

@@ -30,7 +30,6 @@ parameters = function(Species) {
          region, and/or year.')
   }
 
-
   ##### Black Rockfish (CA) 2003 assessment #####
   # source: Ralston & Dick 2003
   if (Species == 'BR_CA_2003') {

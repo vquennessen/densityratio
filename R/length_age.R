@@ -42,9 +42,10 @@ length_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
-  if (A1 >= A2) {stop('A1 must be less than A2')}
-  if (L1 >= L2) {stop('L1 must be less than L2')}
+  if (A1 >= A2) {stop('A1 must be less than A2.')}
+  if (L1 >= L2) {stop('L1 must be less than L2.')}
 
+  ##############################################################################
 
   # should the lengths vector include ages before recruitment?
   if (All_ages == T) {

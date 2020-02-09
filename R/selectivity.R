@@ -38,6 +38,58 @@
 selectivity <- function(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                         A50_down, Alpha, F_fin, Beta, Cf) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (!is.numeric(Rec_age)) {stop('Rec_age must be a numeric value.')}
+  if (!is.numeric(Max_age)) {stop('Max_age must be a numeric value.')}
+  if (!is.numeric(A1)) {stop('A1 must be a numeric value.')}
+  if (!is.numeric(L1)) {stop('L1 must be a numeric value.')}
+  if (!is.numeric(A2)) {stop('A2 must be a numeric value.')}
+  if (!is.numeric(L2)) {stop('L2 must be a numeric value.')}
+  if (!is.numeric(K)) {stop('K must be a numeric value.')}
+  if (!is.character(Fleets)) {stop('Fleets must be a character vector.')}
+  if (!is.numeric(A50_up)) {stop('A50_up must be a numeric vector.')}
+  if (!is.numeric(A50_down)) {stop('A50_down must be a numeric vector.')}
+  if (!is.numeric(Alpha)) {stop('Alpha must be a numeric vector.')}
+  if (!is.numeric(F_fin)) {stop('F_fin must be a numeric vector.')}
+  if (!is.numeric(Beta)) {stop('Beta must be a numeric vector.')}
+  if (!is.numeric(Cf)) {stop('Cf must be a numeric vector.')}
+
+  # acceptable values
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (A1 <= 0) {stop('A1 must be greater than 0.')}
+  if (L1 <= 0) {stop('L1 must be greater than 0.')}
+  if (K <= 0) {stop('K must be greater than 0.')}
+  if (sum(A50_up <= 0) > 0) {stop('All values in A50_up must be greater than 0.')}
+  if (sum(A50_down < 0) > 0) {
+    stop('All values in A50_down must be greater than 0.')}
+  if (sum(Alpha < 0) > 0) {
+    stop('All values in Alpha must be greater than 0.')}
+  if (sum(F_fin < 0) > 0) {
+    stop('All values in F_fin must be greater than or equal to 0.')}
+  if (sum(Beta < 0) > 0) {
+    stop('All values in Beta must be greater than or equal to 0.')}
+  if (sum(Cf <= 0) > 0) {stop('All values in Cf must be greater than 0.')}
+
+  # relational values
+  if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
+  if (A1 >= A2) {stop('A1 must be less than A2.')}
+  if (L1 >= L2) {stop('L1 must be less than L2.')}
+  if (length(A50_up) != length(Fleets)) {
+    stop('A50_up must have the same number of elements as Fleets.')}
+  if (length(A50_down) != length(Fleets)) {
+    stop('A50_down must have the same number of elements as Fleets.')}
+  if (length(Alpha) != length(Fleets)) {
+    stop('Alpha must have the same number of elements as Fleets.')}
+  if (length(F_fin) != length(Fleets)) {
+    stop('F_fin must have the same number of elements as Fleets.')}
+  if (length(Beta) != length(Fleets)) {
+    stop('Beta must have the same number of elements as Fleets')}
+  if (length(Cf) != length(Fleets)) {
+    stop('Cf must have the same number of elements as Fleets.')}
+  ##############################################################################
+
   # length at age for all ages
   L <- length_age(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = T)
 
