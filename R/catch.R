@@ -40,6 +40,55 @@
 
 catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (!is.numeric(a)) {stop('a must be a numeric value.')}
+  if (!is.numeric(t)) {stop('t must be a numeric value.')}
+  if (!is.numeric(cr)) {stop('cr must be a numeric value.')}
+  if (!is.numeric(nm)) {stop('nm must be a numeric value.')}
+  if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
+  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
+  if (!is.numeric(N)) {stop('N must be a numeric array.')}
+  if (!is.logical(A)) {stop('A must be a numeric value.')}
+  if (!is.logical(Fb)) {stop('Fb must be a numeric value.')}
+  if (!is.numeric(E)) {stop('E must be a numeric array.')}
+  if (!is.numeric(Catch)) {stop('Catch must be a numeric array.')}
+
+  # acceptable values
+  if (a <= 0) {stop('a must be greater than 0.')}
+  if (t <= 0) {stop('t must be greater than 0.')}
+  if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0) {stop('nm must be greater than 0.')}
+  if (sum(FM < 0) > 0 && sum(FM > 1) > 0) {
+    stop('All values in FM must be between 0 and 1.')}
+  if (sum(Nat_mortality <= 0) > 0 && sum(Nat_mortality > 1) > 0) {
+    stop('All values in Nat_mortality must be between 0 and 1.')}
+  if (sum(N < 0) > 0) {stop('All values in N must be greater than or equal to 0.')}
+  if (A <= 0) {stop('A must be greater than 0.')}
+  if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
+  if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
+  if (sum(Catch < 0) > 0) {
+    stop('All values in Catch must be greater than or equal to 0.')}
+
+  # relational values
+  if(dim(N)[1] != dim(Catch)[1] && dim(N)[1] != dim(FM)[1]) {
+    stop('N, FM, or Catch has an incorrect number of age classes.')}
+  if(dim(N)[2] != dim(E)[1] && dim(N)[2] != dim(Catch)[2] && dim(N)[2] != dim(FM)[2]) {
+    stop('N, E, or Catch has an incorrect number of areas.')}
+  if(dim(N)[3] != dim(E)[2] && dim(N)[3] != dim(Catch)[3] && dim(N)[3] != dim(FM)[3]) {
+    stop('N, E, FM, or Catch has an incorrect number of time steps.')}
+  if(dim(N)[4] != dim(E)[3] && dim(N)[4] != dim(Catch)[4] && dim(N)[4] != dim(FM)[4]) {
+    stop('N, E, FM, or Catch has an incorrect number of control rules.')}
+  if(dim(N)[5] != dim(E)[4] && dim(N)[5] != dim(Catch)[5] && dim(N)[5] != dim(FM)[5]) {
+    stop('N, E, FM, or Catch has an incorrect number of values in Nat_mortality.')}
+  if (a > dim(N)[2]) {stop('The given "a" value is too high for N.')}
+  if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
+  if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
+  if (nm > dim(N)[5]) {stop('The given "nm" value is too high for N.')}
+
+  ##############################################################################
+
   # calculate the coefficient
   coeff <- FM[ , a, t, cr, nm]/(Nat_mortality[nm] + FM[ , a, t, cr, nm])
 
