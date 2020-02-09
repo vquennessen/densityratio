@@ -60,9 +60,9 @@ catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0) {stop('nm must be greater than 0.')}
-  if (sum(FM < 0) > 0 && sum(FM > 1) > 0) {
+  if (sum(FM < 0) > 0 || sum(FM > 1) > 0) {
     stop('All values in FM must be between 0 and 1.')}
-  if (sum(Nat_mortality <= 0) > 0 && sum(Nat_mortality > 1) > 0) {
+  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
     stop('All values in Nat_mortality must be between 0 and 1.')}
   if (sum(N < 0) > 0) {stop('All values in N must be greater than or equal to 0.')}
   if (A <= 0) {stop('A must be greater than 0.')}
@@ -72,15 +72,15 @@ catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
     stop('All values in Catch must be greater than or equal to 0.')}
 
   # relational values
-  if(dim(N)[1] != dim(Catch)[1] && dim(N)[1] != dim(FM)[1]) {
+  if(dim(N)[1] != dim(Catch)[1] || dim(N)[1] != dim(FM)[1]) {
     stop('N, FM, or Catch has an incorrect number of age classes.')}
-  if(dim(N)[2] != dim(E)[1] && dim(N)[2] != dim(Catch)[2] && dim(N)[2] != dim(FM)[2]) {
+  if(dim(N)[2] != dim(E)[1] || dim(N)[2] != dim(Catch)[2] || dim(N)[2] != dim(FM)[2]) {
     stop('N, E, or Catch has an incorrect number of areas.')}
-  if(dim(N)[3] != dim(E)[2] && dim(N)[3] != dim(Catch)[3] && dim(N)[3] != dim(FM)[3]) {
+  if(dim(N)[3] != dim(E)[2] || dim(N)[3] != dim(Catch)[3] || dim(N)[3] != dim(FM)[3]) {
     stop('N, E, FM, or Catch has an incorrect number of time steps.')}
-  if(dim(N)[4] != dim(E)[3] && dim(N)[4] != dim(Catch)[4] && dim(N)[4] != dim(FM)[4]) {
+  if(dim(N)[4] != dim(E)[3] || dim(N)[4] != dim(Catch)[4] || dim(N)[4] != dim(FM)[4]) {
     stop('N, E, FM, or Catch has an incorrect number of control rules.')}
-  if(dim(N)[5] != dim(E)[4] && dim(N)[5] != dim(Catch)[5] && dim(N)[5] != dim(FM)[5]) {
+  if(dim(N)[5] != dim(E)[4] || dim(N)[5] != dim(Catch)[5] || dim(N)[5] != dim(FM)[5]) {
     stop('N, E, FM, or Catch has an incorrect number of values in Nat_mortality.')}
   if (a > dim(N)[2]) {stop('The given "a" value is too high for N.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
