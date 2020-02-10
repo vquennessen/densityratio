@@ -43,14 +43,14 @@ catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
   ###### Error handling ########################################################
 
   # classes of variables
-  if (!is.numeric(a)) {stop('a must be a numeric value.')}
-  if (!is.numeric(t)) {stop('t must be a numeric value.')}
-  if (!is.numeric(cr)) {stop('cr must be a numeric value.')}
-  if (!is.numeric(nm)) {stop('nm must be a numeric value.')}
+  if (a %% 1 != 0) {stop('a must be an integer value.')}
+  if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
   if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
   if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
   if (!is.numeric(N)) {stop('N must be a numeric array.')}
-  if (!is.numeric(A)) {stop('A must be a numeric value.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(Catch)) {stop('Catch must be a numeric array.')}

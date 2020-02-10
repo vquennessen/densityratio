@@ -23,8 +23,8 @@ maturity = function(Rec_age, Max_age, K_mat, L, L50) {
   ###### Error handling ########################################################
 
   # classes of variables
-  if (!is.numeric(Rec_age)) {stop('Rec_age must be a numeric value.')}
-  if (!is.numeric(Max_age)) {stop('Max_age must be a numeric value.')}
+  if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
+  if (Max_age %% 1 != 0) {stop('Max_age must be an integer value.')}
   if (!is.numeric(K_mat)) {stop('K_mat must be a numeric value.')}
   if (!is.numeric(L)) {stop('L must be a numeric vector.')}
   if (!is.numeric(L50)) {stop('L50 must be a numeric value.')}

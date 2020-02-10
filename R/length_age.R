@@ -25,11 +25,11 @@ length_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
   ###### Error handling ########################################################
 
   # classes of variables
-  if (!is.numeric(Rec_age)) {stop('Rec_age must be a numeric value.')}
-  if (!is.numeric(Max_age)) {stop('Max_age must be a numeric value.')}
-  if (!is.numeric(A1)) {stop('A1 must be a numeric value.')}
+  if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
+  if (Max_age %% 1 != 0) {stop('Max_age must be an integer value.')}
+  if (A1 %% 1 != 0) {stop('A1 must be an integer value.')}
   if (!is.numeric(L1)) {stop('L1 must be a numeric value.')}
-  if (!is.numeric(A2)) {stop('A2 must be a numeric value.')}
+  if (A2 %% 1 != 0) {stop('A2 must be an integer value.')}
   if (!is.numeric(L2)) {stop('L2 must be a numeric value.')}
   if (!is.numeric(K)) {stop('K must be a numeric value.')}
   if (!is.logical(All_ages)) {stop('All_ages must be a logical value.')}
