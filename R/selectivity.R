@@ -88,6 +88,7 @@ selectivity <- function(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
     stop('Beta must have the same number of elements as Fleets')}
   if (length(Cf) != length(Fleets)) {
     stop('Cf must have the same number of elements as Fleets.')}
+
   ##############################################################################
 
   # length at age for all ages

@@ -26,6 +26,32 @@
 #' epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
 epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+  if (TimeT %% 1 != 0) {stop('TimeT must be an integer value.')}
+  if (CR %% 1 != 0) {stop('CR must be an integer value.')}
+  if (NM %% 1 != 0) {stop('NM must be an integer value.')}
+  if (!is.numeric(NuR)) {stop('NuR must be a numeric array.')}
+  if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
+
+  # acceptable values
+  if (A <= 0) {stop('A must be greater than 0.')}
+  if (TimeT <= 0) {stop('TimeT must be greater than 0.')}
+  if (CR < 1) {stop('CR must be greater than or equal to 1.')}
+  if (NM < 1) {stop('NM must be greater than or equal to 1.')}
+  if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
+
+  # relational values
+  if(dim(NuR)[1] != A) {stop('NuR has an incorrect number of areas.')}
+  if(dim(NuR)[2] != TimeT) {stop('NuR has an incorrect number of time steps.')}
+  if(dim(NuR)[3] != CR) {stop('NuR has an incorrect number of control rules.')}
+  if(dim(NuR)[4] != NM) {
+    stop('NuR has an incorrect number of natural mortality estimates.')}
+
+  ##############################################################################
+
   # initialize epsilon vector
   # Dimensions = area * timeT * CR * M values (3)
   Eps <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
