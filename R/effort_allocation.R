@@ -36,6 +36,51 @@ effort_allocation <- function(t, cr, nm, Allocation = 'IFD', E, Yield,
                               Time1 = 50, Inside = c(3),
                               Outside = c(1, 2, 4, 5)) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
+  if (!is.numeric(E)) {stop('E must be a numeric array.')}
+  if (!is.numeric(Yield)) {stop('Yield must be a numeric array.')}
+  if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
+  if (Inside %% 1 != 0) {stop('Inside must be an integer vector.')}
+  if (Outside %% 1 != 0) {stop('Outside must be an integer vector.')}
+
+  # acceptable values
+  if (t <= 0) {stop('t must be greater than 0.')}
+  if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0) {stop('nm must be greater than 0.')}
+  if (Allocation != 'IFD' && Allocation != 'equal') {
+    stop('Allocation must be either "IFD" or "equal".')}
+  if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
+  if (sum(Yield < 0) > 0) {
+    stop('All values in Yield must be greater than or equal to 0.')}
+  if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
+  if (sum(Inside < 0) > 0) {
+    stop('All values in Inside must be greater than or equal to 0.')}
+  if (sum(Outside < 0) > 0) {
+    stop('All values in Outside must be greater than or equal to 0.')}
+
+  # relational values
+  if(dim(E)[1] != dim(Yield)[1]) {
+    stop('E or Yield has an incorrect number of areas.')}
+  if(dim(E)[2] != dim(Yield)[2]) {
+    stop('E or Yield has an incorrect number of time steps.')}
+  if(dim(E)[3] != dim(Yield)[3]) {
+    stop('E or Yield has an incorrect number of control rules.')}
+  if(dim(E)[4] != dim(Yield)[4]) {
+    stop('E or Yield has an incorrect number of natural mortality estimates.')}
+  if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
+  if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
+  if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
+  if (sum(intersect(Inside, Outside)) > 0) {
+    stop('Areas cannot both be inside and outside the marine reserve.')}
+
+  ##############################################################################
+
   # number of areas not in a reserve
   outs <- length(Outside)
   ins <- length(Inside)
