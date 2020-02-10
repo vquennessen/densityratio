@@ -57,8 +57,8 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (!is.character(Areas_sampled)) {stop('Areas_sampled must be a character value.')}
   if (!is.character(Ind_sampled)) {stop('Ind_sampled must be a character value.')}
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
-  if (Inside %% 1 != 0) {stop('Inside must be an integer vector.')}
-  if (Outside %% 1 != 0) {stop('Outside must be an integer vector.')}
+  if (sum(Inside %% 1 != 0) != 0) {stop('Inside must be a vector of integers.')}
+  if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
@@ -86,7 +86,6 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (sum(intersect(Inside, Outside)) > 0) {
     stop('Areas cannot both be inside and outside the marine reserve.')}
   if(dim(Count)[1] != A) {stop('Count has an incorrect number of areas.')}
-  if(dim(Count)[2] != TimeT) {stop('Count has an incorrect number of time steps.')}
   if(dim(Count)[3] != Transects) {stop('Count has the wrong number of transects.')}
   if (t > dim(Count)[2]) {stop('The given "t" value is too high for Count.')}
   if (cr > dim(Count)[3]) {stop('The given "cr" value is too high for Count.')}

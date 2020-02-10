@@ -46,8 +46,8 @@ effort_allocation <- function(t, cr, nm, Allocation = 'IFD', E, Yield,
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(Yield)) {stop('Yield must be a numeric array.')}
   if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
-  if (Inside %% 1 != 0) {stop('Inside must be an integer vector.')}
-  if (Outside %% 1 != 0) {stop('Outside must be an integer vector.')}
+  if (sum(Inside %% 1 != 0) != 0) {stop('Inside must be a vector of integers.')}
+  if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}

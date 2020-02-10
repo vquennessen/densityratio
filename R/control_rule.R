@@ -67,8 +67,8 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
   if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
   if (!is.numeric(Final_DR)) {stop('Final_DR must be a numeric value.')}
-  if (Inside %% 1 != 0) {stop('Inside must be an integer vector.')}
-  if (Outside %% 1 != 0) {stop('Outside must be an integer vector.')}
+  if (sum(Inside %% 1 != 0) != 0) {stop('Inside must be a vector of integers.')}
+  if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
   if (!is.character(Areas_sampled)) {stop('Areas_sampled must be a character value.')}
   if (!is.character(Ind_sampled)) {stop('Ind_sampled must be a character value.')}
   if (Years_sampled %% 1 != 0) {stop('Years_sampled must be an integer value.')}
@@ -115,7 +115,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
     stop('E or Count has an incorrect number of natural mortality estimates.')}
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (length(Nat_mortality) > dim(E)[5]) {
+  if (length(Nat_mortality) > dim(E)[4]) {
     stop('Incorrect number of natural mortality estimates.')}
 
   ##############################################################################
