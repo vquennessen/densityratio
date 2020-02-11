@@ -82,7 +82,6 @@ f_mortality <- function(a, t, cr, nm, FM, A, Fb, E, S) {
 
   ##############################################################################
 
-
   # Catchability (Vulnerability to fishing gear)
   # Based on Babcock & MacCall (2011): Eq. (6)
   vulnerability <- (A*Fb)/(sum(E[, 1, 1, 1]))

@@ -107,9 +107,9 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
   if (a > A) {stop('The given "a" value is too high.')}
   if (t > dim(Abundance_all)[2] || t > dim(Count)[2]) {
     stop('The given "t" value is too high for Abundance_all or Count.')}
-  if (cr > dim(Abundance_all)[3]|| t > dim(Count)[3]) {
+  if (cr > dim(Abundance_all)[3]|| cr > dim(Count)[5]) {
     stop('The given "cr" value is too high for Abundance_all or Count.')}
-  if (nm > dim(Abundance_all)[4] || t > dim(Count)[4]) {
+  if (nm > dim(Abundance_all)[4] || nm > dim(Count)[6]) {
     stop('The given "nm" value is too high for Abundance_all or Count.')}
 
   ##############################################################################
