@@ -33,6 +33,35 @@
 management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
                        effort_inc_allowed = 0.10, Time1 = 50) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (!is.numeric(E)) {stop('E must be a numeric array.')}
+  if (!is.numeric(DR)) {stop('DR must be a numeric value.')}
+  if (!is.numeric(target_DR)) {stop('target_DR must be a numeric value.')}
+  if (!is.numeric(floor_DR)) {stop('floor_DR must be a numeric value.')}
+  if (!is.numeric(effort_inc_allowed)) {
+    stop('effort_inc_allowed must be a numeric value.')}
+  if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
+
+  # acceptable values
+  if (t <= 0) {stop('t must be greater than 0.')}
+  if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
+  if (DR <= 0) {stop('DR must be greater than 0.')}
+  if (target_DR <= 0) {stop('target_DR must be greater than 0.')}
+  if (floor_DR <= 0) {stop('floor_DR must be greater than 0.')}
+  if (effort_inc_allowed <= 0) {stop('effort_inc_allowed must be greater than 0.')}
+  if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
+
+  # relational values
+  if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
+  if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
+
+  ##############################################################################
+
   # If the control rule is based on effort, and the density ratio is higher
   # than the target density ratio, allow effort in each area to increase by the
   # allowed effort increase value (typically 10%)
