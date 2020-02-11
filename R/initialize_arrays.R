@@ -113,6 +113,113 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                               Surveys = TRUE, Fishing = TRUE, Error,
                               Recruitment_mode = 'pool') {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+  if (sum(MPAs %% 1 != 0) != 0) {stop('MPAs must be a vector of integers.')}
+  if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
+  if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
+  if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
+  if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
+  if (Max_age %% 1 != 0) {stop('Max_age must be an integer value.')}
+  if (A1 %% 1 != 0) {stop('A1 must be an integer value.')}
+  if (!is.numeric(L1)) {stop('L1 must be a numeric value.')}
+  if (A2 %% 1 != 0) {stop('A2 must be an integer value.')}
+  if (!is.numeric(L2)) {stop('L2 must be a numeric value.')}
+  if (!is.numeric(K)) {stop('K must be a numeric value.')}
+  if (!is.numeric(WA)) {stop('WA must be a numeric value.')}
+  if (!is.numeric(WB)) {stop('WB must be a numeric value.')}
+  if (!is.numeric(K_mat)) {stop('K_mat must be a numeric value.')}
+  if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
+  if (!is.numeric(L50)) {stop('L50 must be a numeric value.')}
+  if (!is.numeric(Sigma_R)) {stop('Sigma_R must be a numeric value.')}
+  if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric value.')}
+  if (!is.character(Fleets)) {stop('Fleets must be a character vector.')}
+  if (sum(A50_up %% 1 != 0) != 0) {stop('A50_up must be a vector of integers.')}
+  if (sum(A50_down %% 1 != 0) != 0) {stop('A50_down must be a vector of integers.')}
+  if (!is.numeric(Alpha)) {stop('Alpha must be a numeric vector.')}
+  if (!is.numeric(F_fin)) {stop('F_fin must be a numeric vector.')}
+  if (!is.numeric(Beta)) {stop('Beta must be a numeric vector.')}
+  if (!is.numeric(Cf)) {stop('Cf must be a numeric vector.')}
+  if (!is.numeric(R)) {stop('R must be a numeric value.')}
+  if (!is.numeric(X)) {stop('X must be a numeric value.')}
+  if (!is.numeric(SP)) {stop('SP must be a numeric value.')}
+  if (!is.numeric(M)) {stop('M must be a numeric value.')}
+  if (sum(Control_rules %% 1 != 0) != 0) {
+    stop('Control_rules must be a vector of integers.')}
+  if (!is.numeric(Phi)) {stop('Phi must be a numeric value.')}
+  if (!is.logical(Stochasticity)) {
+    stop('Stochasticity must be a logical value.')}
+  if (!is.numeric(D)) {stop('D must be a numeric value.')}
+  if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
+  if (!is.numeric(H)) {stop('H must be a numeric value.')}
+  if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
+  if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
+  if (!is.numeric(Error)) {stop('Error must be a numeric value.')}
+  if (!is.character(Recruitment_mode)) {
+    stop('Recruitment mode must be a character value.')}
+
+  # acceptable values
+  if (A <= 0) {stop('A must be greater than 0.')}
+  if (sum(MPAs < 1) > 0) {
+    stop('All values in MPAs must be greater than or equal to 1.')}
+  if (Time1 <= 1) {stop('Time1 must be greater than 1.')}
+  if (Time2 <= 1) {stop('Time2 must be greater than 1.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (A1 <= 0) {stop('A1 must be greater than 0.')}
+  if (L1 <= 0) {stop('L1 must be greater than 0.')}
+  if (K <= 0) {stop('K must be greater than 0.')}
+  if (WA <= 0) {stop('WA must be greater than 0.')}
+  if (WB <= 0) {stop('WB must be greater than 0.')}
+  if (K_mat >= 0) {stop('K_mat must be less than 0.')}
+  if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
+  if (L50 <= 0) {stop('L50 must be greater than 0.')}
+  if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
+  if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
+  if (sum(A50_up <= 0) > 0) {stop('All values in A50_up must be greater than 0.')}
+  if (sum(A50_down < 0) > 0) {
+    stop('All values in A50_down must be greater than 0.')}
+  if (sum(Alpha < 0) > 0) {
+    stop('All values in Alpha must be greater than 0.')}
+  if (sum(F_fin < 0) > 0) {
+    stop('All values in F_fin must be greater than or equal to 0.')}
+  if (sum(Beta < 0) > 0) {
+    stop('All values in Beta must be greater than or equal to 0.')}
+  if (sum(Cf <= 0) > 0) {stop('All values in Cf must be greater than 0.')}
+  if (R < -1 || R > 1) {stop('R must be between -1 and 1.')}
+  if (X < 0) {stop('X must be greater than or equal to 0.')}
+  if (SP < 0) {stop('SP must be greater than or equal to 0.')}
+  if (M <= 0 || M > 1) {stop('M must be between 0 and 1.')}
+  if (sum(Control_rules < 1) > 0) {
+    stop('All values in Control_rules must be greater than or equal to 1.')}
+  if (Phi <= 0) {stop('Phi must be greater than 0.')}
+  if (D <= 0 || D > 1) {stop('D must be between 0 and 1.')}
+  if (Transects <= 0) {stop('Transects must be greater than 0.')}
+  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
+  if (Error < 0) {stop('Error must be greater than or equal to 0.')}
+
+  # relational values
+  if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
+  if (A1 >= A2) {stop('A1 must be less than A2.')}
+  if (L1 >= L2) {stop('L1 must be less than L2.')}
+  if (length(A50_up) != length(Fleets)) {
+    stop('A50_up must have the same number of elements as Fleets.')}
+  if (length(A50_down) != length(Fleets)) {
+    stop('A50_down must have the same number of elements as Fleets.')}
+  if (length(Alpha) != length(Fleets)) {
+    stop('Alpha must have the same number of elements as Fleets.')}
+  if (length(F_fin) != length(Fleets)) {
+    stop('F_fin must have the same number of elements as Fleets.')}
+  if (length(Beta) != length(Fleets)) {
+    stop('Beta must have the same number of elements as Fleets')}
+  if (length(Cf) != length(Fleets)) {
+    stop('Cf must have the same number of elements as Fleets.')}
+
+
+  ##############################################################################
+
   # set areas in and out of marine reserves
   areas <- 1:A
   Inside <- areas[MPAs]
@@ -148,8 +255,10 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Number of control rules
   CR <- length(Control_rules)
 
-  # Range of natural mortalities (low, correct, and high)
-  Nat_mortality <- c(M - Error, M, M + Error)
+  # Range of natural mortalities (low, correct, and high) if error =/= 0
+  if (Error != 0) {
+    Nat_mortality <- c(M - Error, M, M + Error)
+  } else { Nat_mortality <- M}
   NM <- length(Nat_mortality)
 
   # Initialize age-structured population size matrix
