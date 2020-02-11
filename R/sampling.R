@@ -48,6 +48,72 @@
 sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
                      Abundance_mature, Transects = 24, X, Count, NuS, A = 5) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (a %% 1 != 0) {stop('a must be an integer value.')}
+  if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (!is.numeric(Delta)) {stop('Delta must be a numeric value.')}
+  if (!is.numeric(Gamma)) {stop('Gamma must be a numeric value.')}
+  if (!is.numeric(Abundance_all)) {
+    stop('Abundance_all must be a numeric array.')}
+  if (!is.numeric(Abundance_mature)) {
+    stop('Abundance_mature must be a numeric array.')}
+  if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
+  if (!is.numeric(X)) {stop('X must be a numeric value.')}
+  if (!is.numeric(Count)) {stop('Count must be a numeric array.')}
+  if (!is.numeric(NuS)) {stop('NuS must be a numeric array.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+
+  # acceptable values
+  if (a <= 0) {stop('a must be greater than 0.')}
+  if (t <= 0) {stop('t must be greater than 0.')}
+  if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (Delta <= 0) {stop('Delta must be greater than 0.')}
+  if (Gamma <= 0) {stop('Gamma must be greater than 0.')}
+  if (sum(Abundance_all < 0) > 0) {
+    stop('All values in Abundance_all must be greater than or equal to 0.')}
+  if (sum(Abundance_mature < 0) > 0) {
+    stop('All values in Abundance_mature must be greater than or equal to 0.')}
+  if (Transects <= 0) {stop('Transects must be greater than 0.')}
+  if (X < 0) {stop('X must be greater than or equal to 0.')}
+  if (sum(Count < 0) > 0) {
+    stop('All values in Count must be greater than or equal to 0.')}
+  if (A <= 0) {stop('A must be greater than 0.')}
+
+  # relational values
+  if (dim(Abundance_all)[1] != dim(Abundance_mature)[1] || dim(Abundance_all)[1] != A) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of areas.')}
+  if (dim(Abundance_all)[2] != dim(Abundance_mature)[2]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of time steps.')}
+  if (dim(Abundance_all)[3] != dim(Abundance_mature)[3]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of control rules.')}
+  if (dim(Abundance_all)[4] != dim(Abundance_mature)[4]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of natural
+         mortality estimates.')}
+  if (dim(Count)[1] != dim(NuS)[1] || dim(Abundance_all)[1] != A) {
+    stop('Count or NuS has an incorrect number of areas.')}
+  if (dim(Count)[2] != dim(NuS)[2]) {
+    stop('Count or NuS has an incorrect number of time steps.')}
+  if (dim(Count)[3] != Transects) {stop('Count has the wrong number of transects.')}
+  if (dim(Count)[5] != dim(NuS)[3]) {
+    stop('Count or NuS has an incorrect number of control rules.')}
+  if (dim(Count)[6] != dim(NuS)[4]) {
+    stop('Count or NuS has an incorrect number of natural mortality estimates.')}
+  if (a > A) {stop('The given "a" value is too high.')}
+  if (t > dim(Abundance_all)[2] || t > dim(Count)[2]) {
+    stop('The given "t" value is too high for Abundance_all or Count.')}
+  if (cr > dim(Abundance_all)[3]|| t > dim(Count)[3]) {
+    stop('The given "cr" value is too high for Abundance_all or Count.')}
+  if (nm > dim(Abundance_all)[4] || t > dim(Count)[4]) {
+    stop('The given "nm" value is too high for Abundance_all or Count.')}
+
+  ##############################################################################
+
   # Total population size across all areas
   total_all <- sum(Abundance_all[, t, cr, nm])
   total_mature <- sum(Abundance_mature[, t, cr, nm])
