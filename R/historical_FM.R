@@ -11,8 +11,6 @@
 #'    determine the historic fishing mortality. Default value is 150.
 #' @param R0 numeric value, set arbitrarily, the unfished recruitment. Default
 #'    value is 1e+5.
-#' @param A numeric value, the number of total areas in the model. Default
-#'    value is 5.
 #' @param Stochasticity logical vector, does recruitment contain a stochastic
 #'    component? Default value is FALSE.
 #' @param Recruitment_mode character value, values can be:
@@ -28,10 +26,30 @@
 #' @importFrom graphics plot abline
 #'
 #' @examples
-#' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, A = 1,
+#' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5,
 #'    Stochasticity = FALSE, Recruitment_mode = 'pool')
-historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, A = 1,
+historical_FM <- function(Species, eq_time = 150, R0 = 1e+5,
                           Stochasticity = FALSE, Recruitment_mode = 'pool') {
+
+  ###### Error handling ########################################################
+
+  # classes of values
+  if (!is.character(Species)) {
+    stop('Study species must be a character value.')}
+  if (eq_time %% 1 != 0) {stop('eq_time must be an integer value.')}
+  if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
+  if (!is.logical(Stochasticity)) {
+    stop('Stochasticity must be a logical value.')}
+  if (!is.character(Recruitment_mode)) {
+    stop('Recruitment mode must be a character value.')}
+
+  # acceptable values
+  if (eq_time <= 0) {stop('eq_time must be greater than 0.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
+    stop('Recruitment_mode must be either "pool" or "closed".')}
+
+  ##############################################################################
 
 ##### load species parameters #####
 par <- parameters(Species)
@@ -111,7 +129,7 @@ abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
 
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                  eq_time = 150, A50_mat, Stochasticity, Rho_R,
-                 Nat_mortality = c(M), Recruitment_mode, A)
+                 Nat_mortality = c(M), Recruitment_mode, A = 1)
 
 # initial final biomass with no fishing
 FM0_biomass <- sum(W*SAD)
