@@ -40,7 +40,7 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0) {
   if (A <= 0) {stop('A must be greater than 0.')}
   if (TimeT <= 0) {stop('TimeT must be greater than 0.')}
   if (CR < 1) {stop('CR must be greater than or equal to 1.')}
-  if (NM != 1 || NM != 3) {stop('NM must be equal to 1 or 3.')}
+  if (NM != 1 && NM != 3) {stop('NM must be equal to 1 or 3.')}
   if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
 
   # relational values

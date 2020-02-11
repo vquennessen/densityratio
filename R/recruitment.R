@@ -69,8 +69,6 @@ recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
   if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
   if (B0 <= 0) {stop('B0 must be greater than 0.')}
-  if (sum(Eps < 0) > 0) {
-    stop('All values in Eps must be greater than or equal to 0.')}
   if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
