@@ -59,7 +59,8 @@ catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
   if (a <= 0) {stop('a must be greater than 0.')}
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (nm <= 0) {stop('nm must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
   if (sum(FM < 0) > 0 || sum(FM > 1) > 0) {
     stop('All values in FM must be between 0 and 1.')}
   if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
@@ -86,6 +87,7 @@ catch <- function(a, t, cr, nm, FM, Nat_mortality, N, A, Fb, E, Catch) {
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
   if (nm > dim(N)[5]) {stop('The given "nm" value is too high for N.')}
+  if (a > A) {stop('a must be less than or equal to A.')}
 
   ##############################################################################
 

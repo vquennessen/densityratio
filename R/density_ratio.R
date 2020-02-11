@@ -63,7 +63,8 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (nm <= 0) {stop('nm must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
   if (A <= 0) {stop('A must be greater than 0.')}
   if (sum(Count < 0) > 0) {
     stop('All values in Count must be greater than or equal to 0.')}

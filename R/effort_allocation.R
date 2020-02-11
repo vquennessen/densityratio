@@ -52,7 +52,8 @@ effort_allocation <- function(t, cr, nm, Allocation = 'IFD', E, Yield,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (nm <= 0) {stop('nm must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
   if (Allocation != 'IFD' && Allocation != 'equal') {
     stop('Allocation must be either "IFD" or "equal".')}
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
