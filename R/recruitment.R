@@ -39,6 +39,60 @@
 recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
                        Rec_age, Recruitment_mode) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (a %% 1 != 0) {stop('a must be an integer value.')}
+  if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (!is.numeric(SSB)) {stop('SSB must be a numeric array.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+  if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
+  if (!is.numeric(H)) {stop('H must be a numeric value.')}
+  if (!is.numeric(B0)) {stop('B0 must be a numeric value.')}
+  if (!is.numeric(Eps)) {stop('Eps must be a numeric array.')}
+  if (!is.numeric(Sigma_R)) {stop('Sigma_R must be a numeric array.')}
+  if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
+  if (!is.character(Recruitment_mode)) {
+    stop('Recruitment mode must be a character value.')}
+
+  # acceptable values
+  if (a <= 0) {stop('a must be greater than 0.')}
+  if (t <= 0) {stop('t must be greater than 0.')}
+  if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (sum(SSB < 0) > 0) {
+    stop('All values in SSB must be greater than or equal to 0.')}
+  if (A <= 0) {stop('A must be greater than 0.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
+  if (B0 <= 0) {stop('B0 must be greater than 0.')}
+  if (sum(Eps < 0) > 0) {
+    stop('All values in Eps must be greater than or equal to 0.')}
+  if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
+    stop('Recruitment_mode must be either "pool" or "closed".')}
+
+  # relational values
+  if(dim(SSB)[1] != dim(Eps)[1]) {
+    stop('SSB or Eps has an incorrect number of areas.')}
+  if(dim(SSB)[2] != dim(Eps)[2]) {
+    stop('SSB or Eps has an incorrect number of time steps.')}
+  if(dim(SSB)[3] != dim(Eps)[3]) {
+    stop('SSB or Eps has an incorrect number of control rules.')}
+  if(dim(SSB)[4] != dim(Eps)[4]) {
+    stop('SSB or Eps has an incorrect number of natural mortality estimates.')}
+  if (a > dim(SSB)[1]) {stop('The given "a" value is too high for SSB.')}
+  if (t > dim(SSB)[2]) {stop('The given "t" value is too high for SSB.')}
+  if (cr > dim(SSB)[3]) {stop('The given "cr" value is too high for SSB.')}
+  if (nm > dim(SSB)[4]) {stop('The given "nm" value is too high for SSB.')}
+  if (a > A) {stop('a must be less than or equal to A.')}
+
+  ##############################################################################
+
   # Recruitment
   # Based on Babcock & MacCall (2011): Eq. (3)
   # Dimensions = 1 * 1
