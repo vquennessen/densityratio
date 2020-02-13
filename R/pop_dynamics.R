@@ -92,7 +92,91 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
                          A50_mat, Abundance_all, Abundance_mature, Biomass,
                          Fishing = T, Nat_mortality, Recruitment_mode = 'pool') {
 
+  ###### Error handling ########################################################
 
+  # classes of variables
+  if (a %% 1 != 0) {stop('a must be an integer value.')}
+  if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
+  if (Max_age %% 1 != 0) {stop('Max_age must be an integer value.')}
+  if (!is.numeric(SSB)) {stop('SSB must be a numeric array.')}
+  if (!is.numeric(N)) {stop('N must be a numeric array.')}
+  if (!is.numeric(W)) {stop('W must be a numeric vector.')}
+  if (!is.numeric(Mat)) {stop('Mat must be a numeric vector.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
+  if (!is.numeric(B0)) {stop('B0 must be a numeric value.')}
+  if (!is.numeric(Eps)) {stop('Eps must be a numeric array.')}
+  if (!is.numeric(Sigma_R)) {stop('Sigma_R must be a numeric array.')}
+  if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
+  if (!is.numeric(E)) {stop('E must be a numeric array.')}
+  if (!is.numeric(S)) {stop('S must be a numeric vector.')}
+  if (NM %% 1 != 0) {stop('NM must be an integer value.')}
+  if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
+  if (A50_mat %% 1 != 0) {stop('A50_mat must be an integer value.')}
+  if (!is.numeric(Abundance_all)) {
+    stop('Abundance_all must be a numeric array.')}
+  if (!is.numeric(Abundance_mature)) {
+    stop('Abundance_mature must be a numeric array.')}
+  if (!is.numeric(Biomass)) {stop('Biomass must be a numeric array.')}
+  if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
+  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
+  if (!is.character(Recruitment_mode)) {
+    stop('Recruitment mode must be a character value.')}
+
+  # acceptable values
+  if (a <= 0) {stop('a must be greater than 0.')}
+  if (t <= 0) {stop('t must be greater than 0.')}
+  if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (sum(SSB < 0) > 0) {stop('All values in SSB must be greater than or equal to 0.')}
+  if (sum(N < 0) > 0) {stop('All values in N must be greater than or equal to 0.')}
+  if (sum(W <= 0) > 0) {stop('All values in W must be greater than 0.')}
+  if (sum(Mat <= 0) > 0 || sum(Mat > 1) > 0) {
+    stop('All values in Mat must be between 0 and 1.')}
+  if (A <= 0) {stop('A must be greater than 0.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
+  if (B0 <= 0) {stop('B0 must be greater than 0.')}
+
+
+  if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
+    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (sum(FM < 0) > 0 || sum(FM > 1) > 0) {
+    stop('All values in FM must be between 0 and 1.')}
+  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
+    stop('All values in Nat_mortality must be between 0 and 1.')}
+  if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
+  if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
+  if (sum(Catch < 0) > 0) {
+    stop('All values in Catch must be greater than or equal to 0.')}
+
+  # relational values
+  if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
+
+  if(dim(N)[1] != dim(Catch)[1] || dim(N)[1] != dim(FM)[1]) {
+    stop('N, FM, or Catch has an incorrect number of age classes.')}
+  if(dim(N)[2] != dim(E)[1] || dim(N)[2] != dim(Catch)[2] || dim(N)[2] != dim(FM)[2]) {
+    stop('N, E, or Catch has an incorrect number of areas.')}
+  if(dim(N)[3] != dim(E)[2] || dim(N)[3] != dim(Catch)[3] || dim(N)[3] != dim(FM)[3]) {
+    stop('N, E, FM, or Catch has an incorrect number of time steps.')}
+  if(dim(N)[4] != dim(E)[3] || dim(N)[4] != dim(Catch)[4] || dim(N)[4] != dim(FM)[4]) {
+    stop('N, E, FM, or Catch has an incorrect number of control rules.')}
+  if(dim(N)[5] != dim(E)[4] || dim(N)[5] != dim(Catch)[5] || dim(N)[5] != dim(FM)[5]) {
+    stop('N, E, FM, or Catch has an incorrect number of values in Nat_mortality.')}
+  if (a > dim(N)[2]) {stop('The given "a" value is too high for N.')}
+  if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
+  if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
+  if (nm > dim(N)[5]) {stop('The given "nm" value is too high for N.')}
+  if (a > A) {stop('a must be less than or equal to A.')}
+
+  ##############################################################################
 
   # range of ages
   ages <- Rec_age:Max_age
