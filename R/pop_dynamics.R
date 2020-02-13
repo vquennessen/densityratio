@@ -92,6 +92,8 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
                          A50_mat, Abundance_all, Abundance_mature, Biomass,
                          Fishing = T, Nat_mortality, Recruitment_mode = 'pool') {
 
+
+
   # range of ages
   ages <- Rec_age:Max_age
   num <- length(ages)
