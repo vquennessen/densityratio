@@ -143,38 +143,54 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
   if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
   if (B0 <= 0) {stop('B0 must be greater than 0.')}
-
-
   if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
-  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
-    stop('Recruitment_mode must be either "pool" or "closed".')}
-  if (sum(FM < 0) > 0 || sum(FM > 1) > 0) {
-    stop('All values in FM must be between 0 and 1.')}
-  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
-    stop('All values in Nat_mortality must be between 0 and 1.')}
   if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
-  if (sum(Catch < 0) > 0) {
-    stop('All values in Catch must be greater than or equal to 0.')}
+  if (sum(S < 0) > 0) {stop('All values in S must be greater than or equal to 0.')}
+  if (NM != 1 && NM != 3) {stop('NM must be equal to 1 or 3.')}
+  if (sum(FM < 0) > 0 || sum(FM > 1) > 0) {
+    stop('All values in FM must be between 0 and 1.')}
+  if (A50_mat <= 0) {stop('A50_mat must be greater than 0.')}
+  if (sum(Abundance_all < 0) > 0) {
+    stop('All values in Abundance_all must be greater than or equal to 0.')}
+  if (sum(Abundance_mature < 0) > 0) {
+    stop('All values in Abundance_mature must be greater than or equal to 0.')}
+  if (sum(Biomass < 0) > 0) {
+    stop('All values in Biomass must be greater than or equal to 0.')}
+  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
+    stop('All values in Nat_mortality must be between 0 and 1.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
+    stop('Recruitment_mode must be either "pool" or "closed".')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
 
-  if(dim(N)[1] != dim(Catch)[1] || dim(N)[1] != dim(FM)[1]) {
-    stop('N, FM, or Catch has an incorrect number of age classes.')}
-  if(dim(N)[2] != dim(E)[1] || dim(N)[2] != dim(Catch)[2] || dim(N)[2] != dim(FM)[2]) {
-    stop('N, E, or Catch has an incorrect number of areas.')}
-  if(dim(N)[3] != dim(E)[2] || dim(N)[3] != dim(Catch)[3] || dim(N)[3] != dim(FM)[3]) {
-    stop('N, E, FM, or Catch has an incorrect number of time steps.')}
-  if(dim(N)[4] != dim(E)[3] || dim(N)[4] != dim(Catch)[4] || dim(N)[4] != dim(FM)[4]) {
-    stop('N, E, FM, or Catch has an incorrect number of control rules.')}
-  if(dim(N)[5] != dim(E)[4] || dim(N)[5] != dim(Catch)[5] || dim(N)[5] != dim(FM)[5]) {
-    stop('N, E, FM, or Catch has an incorrect number of values in Nat_mortality.')}
-  if (a > dim(N)[2]) {stop('The given "a" value is too high for N.')}
+  if(dim(N)[1] != dim(FM)[1]) {
+    stop('N or FM has an incorrect number of age classes.')}
+  if(dim(N)[2] != dim(SSB)[1] || dim(N)[2] != dim(FM)[2] || dim(N)[2] != dim(E)[1]) {
+    stop('N, SSB, FM, or E has an incorrect number of areas.')}
+  if(dim(N)[3] != dim(SSB)[2] || dim(N)[3] != dim(FM)[3]|| dim(N)[3] != dim(E)[2]) {
+    stop('N, SSB, FM, or E has an incorrect number of time steps.')}
+  if(dim(N)[4] != dim(SSB)[3] || dim(N)[4] != dim(FM)[4]|| dim(N)[4] != dim(E)[3]) {
+    stop('N, SSB, FM, or E has an incorrect number of control rules.')}
+  if(dim(N)[5] != dim(SSB)[4] || dim(N)[5] != dim(FM)[5]|| dim(N)[5] != dim(E)[4]) {
+    stop('N, SSB, FM, or E has an incorrect number of values in Nat_mortality.')}
+  if (A != dim(N)[2]) {stop('N has the wrong number of areas.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (nm > dim(N)[5]) {stop('The given "nm" value is too high for N.')}
+  if (NM != dim(N)[5]) {stop('N has the wrong number of natural mortality estimates.')}
   if (a > A) {stop('a must be less than or equal to A.')}
+  if (dim(Abundance_all)[1] != dim(Abundance_mature)[1] || dim(Abundance_all)[1] != A) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of areas.')}
+  if (dim(Abundance_all)[2] != dim(Abundance_mature)[2]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of time steps.')}
+  if (dim(Abundance_all)[3] != dim(Abundance_mature)[3]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of control rules.')}
+  if (dim(Abundance_all)[4] != dim(Abundance_mature)[4]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of natural
+         mortality estimates.')}
+  if (length(W) != length(S) || length(W) != length(Mat)) {
+    stop('W, S, or Mat has the wrong number of age classes.')}
 
   ##############################################################################
 
