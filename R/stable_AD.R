@@ -59,6 +59,79 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                      eq_time, A50_mat, Stochasticity, Rho_R, Nat_mortality,
                      Recruitment_mode, A) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
+  if (Max_age %% 1 != 0) {stop('Max_age must be an integer value.')}
+  if (!is.numeric(W)) {stop('W must be a numeric vector.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (!is.numeric(Mat)) {stop('Mat must be a numeric vector.')}
+  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
+  if (!is.numeric(B0)) {stop('B0 must be a numeric value.')}
+  if (!is.numeric(Sigma_R)) {stop('Sigma_R must be a numeric array.')}
+  if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
+  if (!is.numeric(S)) {stop('S must be a numeric vector.')}
+  if (!is.numeric(M)) {stop('M must be a numeric value.')}
+  if (eq_time %% 1 != 0) {stop('eq_time must be an integer value.')}
+  if (A50_mat %% 1 != 0) {stop('A50_mat must be an integer value.')}
+  if (!is.logical(Stochasticity)) {
+    stop('Stochasticity must be a logical value.')}
+  if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
+  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
+  if (!is.character(Recruitment_mode)) {
+    stop('Recruitment mode must be a character value.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+
+  # acceptable values
+  if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
+  if (sum(W <= 0) > 0) {stop('All values in W must be greater than 0.')}
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (sum(Mat <= 0) > 0 || sum(Mat > 1) > 0) {
+    stop('All values in Mat must be between 0 and 1.')}
+  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
+  if (B0 <= 0) {stop('B0 must be greater than 0.')}
+  if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
+  if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
+  if (sum(S < 0) > 0) {stop('All values in S must be greater than or equal to 0.')}
+  if (M <= 0 || M > 1) {stop('M must be between 0 and 1.')}
+  if (eq_time <= 0) {stop('eq_time must be greater than 0.')}
+  if (A50_mat <= 0) {stop('A50_mat must be greater than 0.')}
+  if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
+  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
+    stop('All values in Nat_mortality must be between 0 and 1.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
+    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (A <= 0) {stop('A must be greater than 0.')}
+
+  # relational values
+  if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
+  if(dim(N)[1] != dim(FM)[1]) {
+    stop('N or FM has an incorrect number of age classes.')}
+  if(dim(N)[2] != dim(SSB)[1] || dim(N)[2] != dim(FM)[2] || dim(N)[2] != dim(E)[1]) {
+    stop('N, SSB, FM, or E has an incorrect number of areas.')}
+  if(dim(N)[3] != dim(SSB)[2] || dim(N)[3] != dim(FM)[3]|| dim(N)[3] != dim(E)[2]) {
+    stop('N, SSB, FM, or E has an incorrect number of time steps.')}
+  if(dim(N)[4] != dim(SSB)[3] || dim(N)[4] != dim(FM)[4]|| dim(N)[4] != dim(E)[3]) {
+    stop('N, SSB, FM, or E has an incorrect number of control rules.')}
+  if(dim(N)[5] != dim(SSB)[4] || dim(N)[5] != dim(FM)[5]|| dim(N)[5] != dim(E)[4]) {
+    stop('N, SSB, FM, or E has an incorrect number of values in Nat_mortality.')}
+  if (A != dim(N)[2]) {stop('N has the wrong number of areas.')}
+  if (NM != dim(N)[5]) {stop('N has the wrong number of natural mortality estimates.')}
+  if (dim(Abundance_all)[1] != dim(Abundance_mature)[1] || dim(Abundance_all)[1] != A) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of areas.')}
+  if (dim(Abundance_all)[2] != dim(Abundance_mature)[2]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of time steps.')}
+  if (dim(Abundance_all)[3] != dim(Abundance_mature)[3]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of control rules.')}
+  if (dim(Abundance_all)[4] != dim(Abundance_mature)[4]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of natural
+         mortality estimates.')}
+  if (length(W) != length(S) || length(W) != length(Mat)) {
+    stop('W, S, or Mat has the wrong number of age classes.')}
+
+  ##############################################################################
+
   # range of ages
   ages <- Rec_age:Max_age
   num <- length(ages)
