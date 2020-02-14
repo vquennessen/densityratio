@@ -83,6 +83,63 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
                        Ind_sampled = 'all', Allocation = 'IFD',
                        Control_rules = c(1:6)) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (!is.character(Species)) {
+    stop('Study species must be a character string.')}
+  if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
+  if (sum(MPAs %% 1 != 0) != 0) {stop('MPAs must be a vector of integers.')}
+  if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
+  if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
+  if (!is.character(Recruitment_mode)) {
+    stop('Recruitment mode must be a character value.')}
+  if (!is.numeric(Error)) {stop('Error must be a numeric value.')}
+  if (!is.logical(Stochasticity)) {
+    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
+  if (!is.logical(Fishery_management)) {
+    stop('Fishery_management must be a logical value.')}
+  if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
+  if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
+  if (!is.logical(Adult_movement)) {
+    stop('Adult_movement must be a logical value.')}
+  if (!is.logical(Plotting)) {stop('Plotting must be a logical value.')}
+  if (!is.numeric(Final_DR)) {stop('Final_DR must be a numeric value.')}
+  if (Years_sampled %% 1 != 0) {stop('Years_sampled must be an integer value.')}
+  if (!is.character(Areas_sampled)) {
+    stop('Areas_sampled must be a character value.')}
+  if (!is.character(Ind_sampled)) {
+    stop('Ind_sampled must be a character value.')}
+  if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
+  if (sum(Control_rules %% 1 != 0) != 0) {
+    stop('Control_rules must be a vector of integers.')}
+
+  # acceptable values
+  if (R0 <= 0) {stop('R0 must be greater than 0.')}
+  if (A <= 0) {stop('A must be greater than 0.')}
+  if (sum(MPAs < 0) > 0) {
+    stop('All values in MPAs must be greater than or equal to 0.')}
+  if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
+  if (Time2 <= 0) {stop('Time2 must be greater than 0.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
+    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (Error < 0) {stop('Error must be greater than or equal to 0.')}
+  if (Transects <= 0) {stop('Transects must be greater than 0.')}
+  if (Final_DR <= 0) {stop('Final_DR must be greater than 0.')}
+  if (Years_sampled <= 0) {stop('Years_sampled must be greater than 0.')}
+  if (Areas_sampled != 'far' && Areas_sampled != 'all') {
+    stop('Areas_sampled must be either "far" or "all".')}
+  if (Ind_sampled != 'mature' && Ind_sampled != 'all') {
+    stop('Ind_sampled must be either "mature" or "all".')}
+  if (Allocation != 'IFD' && Allocation != 'equal') {
+    stop('Allocation must be either "IFD" or "equal".')}
+  if (sum(Control_rules <= 0) > 0) {
+    stop('All values in Control_rules must be greater than 0.')}
+
+  ##############################################################################
+
   ##### Load life history characteristics for species ##########################
 
   par <- parameters(Species)
