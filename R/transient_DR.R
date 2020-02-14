@@ -20,6 +20,29 @@
 #'    Nat_mortality = c(0.09, 0.14, 0.19), nm = 1)
 transient_DR <- function(Time1 = 50, TimeT = 70, Final_DR, Nat_mortality, nm) {
 
+  ###### Error handling ########################################################
+
+  # classes of variables
+  if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
+  if (TimeT %% 1 != 0) {stop('TimeT must be an integer value.')}
+  if (!is.numeric(Final_DR)) {stop('Final_DR must be a numeric value.')}
+  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+
+  # acceptable values
+  if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
+  if (TimeT <= 0) {stop('TimeT must be greater than 0.')}
+  if (Final_DR <= 0) {stop('Final_DR must be greater than 0.')}
+  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
+    stop('All values in Nat_mortality must be between 0 and 1.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
+
+  # relational values
+  if (Time1 >= TimeT) {stop('TimeT must be greater than Time1.')}
+
+  ##############################################################################
+
   # calculate target_DR based on transient timescales
 
   # set timesteps
