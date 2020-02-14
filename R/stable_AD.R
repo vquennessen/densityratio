@@ -106,27 +106,6 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
-  if(dim(N)[1] != dim(FM)[1]) {
-    stop('N or FM has an incorrect number of age classes.')}
-  if(dim(N)[2] != dim(SSB)[1] || dim(N)[2] != dim(FM)[2] || dim(N)[2] != dim(E)[1]) {
-    stop('N, SSB, FM, or E has an incorrect number of areas.')}
-  if(dim(N)[3] != dim(SSB)[2] || dim(N)[3] != dim(FM)[3]|| dim(N)[3] != dim(E)[2]) {
-    stop('N, SSB, FM, or E has an incorrect number of time steps.')}
-  if(dim(N)[4] != dim(SSB)[3] || dim(N)[4] != dim(FM)[4]|| dim(N)[4] != dim(E)[3]) {
-    stop('N, SSB, FM, or E has an incorrect number of control rules.')}
-  if(dim(N)[5] != dim(SSB)[4] || dim(N)[5] != dim(FM)[5]|| dim(N)[5] != dim(E)[4]) {
-    stop('N, SSB, FM, or E has an incorrect number of values in Nat_mortality.')}
-  if (A != dim(N)[2]) {stop('N has the wrong number of areas.')}
-  if (NM != dim(N)[5]) {stop('N has the wrong number of natural mortality estimates.')}
-  if (dim(Abundance_all)[1] != dim(Abundance_mature)[1] || dim(Abundance_all)[1] != A) {
-    stop('Abundance_all or Abundance_mature has an incorrect number of areas.')}
-  if (dim(Abundance_all)[2] != dim(Abundance_mature)[2]) {
-    stop('Abundance_all or Abundance_mature has an incorrect number of time steps.')}
-  if (dim(Abundance_all)[3] != dim(Abundance_mature)[3]) {
-    stop('Abundance_all or Abundance_mature has an incorrect number of control rules.')}
-  if (dim(Abundance_all)[4] != dim(Abundance_mature)[4]) {
-    stop('Abundance_all or Abundance_mature has an incorrect number of natural
-         mortality estimates.')}
   if (length(W) != length(S) || length(W) != length(Mat)) {
     stop('W, S, or Mat has the wrong number of age classes.')}
 
@@ -174,7 +153,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
     # biology
     PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
-                       N2, W, Mat, A, R0, H, B0, Eps2, Sigma_R, Fb, E2, S,
+                       N2, W, Mat, A = 1, R0, H, B0, Eps2, Sigma_R, Fb, E2, S,
                        NM = 1, FM2, A50_mat, abundance_all2, abundance_mature2,
                        biomass2, Fishing = F, Nat_mortality = c(M),
                        Recruitment_mode)

@@ -174,10 +174,10 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
     stop('N, SSB, FM, or E has an incorrect number of control rules.')}
   if(dim(N)[5] != dim(SSB)[4] || dim(N)[5] != dim(FM)[5]|| dim(N)[5] != dim(E)[4]) {
     stop('N, SSB, FM, or E has an incorrect number of values in Nat_mortality.')}
-  if (A != dim(N)[2]) {stop('N has the wrong number of areas.')}
+  if (dim(N)[2] != A) {stop('N has the wrong number of areas.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (NM != dim(N)[5]) {stop('N has the wrong number of natural mortality estimates.')}
+  if (dim(N)[5] != NM) {stop('N has the wrong number of natural mortality estimates.')}
   if (a > A) {stop('a must be less than or equal to A.')}
   if (dim(Abundance_all)[1] != dim(Abundance_mature)[1] || dim(Abundance_all)[1] != A) {
     stop('Abundance_all or Abundance_mature has an incorrect number of areas.')}
