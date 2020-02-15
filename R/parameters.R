@@ -17,7 +17,7 @@
 parameters = function(Species) {
 
   species_list <- c('BR_CA_2003', 'BR_OR_2015', 'CAB_CA_2005', 'CAB_OR_2019',
-                    'LING_OR_2017', 'CR_OR_2015')
+                    'LING_OW_2017', 'CR_OR_2015', 'ES_COW_2013')
 
   ###### Error handling ########################################################
 
@@ -50,7 +50,7 @@ parameters = function(Species) {
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.488                       # depletion
     Fb       <- 0.07                        # fishing mortality to cause D
-    R        <- 0.77                        # Proportion of positive transects
+    P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
@@ -70,141 +70,145 @@ parameters = function(Species) {
   ##### Black Rockfish (OR) 2015 assessment #####
   # source: Cope et al. 2016
   if (Species == 'BR_OR_2015') { #####
-    Max_age <- 40                           # maximum age
-    M <- 0.17                               # natural mortality
-    Rec_age <- 3                            # age at recruitment
-    WA <- 2.6e-5; WB <- 2.88                # weight at length parameters (f)
-    A1 <- 1; L1 <- 20.32;                   # growth parameters (f)
-    A2 <- 40; L2 <- 49.67; K <- 0.21
-    L50 <- 43.69                            # length at 50% maturity
-    K_mat <- -0.66                          # slope of maturity curve
-    LDP <- 0.1                              # larval drift proportion
-    H <- 0.77                               # steepness
-    Phi <- 1.1                              # unfished recruits per spawner
-    Sigma_R <- 0.5                          # recruitment standard deviation
-    Rho_R <- 0                              # recruitment autocorrelation
-    AMP <- 0.1                              # adult movement proportion
-    D <- 0.604                              # depletion
-    Fb <- 0.16                              # fishing mortality to cause D
-    R <- 0.77                               # Proportion of positive transects
+    Max_age  <- 40                          # maximum age
+    M        <- 0.17                        # natural mortality
+    Rec_age  <- 3                           # age at recruitment
+    WA       <- 2.6e-5;   WB <- 2.88        # weight at length parameters (f)
+    A1       <- 1;        L1 <- 20.32       # growth parameters (f)
+    A2       <- 40;       L2 <- 49.67
+    K        <- 0.21
+    L50      <- 43.69                       # length at 50% maturity
+    K_mat    <- -0.66                       # slope of maturity curve
+    LDP      <- 0.1                         # larval drift proportion
+    H        <- 0.77                        # steepness
+    Phi      <- 1.1                         # unfished recruits per spawner
+    Sigma_R  <- 0.5                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.604                       # depletion
+    Fb       <- 0.16                        # fishing mortality to cause D
+    P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X <- 15.42                              # mean of positive transects
-    SP <- 16.97                             # std of positive transects
-    Fleets <- c('trawl', 'live', 'dead',    # names of fleets
-                'ocean', 'shore')
-    Alpha <- c(0.325, 0.4, 0.35,
-               0.65, 0.425)                 # slope of upcurve per fleet
-    Beta <- c(0.25, 0.5, 0.4, 1.1, 0.5)     # slope of downcurve per fleet
-    F_fin <- c(0.325, 0.05, -0.11,
-               -0.025, 0.135)               # final selectivity if dome-shaped
-    A50_up <- c(7, 5, 5, 5, 3)              # L50 value for upcurve
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
+    Fleets   <- c('trawl', 'live', 'dead',  # names of fleets
+                  'ocean', 'shore')
+    Alpha    <- c(0.325, 0.4, 0.35,
+                  0.65, 0.425)              # slope of upcurve per fleet
+    Beta     <- c(0.25, 0.5, 0.4, 1.1, 0.5) # slope of downcurve per fleet
+    F_fin    <- c(0.325, 0.05, -0.11,
+                  -0.025, 0.135)            # final selectivity if dome-shaped
+    A50_up   <- c(7, 5, 5, 5, 3)            # L50 value for upcurve
     A50_down <- c(15, 13, 13, 12, 6.5)      # L50 value for downcurve
-    Cf <- c(0.0001, 0.1679, 0.0982,         # fraction of fishery caught / fleet
-            0.6979, 0.0358)
+    Cf       <- c(0.0001, 0.1679, 0.0982,   # fraction of fishery caught / fleet
+                  0.6979, 0.0358)
   }
 
   ##### Cabezon (CA) 2005 assessment #####
   # source: Cope & Punt 2005
   if (Species == 'CAB_CA_2005') {
-    Max_age <- 17                           # maximum age
-    M <- 0.275                              # natural mortality
-    Rec_age <- 1                            # age at recruitment
-    WA <- 1.24e-5; WB <- 3.113              # weight at length parameters (f)
-    A1 <- 5; L1 <- 41.3;                    # growth parameters (f)
-    A2 <- 30; L2 <- 61.9; K <- 0.18
-    L50 <- 25.702                           # length at 50% maturity
-    K_mat <- -0.743                         # slope of maturity curve
-    LDP <- 0.1                              # larval drift proportion
-    H <- 0.7                                # steepness
-    Phi <- 0.71                             # unfished recruits per spawner
-    Sigma_R <- 1                            # recruitment standard deviation
-    Rho_R <- 0                              # recruitment autocorrelation
-    AMP <- 0.1                              # adult movement proportion
-    D <- 0.4                                # depletion
-    Fb <- 0.08                              # fishing mortality to cause D
-    R <- 0.27                               # Proportion of positive transects
+    Max_age  <- 17                          # maximum age
+    M        <- 0.275                       # natural mortality
+    Rec_age  <- 1                           # age at recruitment
+    WA       <- 1.24e-5;  WB  <- 3.113      # weight at length parameters (f)
+    A1       <- 5;        L1  <- 41.3       # growth parameters (f)
+    A2       <- 30;       L2  <- 61.9
+    K <- 0.18
+    L50      <- 25.702                      # length at 50% maturity
+    K_mat    <- -0.743                      # slope of maturity curve
+    LDP      <- 0.1                         # larval drift proportion
+    H        <- 0.7                         # steepness
+    Phi      <- 0.71                        # unfished recruits per spawner
+    Sigma_R  <- 1                           # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.4                         # depletion
+    Fb       <- 0.08                        # fishing mortality to cause D
+    P        <- 0.27                        # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X <- 3.27                               # mean of positive transects
-    SP <- 3.32                              # std of positive transects
-    Fleets <- c('dead', 'live', 'man.made',
-                'shore', 'PBR', 'CPFV')     # names of fleets
-    Alpha <- c(0.4, 0.25, 5, 0.15,
-               0.35, 0.25)                  # slope of upcurve per fleet
-    Beta <- c(0, 0.35, 0.5, 0.26, 0, 0)     # slope of downcurve per fleet
-    F_fin <- c(1, 0.7, 0.38, 0.43, 1, 1)    # final selectivity if dome-shaped
-    A50_up <- c(2, 3, 1, 1, 2, 1)           # A50 value for upcurve
+    X        <- 3.27                        # mean of positive transects
+    SP       <- 3.32                        # std of positive transects
+    Fleets   <- c('dead', 'live', 'manmade',# names of fleets
+                  'shore', 'PBR', 'CPFV')
+    Alpha    <- c(0.4, 0.25, 5, 0.15,
+                  0.35, 0.25)               # slope of upcurve per fleet
+    Beta     <- c(0, 0.35, 0.5, 0.26, 0, 0) # slope of downcurve per fleet
+    F_fin    <- c(1, 0.7, 0.38, 0.43, 1, 1) # final selectivity if dome-shaped
+    A50_up   <- c(2, 3, 1, 1, 2, 1)         # A50 value for upcurve
     A50_down <- c(1, 17, 5, 4, 1, 1)        # A50 value for downcurve
-    Cf <- c(0.0186, 0.3389, 0.1208, 0.0241,
-            0.1971, 0.3006)                 # fraction of fishery caught / fleet
+    Cf       <- c(0.0186, 0.3389, 0.1208,   # fraction of fishery caught / fleet
+                  0.0241, 0.1971, 0.3006)
 
   }
 
   ##### Cabezon (OR) 2019 assessment #####
   # source: Cope et al. 2019
   if (Species == 'CAB_OR_2019') {
-    Max_age <- 20                           # maximum age
-    M <- 0.26                               # natural mortality
-    Rec_age <- 4                            # age at recruitment
-    WA <- 1.90e-5; WB <- 2.99               # weight at length parameters (f)
-    A1 <- -1.28; L1 <- -0.37;               # growth parameters (f)
-    A2 <- 3.86; L2 <- 43.67; K <- 0.225
-    L50 <- 43                               # length at 50% maturity
-    K_mat <- -0.7                           # slope of maturity curve
-    LDP <- 0.1                              # larval drift proportion
-    H <- 0.7                                # steepness
-    Phi <- 1.1                              # unfished recruits per spawner
-    Sigma_R <- 0.5                          # recruitment standard deviation
-    Rho_R <- 0                              # recruitment autocorrelation
-    AMP <- 0.1                              # adult movement proportion
-    D <- 0.528                              # depletion
-    Fb <-                                # fishing mortality to cause D
-    R <- 0.247                              # Proportion of positive transects
+    Max_age  <- 20                          # maximum age
+    M        <- 0.26                        # natural mortality
+    Rec_age  <- 4                           # age at recruitment
+    WA       <- 1.90e-5;  WB  <- 2.99       # weight at length parameters (f)
+    A1       <- -1.28;    L1  <- -0.37      # growth parameters (f)
+    A2       <- 3.86;     L2  <- 43.67
+    K <- 0.225
+    L50      <- 43                          # length at 50% maturity
+    K_mat    <- -0.7                        # slope of maturity curve
+    LDP      <- 0.1                         # larval drift proportion
+    H        <- 0.7                         # steepness
+    Phi      <- 1.1                         # unfished recruits per spawner
+    Sigma_R  <- 0.5                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.528                       # depletion
+    Fb       <-                             # fishing mortality to cause D
+    P        <- 0.247                       # proportion of positive transects
                                             #       in PISCO monitoring data
-    X <-                                # mean of positive transects
-    SP <-                               # std of positive transects
-    Fleets <- c('live', 'dead', 'ocean',    # names of fleets
-                'shore')
-    Alpha <- c(0.4, 0.33, 0.35, 0.9)        # slope of upcurve per fleet
-    Beta <- c(0.35, 0, 0, 0.2)              # slope of downcurve per fleet
-    F_fin <- c(0.7, 1, 1, 0.07)             # final select. if dome-shaped
-    A50_up <- c(3, 4, 2, 1)                 # A50 value for upcurve
+    X        <-                             # mean of positive transects
+    SP       <-                             # std of positive transects
+    Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
+                   'shore')
+    Alpha    <- c(0.4, 0.33, 0.35, 0.9)     # slope of upcurve per fleet
+    Beta     <- c(0.35, 0, 0, 0.2)          # slope of downcurve per fleet
+    F_fin    <- c(0.7, 1, 1, 0.07)          # final select. if dome-shaped
+    A50_up   <- c(3, 4, 2, 1)               # A50 value for upcurve
     A50_down <- c(17, 1, 1, 3)              # A50 value for downcurve
-    Cf <- c(0.6033, 0.0415, 0.3423, 0.0130) # fraction of fishery
-
+    Cf       <- c(0.6033, 0.0415, 0.3423,   # fraction of fishery
+                  0.0130)
   }
 
-  ##### Lingcod (OR) 2017 assessment #####
+  ##### Lingcod (OR and WA) 2017 assessment #####
   # source: Haltuch et al. 2018
-  if (Species == 'LING_OR_2017') {
-    Max_age <- 25                           # maximum age
-    M <- 0.28                               # natural mortality
-    Rec_age <- 3                            # age at recruitment
-    WA <- 2.76e-6; WB <- 3.28               # weight at length parameters (f)
-    A1 <- 1; L1 <- 17.28;                   # growth parameters (f)
-    A2 <- 20; L2 <- 120; K <- 0.128
-    L50 <- 56.7                             # length at 50% maturity
-    K_mat <- -0.27                          # slope of maturity curve
-    LDP <- 0.1                              # larval drift proportion
-    H <- 0.7                                # steepness
-    Phi <- 1.1                              # unfished recruits per spawner
-    Sigma_R <- 0.55                         # recruitment standard deviation
-    Rho_R <- 0                              # recruitment autocorrelation
-    AMP <- 0.1                              # adult movement proportion
-    D <- 0.579                              # depletion
-    Fb <-                                # fishing mortality to cause D
-    R <-                               # Proportion of positive transects
+  if (Species == 'LING_OW_2017') {
+    Max_age  <- 25                          # maximum age
+    M        <- 0.28                        # natural mortality
+    Rec_age  <- 3                           # age at recruitment
+    WA       <- 2.76e-6;  WB <- 3.28        # weight at length parameters (f)
+    A1       <- 1;        L1 <- 17.28;      # growth parameters (f)
+    A2       <- 20;       L2 <- 120;
+    K        <- 0.128
+    L50      <- 56.7                        # length at 50% maturity
+    K_mat    <- -0.27                       # slope of maturity curve
+    LDP      <- 0.1                         # larval drift proportion
+    H        <- 0.7                         # steepness
+    Phi      <- 1.1                         # unfished recruits per spawner
+    Sigma_R  <- 0.55                        # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.579                       # depletion
+    Fb       <- 0.16                        # fishing mortality to cause D
+    P        <-                             # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X <-                                # mean of positive transects
-    SP <-                               # std of positive transects
-    Fleets <- c('trawl', 'fixed_gear',      # names of fleets
-                'WArec', 'ORrec')
-    Alpha <- c(0.25, 0.25, 0.55, 1)         # slope of upcurve per fleet
-    Beta <- c(0.09, 0.3, 0.17, 0.15)        # slope of downcurve per fleet
-    F_fin <- c(0.07, 0, 0, 0)               # final select. if dome-shaped
-    A50_up <- c(3, 5, 5, 3)                 # A50 value for upcurve
+    X        <-                             # mean of positive transects
+    SP       <-                             # std of positive transects
+    Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
+                  'WArec', 'ORrec')
+    Alpha    <- c(0.25, 0.25, 0.55, 1)      # slope of upcurve per fleet
+    Beta     <- c(0.09, 0.3, 0.17, 0.15)    # slope of downcurve per fleet
+    F_fin    <- c(0.07, 0, 0, 0)            # final select. if dome-shaped
+    A50_up   <- c(3, 5, 5, 3)               # A50 value for upcurve
     A50_down <- c(15, 12, 10, 9)            # A50 value for downcurve
-    Cf <- c(0.2872, 0.1379, 0.3253, 0.2496) # fraction of fishery
-
+    Cf       <- c(0.2872, 0.1379, 0.3253,   # fraction of fishery
+                  0.2496)
   }
 
   ##### Canary Rockfish (OR) 2015 assessment #####
@@ -226,7 +230,7 @@ parameters = function(Species) {
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.555                       # depletion
-    Fb       <-                             # fishing mortality to cause D
+    Fb       <- 0.04                        # fishing mortality to cause D
     R        <-                             # Proportion of positive transects
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
@@ -247,5 +251,48 @@ parameters = function(Species) {
                 Alpha, Beta, F_fin, A50_up, A50_down, Cf)
 
   return(output)
+
+
+  ##### English Sole (Northern CA, OR, WA) 2013 assessment #####
+  # source: Cope et al. 2013 and
+  if (Species == 'ES_COW_2013') {
+    Max_age  <- 23                          # maximum age
+    M        <- 0.26                        # natural mortality
+    Rec_age  <- 4                           # age at recruitment
+    WA       <- 8.21e-5;   WB   <- 2.94     # weight at length parameters (f)
+    A1       <- 2;         L1   <- 17.34;   # growth parameters (f)
+    A2       <- 20;        L2   <- 40.56;
+    K        <- 0.36
+    L50      <- 31                          # length at 50% maturity
+    K_mat    <- -0.61                       # slope of maturity curve
+    LDP      <- 0.1                         # larval drift proportion
+    H        <- 0.85                        # steepness
+    Phi      <- 1.1                         # unfished recruits per spawner
+    Sigma_R  <- 0.8                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.88                        # depletion
+    Fb       <-                             # fishing mortality to cause D
+    P        <-                             # Proportion of positive transects
+                                            #       in PISCO monitoring data
+    X        <-                             # mean of positive transects
+    SP       <-                             # std of positive transects
+    Fleets   <- c('trawl', 'non-trawl',     # names of fleets
+                  'rec', 'hake', 'research')
+    Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
+    Beta     <- c(1, 0, 1, 1, 0.08)         # slope of downcurve per fleet
+    F_fin    <- c(0.36, 1, 0.175, 0.65, 0.8)# final selectivity if dome-shaped
+    A50_up   <- c(5, 5, 4, 8, 1)            # A50 value for upcurve
+    A50_down <- c(10, 50, 7, 11, 30)        # A50 value for downcurve
+    Cf       <- c(0.3908, 0.3122, 0.2246,   # fraction of fishery caught / fleet
+                  0.0295, 0.0429)
+  }
+
+  output = list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
+                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, R, X, SP, Fleets,
+                Alpha, Beta, F_fin, A50_up, A50_down, Cf)
+
+  return(output)
+
 
 }
