@@ -59,7 +59,7 @@
 #'    dome-shaped.
 #' @param Cf numeric vector, the fraction of the whole fishery represented by
 #'    each fleet.
-#' @param R numeric value, the proportion of positive transects during sampling.
+#' @param P numeric value, the proportion of positive transects during sampling.
 #' @param X numeric value, the average value of individuals seen during positive
 #'    transects.
 #' @param SP numeric value, the standard deviation of individuals seen during

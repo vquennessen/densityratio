@@ -231,7 +231,7 @@ parameters = function(Species) {
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.555                       # depletion
     Fb       <- 0.04                        # fishing mortality to cause D
-    R        <-                             # Proportion of positive transects
+    P        <-                             # Proportion of positive transects
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
@@ -247,7 +247,7 @@ parameters = function(Species) {
   }
 
   output = list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, R, X, SP, Fleets,
+                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
                 Alpha, Beta, F_fin, A50_up, A50_down, Cf)
 
   return(output)
@@ -289,7 +289,7 @@ parameters = function(Species) {
   }
 
   output = list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, R, X, SP, Fleets,
+                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
                 Alpha, Beta, F_fin, A50_up, A50_down, Cf)
 
   return(output)
