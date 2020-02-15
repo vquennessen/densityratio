@@ -161,7 +161,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   AMP                    <- par[[18]]       # adult movement proportion
   D                      <- par[[19]]       # depletion
   Fb                     <- par[[20]]       # fishing mortality to cause D
-  R                      <- par[[21]]       # proportion of positive transects
+  P                      <- par[[21]]       # proportion of positive transects
   X                      <- par[[22]]       # mean of positive transects
   SP                     <- par[[23]]       # std of positive transects
   Fleets                 <- par[[24]]       # fishery fleet names
@@ -177,7 +177,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   # Initialize arrays for time-varying dynamics
   IA <- initialize_arrays(A, MPAs, Time1, Time2, R0, Rec_age, Max_age, A1, L1,
                           A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R,
-                          Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf, R,
+                          Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf, P,
                           X, SP, M, Control_rules, Phi, Stochasticity, D,
                           Transects, H, Surveys, Fishing, Error,
                           Recruitment_mode)

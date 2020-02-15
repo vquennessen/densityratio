@@ -101,14 +101,14 @@
 #'    Sigma_R = 0.5, Rho_R = 0, Fleets = c('sport', 'hook', 'trawl'),
 #'    Alpha = c(0.33, 0.6, 0.64), A50_up = c(2, 5, 10), A50_down = c(6, 16, 35),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
-#'    R = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
+#'    P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
 #'    Phi = 1.1, Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65,
 #'    Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool')
 initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
-                              R, X, SP, M, Control_rules, Phi,
+                              P, X, SP, M, Control_rules, Phi,
                               Stochasticity = TRUE, D, Transects = 24, H,
                               Surveys = TRUE, Fishing = TRUE, Error,
                               Recruitment_mode = 'pool') {
@@ -142,7 +142,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (!is.numeric(F_fin)) {stop('F_fin must be a numeric vector.')}
   if (!is.numeric(Beta)) {stop('Beta must be a numeric vector.')}
   if (!is.numeric(Cf)) {stop('Cf must be a numeric vector.')}
-  if (!is.numeric(R)) {stop('R must be a numeric value.')}
+  if (!is.numeric(P)) {stop('P must be a numeric value.')}
   if (!is.numeric(X)) {stop('X must be a numeric value.')}
   if (!is.numeric(SP)) {stop('SP must be a numeric value.')}
   if (!is.numeric(M)) {stop('M must be a numeric value.')}
@@ -188,7 +188,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (sum(Beta < 0) > 0) {
     stop('All values in Beta must be greater than or equal to 0.')}
   if (sum(Cf <= 0) > 0) {stop('All values in Cf must be greater than 0.')}
-  if (R < -1 || R > 1) {stop('R must be between -1 and 1.')}
+  if (P < -1 || P > 1) {stop('P must be between -1 and 1.')}
   if (X < 0) {stop('X must be greater than or equal to 0.')}
   if (SP < 0) {stop('SP must be greater than or equal to 0.')}
   if (M <= 0 || M > 1) {stop('M must be between 0 and 1.')}
@@ -312,7 +312,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 
   # Calculate delta - constant of proportionality
   # Based on Babcock & MacCall (2011): Eq. (13)
-  Delta <- R / D
+  Delta <- P / D
 
   # Calculate gamma
   # Based on Babcock & MacCall (2011): Eq. (16)
