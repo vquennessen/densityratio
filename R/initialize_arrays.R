@@ -99,7 +99,7 @@
 #' initialize_arrays(A = 5,  MPAs = c(3), Time1 = 50, Time2 = 20, R0 = 1e+5,
 #'    Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
 #'    K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103, Fb = 0.2, L50 = 39.53,
-#'    Sigma_R = 0.5, Rho_R = 0, SM = F, Fleets = c('sport', 'hook', 'trawl'),
+#'    Sigma_R = 0.5, Rho_R = 0, SM = FALSE, Fleets = c('sport', 'hook', 'trawl'),
 #'    Alpha = c(0.33, 0.6, 0.64), A50_up = c(2, 5, 10), A50_down = c(6, 16, 35),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
 #'    P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
