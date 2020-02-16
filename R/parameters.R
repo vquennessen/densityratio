@@ -98,8 +98,8 @@ parameters = function(Species) {
     Beta     <- c(0.25, 0.5, 0.4, 1.1, 0.5) # slope of downcurve per fleet
     F_fin    <- c(0.325, 0.05, -0.11,
                   -0.025, 0.135)            # final selectivity if dome-shaped
-    A50_up   <- c(7, 5, 5, 5, 3)            # L50 value for upcurve
-    A50_down <- c(15, 13, 13, 12, 6.5)      # L50 value for downcurve
+    A50_up   <- c(7, 5, 5, 5, 3)            # A50 value for upcurve
+    A50_down <- c(15, 13, 13, 12, 6)        # A50 value for downcurve
     Cf       <- c(0.0001, 0.1679, 0.0982,   # fraction of fishery caught / fleet
                   0.6979, 0.0358)
   }
@@ -272,11 +272,11 @@ parameters = function(Species) {
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.88                        # depletion
-    Fb       <-                             # fishing mortality to cause D
-    P        <-                             # Proportion of positive transects
+    Fb       <- 0                            # fishing mortality to cause D
+    P        <- 0                            # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X        <-                             # mean of positive transects
-    SP       <-                             # std of positive transects
+    X        <- 0                            # mean of positive transects
+    SP       <- 0                            # std of positive transects
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
                   'rec', 'hake', 'research')
     Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
