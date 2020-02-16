@@ -147,8 +147,8 @@ parameters = function(Species) {
     M        <- 0.26                        # natural mortality
     Rec_age  <- 4                           # age at recruitment
     WA       <- 1.90e-5;  WB  <- 2.99       # weight at length parameters (f)
-    A1       <- -1.28;    L1  <- -0.37      # growth parameters (f)
-    A2       <- 3.86;     L2  <- 43.67
+    A1       <- 4;        L1  <- 44.30      # growth parameters (f)
+    A2       <- 20;       L2  <- 63.35
     K <- 0.225
     L50      <- 43                          # length at 50% maturity
     K_mat    <- -0.7                        # slope of maturity curve
