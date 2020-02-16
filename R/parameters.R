@@ -30,6 +30,7 @@ parameters = function(Species) {
          region, and/or year.')
   }
 
+
   ##### Black Rockfish (CA) 2003 assessment #####
   # source: Ralston & Dick 2003
   if (Species == 'BR_CA_2003') {
@@ -63,8 +64,6 @@ parameters = function(Species) {
     A50_up   <- c(2, 5, 10)                 # A50 value for upcurve
     A50_down <- c(6, 16, 35)                # A50 value for downcurve
     Cf       <- c(0.71, 0.28, 0.01)         # fraction of fishery caught / fleet
-                                            #       from upcurve to 1
-
   }
 
   ##### Black Rockfish (OR) 2015 assessment #####
@@ -245,13 +244,6 @@ parameters = function(Species) {
     Cf       <- c(0.3908, 0.3122, 0.2246,   # fraction of fishery caught / fleet
                   0.0295, 0.0429)           #       from upcurve to 1
   }
-
-  output = list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
-                Alpha, Beta, F_fin, A50_up, A50_down, Cf)
-
-  return(output)
-
 
   ##### English Sole (Northern CA, OR, WA) 2013 assessment #####
   # source: Cope et al. 2013 and
