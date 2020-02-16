@@ -164,19 +164,20 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   P                      <- par[[21]]       # proportion of positive transects
   X                      <- par[[22]]       # mean of positive transects
   SP                     <- par[[23]]       # std of positive transects
-  Fleets                 <- par[[24]]       # fishery fleet names
-  Alpha                  <- par[[25]]       # slope for upcurve
-  Beta                   <- par[[26]]       # slope for downcurve
-  F_fin                  <- par[[27]]       # F_fin for fishery, 0 if asymptotic
-  A50_up                 <- par[[28]]       # A50 for upcurve
-  A50_down               <- par[[29]]       # A50 for downcurve
-  Cf                     <- par[[30]]       # fraction of fishery caught / fleet
+  SM                     <- par[[24]]
+  Fleets                 <- par[[25]]       # fishery fleet names
+  Alpha                  <- par[[26]]       # slope for upcurve
+  Beta                   <- par[[27]]       # slope for downcurve
+  F_fin                  <- par[[28]]       # F_fin for fishery, 0 if asymptotic
+  A50_up                 <- par[[29]]       # A50 for upcurve
+  A50_down               <- par[[30]]       # A50 for downcurve
+  Cf                     <- par[[31]]       # fraction of fishery caught / fleet
 
   ##### Population Dynamics - Non-Time Varying #################################
 
   # Initialize arrays for time-varying dynamics
   IA <- initialize_arrays(A, MPAs, Time1, Time2, R0, Rec_age, Max_age, A1, L1,
-                          A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R,
+                          A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R, SM,
                           Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf, P,
                           X, SP, M, Control_rules, Phi, Stochasticity, D,
                           Transects, H, Surveys, Fishing, Error,

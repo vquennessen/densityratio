@@ -55,8 +55,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
-
-                                            #### selectivity parameters ####
+    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('sport', 'hook', 'trawl') # names of fleets
     Alpha    <- c(0.33, 0.6, 0.64)          # slope of upcurve per fleet
     Beta     <- c(1.2, 0.6, 0)              # slope of downcurve per fleet
@@ -90,6 +89,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
+    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('trawl', 'live', 'dead',  # names of fleets
                   'ocean', 'shore')
     Alpha    <- c(0.325, 0.4, 0.35,
@@ -127,6 +127,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 3.27                        # mean of positive transects
     SP       <- 3.32                        # std of positive transects
+    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('dead', 'live', 'manmade',# names of fleets
                   'shore', 'PBR', 'CPFV')
     Alpha    <- c(0.4, 0.25, 5, 0.15,
@@ -164,6 +165,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
+    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
                    'shore')
     Alpha    <- c(0.4, 0.33, 0.35, 0.9)     # slope of upcurve per fleet
@@ -199,6 +201,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
+    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
                   'WArec', 'ORrec')
     Alpha    <- c(0.25, 0.25, 0.55, 1)      # slope of upcurve per fleet
@@ -234,6 +237,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
+    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
                   'rec', 'hake', 'research')
     Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
@@ -269,6 +273,7 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 0                            # mean of positive transects
     SP       <- 0                            # std of positive transects
+    SM       <- TRUE                        # is selectivity = maturity?
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
                   'rec', 'hake', 'research')
     Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
@@ -281,10 +286,9 @@ parameters = function(Species) {
   }
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
+                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, SM, Fleets,
                 Alpha, Beta, F_fin, A50_up, A50_down, Cf)
 
   return(output)
-
 
 }

@@ -43,6 +43,7 @@
 #' @param Sigma_R numeric value, the recruitment standard deviation.
 #' @param Rho_R numeric value, the recruitment autocorrelation on the interval
 #'    (-1, 1). Default value is 0.
+#' @param SM logical value, is selectivity at age equal to maturity at age?
 #' @param Fleets character vector, the names of all fishing fleets that
 #'    contribute to selectivity at age on the interval (0, 1).
 #' @param Alpha numeric vector, the alpha values for each fishing fleet in
@@ -98,7 +99,7 @@
 #' initialize_arrays(A = 5,  MPAs = c(3), Time1 = 50, Time2 = 20, R0 = 1e+5,
 #'    Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
 #'    K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103, Fb = 0.2, L50 = 39.53,
-#'    Sigma_R = 0.5, Rho_R = 0, Fleets = c('sport', 'hook', 'trawl'),
+#'    Sigma_R = 0.5, Rho_R = 0, SM = F, Fleets = c('sport', 'hook', 'trawl'),
 #'    Alpha = c(0.33, 0.6, 0.64), A50_up = c(2, 5, 10), A50_down = c(6, 16, 35),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
 #'    P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
@@ -106,7 +107,7 @@
 #'    Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool')
 initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
-                              WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
+                              WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0, SM,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
                               P, X, SP, M, Control_rules, Phi,
                               Stochasticity = TRUE, D, Transects = 24, H,
@@ -135,6 +136,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (!is.numeric(L50)) {stop('L50 must be a numeric value.')}
   if (!is.numeric(Sigma_R)) {stop('Sigma_R must be a numeric value.')}
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric value.')}
+  if (!is.logical(SM)) {stop('SM must be a logical value.')}
   if (!is.character(Fleets)) {stop('Fleets must be a character vector.')}
   if (sum(A50_up %% 1 != 0) != 0) {stop('A50_up must be a vector of integers.')}
   if (sum(A50_down %% 1 != 0) != 0) {stop('A50_down must be a vector of integers.')}
@@ -217,7 +219,6 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (length(Cf) != length(Fleets)) {
     stop('Cf must have the same number of elements as Fleets.')}
 
-
   ##############################################################################
 
   # set areas in and out of marine reserves
@@ -240,14 +241,16 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Dimensions = 1 * age
   W <- weight(L, WA, WB)
 
-  # Selectivity at age (updated)
-  # Dimensions = 1 * age
-  S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
-                   A50_down, Alpha, F_fin, Beta, Cf)
-
   # Maturity at age
   # Dimensions = 1 * age
   Mat <- maturity(Rec_age, Max_age, K_mat, L, L50)
+
+  # Selectivity at age (updated)
+  # Dimensions = 1 * age
+  if (SM == FALSE) {
+  S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
+                   A50_down, Alpha, F_fin, Beta, Cf)
+  } else { S <- Mat }
 
   # Cutoff for maturity
   A50_mat <- ages[min(which(Mat > 0.5))]
