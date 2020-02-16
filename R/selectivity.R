@@ -66,8 +66,6 @@ selectivity <- function(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
     stop('All values in A50_down must be greater than 0.')}
   if (sum(Alpha < 0) > 0) {
     stop('All values in Alpha must be greater than 0.')}
-  if (sum(F_fin < 0) > 0) {
-    stop('All values in F_fin must be greater than or equal to 0.')}
   if (sum(Beta < 0) > 0) {
     stop('All values in Beta must be greater than or equal to 0.')}
   if (sum(Cf <= 0) > 0) {stop('All values in Cf must be greater than 0.')}
