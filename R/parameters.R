@@ -274,15 +274,13 @@ parameters = function(Species) {
     X        <- 0                            # mean of positive transects
     SP       <- 0                            # std of positive transects
     SM       <- TRUE                        # is selectivity = maturity?
-    Fleets   <- c('trawl', 'non-trawl',     # names of fleets
-                  'rec', 'hake', 'research')
-    Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
-    Beta     <- c(1, 0, 1, 1, 0.08)         # slope of downcurve per fleet
-    F_fin    <- c(0.36, 1, 0.175, 0.65, 0.8)# final selectivity if dome-shaped
-    A50_up   <- c(5, 5, 4, 8, 1)            # A50 value for upcurve
-    A50_down <- c(10, 50, 7, 11, 30)        # A50 value for downcurve
-    Cf       <- c(0.3908, 0.3122, 0.2246,   # fraction of fishery caught / fleet
-                  0.0295, 0.0429)
+    Fleets   <- c('All')                    # names of fleets
+    Alpha    <- c(1)                        # slope of upcurve per fleet
+    Beta     <- c(1)                        # slope of downcurve per fleet
+    F_fin    <- c(1)                        # final selectivity if dome-shaped
+    A50_up   <- c(1)                        # A50 value for upcurve
+    A50_down <- c(1)                        # A50 value for downcurve
+    Cf       <- c(1)                        # fraction of fishery caught / fleet
   }
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
