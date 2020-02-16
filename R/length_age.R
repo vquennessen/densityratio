@@ -36,8 +36,8 @@ length_age = function(Rec_age, Max_age, A1, L1, A2, L2, K, All_ages = F) {
 
   # acceptable values
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
-  # if (A1 <= 0) {stop('A1 must be greater than 0.')}
-  # if (L1 <= 0) {stop('L1 must be greater than 0.')}
+  if (A1 <= 0) {stop('A1 must be greater than 0.')}
+  if (L1 <= 0) {stop('L1 must be greater than 0.')}
   if (K <= 0) {stop('K must be greater than 0.')}
 
   # relational values
