@@ -106,9 +106,6 @@ Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 
 ##### Initialize arrays #####
 
-# Set historical FM to 0
-Fb <- 0
-
 # Fishing effort stays constant
 E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1))
 
