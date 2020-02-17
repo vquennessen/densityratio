@@ -91,11 +91,20 @@ effort_allocation <- function(t, cr, nm, Allocation = 'IFD', E, Yield,
   # year depends on the distribution of yield from the previous year
   if (Allocation == 'IFD') {
 
+    if (t <= Time1) {
+
+      prop_yield <- Yield[all, t - 1, cr, nm] / sum(Yield[all, t - 1, cr, nm])
+      E[all, t, cr, nm] <- sum(E[all, t - 1, cr, nm])*prop_yield
+
+    } else if (t > Time1) {
+
       prop_yield_out <- Yield[Outside, t - 1, cr, nm] /
         sum(Yield[Outside, t - 1, cr, nm])
 
       E[Outside, t, cr, nm] <- sum(E[, t - 1, cr, nm])*prop_yield_out
       E[Inside, t, cr, nm] <- 0
+
+    }
 
   # Otherwise, distribute effort equally between the four areas outside the
   # marine reserve, regardless of yield

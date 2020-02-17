@@ -223,6 +223,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
       for (nm in 1:NM) {
 
+        # effort allocation
+        E <- effort_allocation(t, cr, nm, Allocation, E, Yield, Time1, Inside,
+                               Outside)
+
         # If there is adult movement, add movement
         if (Adult_movement == TRUE) { N <- movement(t, cr, nm, N, A, AMP) }
 
