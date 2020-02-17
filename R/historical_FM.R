@@ -129,7 +129,8 @@ SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
                                              c(1, eq_time, 1, 1))
 
-SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
+# calculate stable age distribution
+SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
                  eq_time = 150, A50_mat, Stochasticity, Rho_R,
                  Nat_mortality = c(M), Recruitment_mode, A = 1)
 
