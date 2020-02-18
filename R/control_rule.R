@@ -146,7 +146,95 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
     E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR[t - Time1 + 1],
                                    floor_DR = 0.2, effort_inc_allowed = 0.1,
                                    Time1)
-  }
+
+    } else if (cr == 7) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
+                          Ind_sampled, Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 100,
+                                     floor_DR = 0, effort_inc_allowed = 0.1,
+                                     Time1)
+
+    } else if (cr == 8) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 3,
+                          Areas_sampled = 'all', Ind_sampled = 'all',
+                          Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
+                                     Time1)
+
+    } else if (cr == 9) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+                          Areas_sampled = 'all', Ind_sampled = 'all',
+                          Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
+                                     Time1)
+
+    } else if (cr == 10) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+                          Areas_sampled = 'far', Ind_sampled = 'all',
+                          Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
+                                     Time1)
+
+    } else if (cr == 11) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+                          Areas_sampled = 'all', Ind_sampled = 'mature',
+                          Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
+                                     Time1)
+
+    } else if (cr == 12) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+                          Areas_sampled = 'all', Ind_sampled = 'all',
+                          Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.8,
+                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
+                                     Time1)
+
+    } else if (cr == 13) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
+                          Ind_sampled, Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 100,
+                                     floor_DR = 0, effort_inc_allowed = 0,
+                                     Time1)
+
+    } else if (cr == 14) {
+
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+                          Areas_sampled = 'all', Ind_sampled = 'all',
+                          Transects, Inside, Outside)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+                                     floor_DR = 0.2, effort_inc_allowed = 0,
+                                     Time1)
+
+    }
+
 
   return(E[, t + 1, cr, ])
 

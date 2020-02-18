@@ -52,8 +52,9 @@ management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
   if (DR <= 0) {stop('DR must be greater than 0.')}
   if (target_DR <= 0) {stop('target_DR must be greater than 0.')}
-  if (floor_DR <= 0) {stop('floor_DR must be greater than 0.')}
-  if (effort_inc_allowed <= 0) {stop('effort_inc_allowed must be greater than 0.')}
+  if (floor_DR < 0) {stop('floor_DR must be greater than or equal to 0.')}
+  if (effort_inc_allowed < 0) {
+    stop('effort_inc_allowed must be greater than or equal to 0.')}
   if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
 
   # relational values
