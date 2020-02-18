@@ -93,8 +93,8 @@ effort_allocation <- function(t, cr, nm, Allocation = 'IFD', E, Yield,
 
     if (t <= Time1) {
 
-      prop_yield <- Yield[all, t - 1, cr, nm] / sum(Yield[all, t - 1, cr, nm])
-      E[all, t, cr, nm] <- sum(E[all, t - 1, cr, nm])*prop_yield
+      prop_yield <- Yield[ , t - 1, cr, nm] / sum(Yield[ , t - 1, cr, nm])
+      E[ , t, cr, nm] <- sum(E[ , t - 1, cr, nm])*prop_yield
 
     } else if (t > Time1) {
 
