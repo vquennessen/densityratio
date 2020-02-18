@@ -5,11 +5,12 @@
 \title{Base Model}
 \usage{
 base_model(Species, R0 = 1e+05, A = 5, MPAs = c(3), Time1 = 50,
-  Time2 = 20, Recruitment_mode = "pool", Error, Stochasticity = TRUE,
-  Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
-  Transects = 24, Adult_movement = TRUE, Plotting = FALSE, Final_DR,
-  Years_sampled = 1, Areas_sampled = "all", Ind_sampled = "all",
-  Allocation = "IFD", Control_rules = c(1:6))
+  Time2 = 20, Recruitment_mode = "pool", Error = 0.05,
+  Stochasticity = TRUE, Surveys = TRUE, Fishery_management = TRUE,
+  Fishing = TRUE, Transects = 24, Adult_movement = TRUE,
+  Plotting = FALSE, Final_DR, Years_sampled = 1,
+  Areas_sampled = "all", Ind_sampled = "all", Allocation = "IFD",
+  Control_rules = c(1:6))
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in

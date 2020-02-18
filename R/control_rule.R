@@ -132,10 +132,9 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
     E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = Final_DR,
                                    floor_DR = 0.2, effort_inc_allowed = 0.1,
                                    Time1)
-  }
 
   # transient control rules with shifting target density ratios
-  else {
+  } else if (cr <= 6) {
 
     target_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm)
 
