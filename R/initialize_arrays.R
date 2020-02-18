@@ -367,6 +367,9 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
         Biomass[a, t, cr, nm] <- sum(N[, a, t, cr, nm] * W)
         SSB[a, t, cr, nm] <- sum(N[, a, t, cr, nm]*W*Mat)
         E[a, t, cr, nm] <- 0.2
+        Catch[, a, t, cr, nm] <- catch(a, t, cr, nm, FM, Nat_mortality, N, A,
+                                       Fb, E, Catch)
+        Yield[a, t, cr, nm] <- sum(Catch[, a, t, cr, nm]*W)
         }
       }
     }
