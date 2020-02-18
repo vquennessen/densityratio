@@ -354,7 +354,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
                   Nat_mortality, Recruitment_mode, A)
 
-  # Enter N, abundance, and biomasses for time = 1 to rec_age
+  # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
   for (a in 1:A) {
     for (t in 1:Rec_age) {
@@ -366,6 +366,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                                                 a, t, cr, nm])
         Biomass[a, t, cr, nm] <- sum(N[, a, t, cr, nm] * W)
         SSB[a, t, cr, nm] <- sum(N[, a, t, cr, nm]*W*Mat)
+        E[a, t, cr, nm] <- 0.2
         }
       }
     }
