@@ -67,11 +67,14 @@ true_DR <- function(t, cr, Abundance_all, Inside = c(3), Outside = c(1, 2, 4, 5)
 
   ##############################################################################
 
+  # adjust nm for case when Error = 0 or not
+  ENM <- ifelse(Error == 0, 1, 2)
+
   # Density of fish outside marine reserve(s)
-  Outside_density <- sum(Abundance_all[Outside, t, cr, 2]) / length(Outside)
+  Outside_density <- sum(Abundance_all[Outside, t, cr, ENM]) / length(Outside)
 
   # Density of fish inside marine reserve(s)
-  Inside_density <- sum(Abundance_all[Inside, t, cr, 2]) / length(Inside)
+  Inside_density <- sum(Abundance_all[Inside, t, cr, ENM]) / length(Inside)
 
   # True density ratio
   Density_ratio[t - Time1 + 1, cr] <- Outside_density / Inside_density
