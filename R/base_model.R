@@ -321,7 +321,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
       # calculate true density ratio
       Density_ratio <- true_DR(t, cr, Abundance_all, Inside, Outside,
-                               Density_ratio, Time1)
+                               Density_ratio, Time1, Error)
 
     }
 

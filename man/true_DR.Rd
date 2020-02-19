@@ -5,7 +5,7 @@
 \title{True density ratio}
 \usage{
 true_DR(t, cr, Abundance_all, Inside = c(3), Outside = c(1, 2, 4, 5),
-  Density_ratio, Time1 = 50)
+  Density_ratio, Time1 = 50, Error)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -27,6 +27,9 @@ under each control rule, and for each estimate of natural mortality.}
 
 \item{Time1}{numeric value, the number of years to run the model before a
 marine reserve is implemented. Default value is 50.}
+
+\item{Error}{numeric value, the error between estimated and correct natural
+mortality.}
 }
 \value{
 a numeric array that updates the true density ratios for the most
@@ -40,5 +43,5 @@ a numeric array that updates the true density ratios for the most
 Abundance_all <- array(rep(3400, 5*70*6*3), c(5, 70, 6, 3))
 Density_ratio <- array(rep(0, (20 + 1)*6), c(20 + 1, 6))
 true_DR(t = 51, cr = 1, Abundance_all, Inside = c(3), Outside = c(1, 2, 4, 5),
-   Density_ratio, Time1 = 50)
+   Density_ratio, Time1 = 50, Error = 0.05)
 }
