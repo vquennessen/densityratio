@@ -343,7 +343,8 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
     E[, 1:Time1, , ] <- rep(1/A, A*CR*Time1*NM)
 
     # Set constant fishing mortality rate for first 50 years
-    fm <- f_mortality(a = 1, t = 1, cr = 1, nm = 2, FM, A, Fb, E, S)
+    ifelse(Error == 0, ENM = 1, ENM = 2)
+    fm <- f_mortality(a = 1, t = 1, cr = 1, nm = ENM, FM, A, Fb, E, S)
     FM[, , 1:Time1, , ] <- rep(fm, A*Time1*CR*NM)
 
   }

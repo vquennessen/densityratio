@@ -379,7 +379,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
     position <- 'left'
 
     # transient DR for population with correct M
-    y_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm = 2)
+    ifelse(Error == 0, ENM = 1, ENM = 2)
+    y_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm = ENM)
 
     ##### Plot relative biomass over time after reserve implementation #########
 
