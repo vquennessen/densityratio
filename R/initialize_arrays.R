@@ -343,7 +343,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
     E[, 1:Time1, , ] <- rep(1/A, A*CR*Time1*NM)
 
     # Set constant fishing mortality rate for first 50 years
-    ifelse(Error == 0, ENM = 1, ENM = 2)
+    ENM <- ifelse(Error == 0, 1, 2)
     fm <- f_mortality(a = 1, t = 1, cr = 1, nm = ENM, FM, A, Fb, E, S)
     FM[, , 1:Time1, , ] <- rep(fm, A*Time1*CR*NM)
 
@@ -353,7 +353,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                  Nat_mortality, Recruitment_mode, A)
+                  Recruitment_mode, A)
 
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR

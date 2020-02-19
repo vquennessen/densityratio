@@ -27,7 +27,6 @@
 #'    component? Default value is TRUE.
 #' @param Rho_R numeric value, the recruitment autocorrelation on the interval
 #'    (-1, 1). Default value is 0.
-#' @param Nat_mortality numeric vector, the estimates of natural mortality.
 #' @param Recruitment_mode character value, values can be:
 #'    'closed' - the recruits in each area originate from adults in that area.
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
@@ -53,11 +52,10 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65, B0 = 1e+5/1.1,
 #'    Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150, A50_mat = 8,
-#'    Stochasticity = TRUE, Rho_R = 0, Nat_mortality = 0.14,
-#'    Recruitment_mode = 'pool', A = 5)
+#'    Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool', A = 5)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                     eq_time, A50_mat, Stochasticity, Rho_R, Nat_mortality,
-                     Recruitment_mode, A) {
+                     eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
+                     A) {
 
   ###### Error handling ########################################################
 
@@ -78,7 +76,6 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (!is.logical(Stochasticity)) {
     stop('Stochasticity must be a logical value.')}
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
-  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
@@ -98,8 +95,6 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (eq_time <= 0) {stop('eq_time must be greater than 0.')}
   if (A50_mat <= 0) {stop('A50_mat must be greater than 0.')}
   if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
-  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
-    stop('All values in Nat_mortality must be between 0 and 1.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
     stop('Recruitment_mode must be either "pool" or "closed".')}
   if (A <= 0) {stop('A must be greater than 0.')}
