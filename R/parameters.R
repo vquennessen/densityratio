@@ -55,7 +55,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
-    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('sport', 'hook', 'trawl') # names of fleets
     Alpha    <- c(0.33, 0.6, 0.64)          # slope of upcurve per fleet
     Beta     <- c(1.2, 0.6, 0)              # slope of downcurve per fleet
@@ -89,7 +88,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
-    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('trawl', 'live', 'dead',  # names of fleets
                   'ocean', 'shore')
     Alpha    <- c(0.325, 0.4, 0.35,
@@ -127,7 +125,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <- 3.27                        # mean of positive transects
     SP       <- 3.32                        # std of positive transects
-    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('dead', 'live', 'manmade',# names of fleets
                   'shore', 'PBR', 'CPFV')
     Alpha    <- c(0.4, 0.25, 5, 0.15,
@@ -165,7 +162,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
-    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
                    'shore')
     Alpha    <- c(0.4, 0.33, 0.35, 0.9)     # slope of upcurve per fleet
@@ -201,7 +197,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
-    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
                   'WArec', 'ORrec')
     Alpha    <- c(0.25, 0.25, 0.55, 1)      # slope of upcurve per fleet
@@ -237,7 +232,6 @@ parameters = function(Species) {
                                             #       in PISCO monitoring data
     X        <-                             # mean of positive transects
     SP       <-                             # std of positive transects
-    SM       <- FALSE                       # is selectivity = maturity?
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
                   'rec', 'hake', 'research')
     Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
@@ -249,39 +243,6 @@ parameters = function(Species) {
                   0.0295, 0.0429)           #       from upcurve to 1
   }
 
-  ##### English Sole (Northern CA, OR, WA) 2013 assessment #####
-  # source: Cope et al. 2013 and
-  if (Species == 'ES_COW_2013') {
-    Max_age  <- 23                          # maximum age
-    M        <- 0.26                        # natural mortality
-    Rec_age  <- 4                           # age at recruitment
-    WA       <- 8.21e-5;   WB   <- 2.94     # weight at length parameters (f)
-    A1       <- 2;         L1   <- 17.34;   # growth parameters (f)
-    A2       <- 20;        L2   <- 40.56;
-    K        <- 0.36
-    L50      <- 31                          # length at 50% maturity
-    K_mat    <- -0.61                       # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
-    H        <- 0.85                        # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
-    Sigma_R  <- 0.8                         # recruitment standard deviation
-    Rho_R    <- 0                           # recruitment autocorrelation
-    AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.88                        # depletion
-    Fb       <- 0                            # fishing mortality to cause D
-    P        <- 0                            # Proportion of positive transects
-                                            #       in PISCO monitoring data
-    X        <- 0                            # mean of positive transects
-    SP       <- 0                            # std of positive transects
-    SM       <- TRUE                        # is selectivity = maturity?
-    Fleets   <- c('All')                    # names of fleets
-    Alpha    <- c(1)                        # slope of upcurve per fleet
-    Beta     <- c(1)                        # slope of downcurve per fleet
-    F_fin    <- c(1)                        # final selectivity if dome-shaped
-    A50_up   <- c(1)                        # A50 value for upcurve
-    A50_down <- c(1)                        # A50 value for downcurve
-    Cf       <- c(1)                        # fraction of fishery caught / fleet
-  }
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
                 LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, SM, Fleets,
