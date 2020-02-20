@@ -311,8 +311,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
       # management
         if (Fishery_management == TRUE && t < TimeT) {
-          E[, t, cr, ] <- control_rule(t, Control_rules, cr, A, E, Count, Time1,
-                                       TimeT, Transects, Nat_mortality,
+          E[, t, cr, ] <- control_rule(t, Control_rules, cr, nm, A, E, Count,
+                                       Time1, TimeT, Transects, Nat_mortality,
                                        Final_DR, Inside, Outside, Areas_sampled,
                                        Ind_sampled, Years_sampled)
         }
