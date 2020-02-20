@@ -129,7 +129,7 @@ control_rule <- function(t, Control_rules, cr, nm, A = 5, E, Count, Time1 = 50,
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
   if (length(Nat_mortality) > dim(E)[4]) {
     stop('Incorrect number of natural mortality estimates.')}
-  if (cr > length(CR)) {stop('The given "cr" value is too high.')}
+  if (cr > length(Control_rules)) {stop('The given "cr" value is too high.')}
   if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
 
   ##############################################################################
