@@ -245,7 +245,7 @@ parameters = function(Species) {
 
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, SM, Fleets,
+                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
                 Alpha, Beta, F_fin, A50_up, A50_down, Cf)
 
   return(output)

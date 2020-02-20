@@ -70,14 +70,13 @@ Rho_R                  <- par[[17]]       # recruitment autocorrelation
                                           #       in PISCO monitoring data
 D                      <- par[[19]]
 SP                     <- par[[23]]       # std of positive transects
-SM                     <- par[[24]]       # is selectivity = maturity at age?
-Fleets                 <- par[[25]]       # fishery fleet names
-Alpha                  <- par[[26]]       # slope for upcurve
-Beta                   <- par[[27]]       # slope for downcurve
-F_fin                  <- par[[28]]       # F_fin for fishery, 0 if asymptotic
-A50_up                 <- par[[29]]       # L50 for upcurve
-A50_down               <- par[[30]]       # L50 for downcurve
-Cf                     <- par[[31]]       # fraction of fishery caught / fleet
+Fleets                 <- par[[24]]       # fishery fleet names
+Alpha                  <- par[[25]]       # slope for upcurve
+Beta                   <- par[[26]]       # slope for downcurve
+F_fin                  <- par[[27]]       # F_fin for fishery, 0 if asymptotic
+A50_up                 <- par[[28]]       # L50 for upcurve
+A50_down               <- par[[29]]       # L50 for downcurve
+Cf                     <- par[[30]]       # fraction of fishery caught / fleet
 
 ##### Calculate set values #####
 ages <- Rec_age:Max_age                            # applicable ages
@@ -93,10 +92,8 @@ A50_mat <- ages[min(which(Mat > 0.5))]
 # unfished biomass
 B0 <- R0/Phi
 # selectivity at age
-if (SM == FALSE) {
-  S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
+S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                    A50_down, Alpha, F_fin, Beta, Cf)
-} else { S <- Mat }
 
 # NM - number of estimates of natural mortality
 NM <- 1
