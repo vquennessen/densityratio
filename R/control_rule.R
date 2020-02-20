@@ -4,6 +4,8 @@
 #'    the fishery (i.e. set fishing effort for the next timestep).
 #'
 #' @param t temporary numeric value, the current time step.
+#' @param Control_rules numeric vector, the control rules to be compared.
+#'    Default value is c(1:6).
 #' @param cr temporary numeric value, the current control rule.
 #' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
@@ -45,14 +47,16 @@
 #' @examples
 #' E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
 #' Count <- array(rep(5, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
-#' control_rule(t = 51, cr = 1, A = 5, E, Count, Time1 = 50, TimeT = 70,
-#'    Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6,
-#'    Inside = c(3), Outside = c(1, 2, 4, 5), Areas_sampled = 'all',
-#'    Ind_sampled = 'all', Years_sampled = 1)
-control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
-                         Transects = 24, Nat_mortality, Final_DR, Inside = c(3),
-                         Outside = c(1, 2, 4, 5), Areas_sampled = 'all',
-                         Ind_sampled = 'all', Years_sampled = 1) {
+#' control_rule(t = 51, Control_rules = c(1:6), cr = 1, A = 5, E, Count,
+#'    Time1 = 50, TimeT = 70, Transects = 24,
+#'    Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6, Inside = c(3),
+#'    Outside = c(1, 2, 4, 5), Areas_sampled = 'all', Ind_sampled = 'all',
+#'    Years_sampled = 1)
+control_rule <- function(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
+                         TimeT = 70, Transects = 24, Nat_mortality, Final_DR,
+                         Inside = c(3), Outside = c(1, 2, 4, 5),
+                         Areas_sampled = 'all', Ind_sampled = 'all',
+                         Years_sampled = 1) {
 
   ###### Error handling ########################################################
 
@@ -120,10 +124,12 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
 
   ##############################################################################
 
-  if (cr < 4) { nm = cr } else { nm = cr - 3 }
+  Control_Rule <- Control_rules[cr]
+
+  if (Control_Rule <= 3) { nm = cr } else if (Control_Rule <= 6) { nm = cr - 3 }
 
   # static control rules, with constant target density ratios
-  if (cr < 4) {
+  if (Control_Rule <= 3) {
 
     DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
                         Ind_sampled, Transects, Inside, Outside)
@@ -134,7 +140,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                    Time1)
 
   # transient control rules with shifting target density ratios
-  } else if (cr <= 6) {
+  } else if (Control_Rule <= 6) {
 
     target_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm)
 
@@ -147,7 +153,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                    floor_DR = 0.2, effort_inc_allowed = 0.1,
                                    Time1)
 
-    } else if (cr == 7) {
+    } else if (Control_Rule == 7) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
                           Ind_sampled, Transects, Inside, Outside)
@@ -157,7 +163,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0, effort_inc_allowed = 0.1,
                                      Time1)
 
-    } else if (cr == 8) {
+    } else if (Control_Rule == 8) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 3,
                           Areas_sampled = 'all', Ind_sampled = 'all',
@@ -168,7 +174,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
-    } else if (cr == 9) {
+    } else if (Control_Rule == 9) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
@@ -179,7 +185,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
-    } else if (cr == 10) {
+    } else if (Control_Rule == 10) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
                           Areas_sampled = 'far', Ind_sampled = 'all',
@@ -190,7 +196,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
-    } else if (cr == 11) {
+    } else if (Control_Rule == 11) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'mature',
@@ -201,7 +207,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
-    } else if (cr == 12) {
+    } else if (Control_Rule == 12) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
@@ -212,7 +218,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
-    } else if (cr == 13) {
+    } else if (Control_Rule == 13) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
                           Ind_sampled, Transects, Inside, Outside)
@@ -222,7 +228,7 @@ control_rule <- function(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0, effort_inc_allowed = 0,
                                      Time1)
 
-    } else if (cr == 14) {
+    } else if (Control_Rule == 14) {
 
       DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',

@@ -247,9 +247,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
           # sampling
           if (Surveys == TRUE) {
-              Count[a, t, , , cr, nm] <- sampling(a, t, cr, nm, Delta, Gamma,
-                                                  Abundance_all, Abundance_mature,
-                                                  Transects, X, Count, NuS, A)
+            Count[a, t, , , cr, nm] <- sampling(a, t, cr, nm, Delta, Gamma,
+                                                Abundance_all, Abundance_mature,
+                                                Transects, X, Count, NuS, A)
           }
 
           # fishing
@@ -281,10 +281,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
         for (a in 1:A) {
 
           # biology
-          PD <- pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A,
-                             R0, H, B0, Eps, Sigma_R, Fb, E, S, NM, FM, A50_mat,
-                             Abundance_all, Abundance_mature, Biomass, Fishing,
-                             Nat_mortality, Recruitment_mode)
+          PD <- pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB,
+                             N, W, Mat, A, R0, H, B0, Eps, Sigma_R, Fb, E, S,
+                             NM, FM, A50_mat, Abundance_all, Abundance_mature,
+                             Biomass, Fishing, Nat_mortality, Recruitment_mode)
 
           FM[, a, t, cr, nm]               <- PD[[1]]
           N[, a, t, cr, nm]                <- PD[[2]]
@@ -296,8 +296,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
           # sampling
           if (Surveys == TRUE) {
             Count[a, t, , , cr, nm] <- sampling(a, t, cr, nm, Delta, Gamma,
-                                            Abundance_all, Abundance_mature,
-                                            Transects, X, Count, NuS, A)
+                                                Abundance_all, Abundance_mature,
+                                                Transects, X, Count, NuS, A)
           }
 
           # fishing
@@ -306,16 +306,14 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
                                            A, Fb, E, Catch)
             Yield[a, t, cr, nm] <- sum(Catch[, a, t, cr, nm]*W)
           }
-
         }
-
       }
 
       # management
         if (Fishery_management == TRUE && t < TimeT) {
-          E[, t, cr, ] <- control_rule(t, cr, A, E, Count, Time1, TimeT,
-                                       Transects, Nat_mortality, Final_DR,
-                                       Inside, Outside, Areas_sampled,
+          E[, t, cr, ] <- control_rule(t, Control_rules, cr, A, E, Count, Time1,
+                                       TimeT, Transects, Nat_mortality,
+                                       Final_DR, Inside, Outside, Areas_sampled,
                                        Ind_sampled, Years_sampled)
         }
 
@@ -324,7 +322,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
                                Density_ratio, Time1, Error)
 
     }
-
   }
 
   # Troubleshooting plots

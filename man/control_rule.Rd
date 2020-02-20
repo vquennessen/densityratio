@@ -4,13 +4,16 @@
 \alias{control_rule}
 \title{Control rule}
 \usage{
-control_rule(t, cr, A = 5, E, Count, Time1 = 50, TimeT = 70,
-  Transects = 24, Nat_mortality, Final_DR, Inside = c(3),
+control_rule(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
+  TimeT = 70, Transects = 24, Nat_mortality, Final_DR, Inside = c(3),
   Outside = c(1, 2, 4, 5), Areas_sampled = "all",
   Ind_sampled = "all", Years_sampled = 1)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
+
+\item{Control_rules}{numeric vector, the control rules to be compared.
+Default value is c(1:6).}
 
 \item{cr}{temporary numeric value, the current control rule.}
 
@@ -70,8 +73,9 @@ a numeric vector of fishing effort for the next timestep, under the
 \examples{
 E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
 Count <- array(rep(5, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
-control_rule(t = 51, cr = 1, A = 5, E, Count, Time1 = 50, TimeT = 70,
-   Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6,
-   Inside = c(3), Outside = c(1, 2, 4, 5), Areas_sampled = 'all',
-   Ind_sampled = 'all', Years_sampled = 1)
+control_rule(t = 51, Control_rules = c(1:6), cr = 1, A = 5, E, Count,
+   Time1 = 50, TimeT = 70, Transects = 24,
+   Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6, Inside = c(3),
+   Outside = c(1, 2, 4, 5), Areas_sampled = 'all', Ind_sampled = 'all',
+   Years_sampled = 1)
 }
