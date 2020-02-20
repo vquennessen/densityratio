@@ -4,7 +4,7 @@
 \alias{control_rule}
 \title{Control rule}
 \usage{
-control_rule(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
+control_rule(t, Control_rules, cr, nm, A = 5, E, Count, Time1 = 50,
   TimeT = 70, Transects = 24, Nat_mortality, Final_DR, Inside = c(3),
   Outside = c(1, 2, 4, 5), Areas_sampled = "all",
   Ind_sampled = "all", Years_sampled = 1)
@@ -16,6 +16,8 @@ control_rule(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
 Default value is c(1:6).}
 
 \item{cr}{temporary numeric value, the current control rule.}
+
+\item{nm}{temporary numeric value, the current natural mortality estimate.}
 
 \item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}

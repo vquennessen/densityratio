@@ -7,6 +7,7 @@
 #' @param Control_rules numeric vector, the control rules to be compared.
 #'    Default value is c(1:6).
 #' @param cr temporary numeric value, the current control rule.
+#' @param nm temporary numeric value, the current natural mortality estimate.
 #' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
 #' @param E numeric array, the relative fishing effort displayed in each area,
@@ -52,7 +53,7 @@
 #'    Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6, Inside = c(3),
 #'    Outside = c(1, 2, 4, 5), Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Years_sampled = 1)
-control_rule <- function(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
+control_rule <- function(t, Control_rules, cr, nm, A = 5, E, Count, Time1 = 50,
                          TimeT = 70, Transects = 24, Nat_mortality, Final_DR,
                          Inside = c(3), Outside = c(1, 2, 4, 5),
                          Areas_sampled = 'all', Ind_sampled = 'all',
@@ -62,7 +63,10 @@ control_rule <- function(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
 
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
+  if (sum(Control_rules %% 1 != 0) != 0) {
+    stop('Control_rules must be a vector of integers.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(Count)) {stop('Count must be a numeric array.')}
@@ -79,7 +83,11 @@ control_rule <- function(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
+  if (sum(Control_rules <= 0) > 0) {
+    stop('All values in Control_rules must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
   if (A <= 0) {stop('A must be greater than 0.')}
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
   if (sum(Count < 0) > 0) {
@@ -121,6 +129,8 @@ control_rule <- function(t, Control_rules, cr, A = 5, E, Count, Time1 = 50,
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
   if (length(Nat_mortality) > dim(E)[4]) {
     stop('Incorrect number of natural mortality estimates.')}
+  if (cr > length(CR)) {stop('The given "cr" value is too high.')}
+  if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
 
   ##############################################################################
 
