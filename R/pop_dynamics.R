@@ -148,8 +148,8 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
   if (sum(S < 0) > 0) {stop('All values in S must be greater than or equal to 0.')}
   if (NM != 1 && NM != 3) {stop('NM must be equal to 1 or 3.')}
-  if (sum(FM < 0) > 0 || sum(FM > 1) > 0) {
-    stop('All values in FM must be between 0 and 1.')}
+  if (sum(FM < 0) > 0) {
+    stop('All values in FM must be greater than or equal to 0.')}
   if (A50_mat <= 0) {stop('A50_mat must be greater than 0.')}
   if (sum(Abundance_all < 0) > 0) {
     stop('All values in Abundance_all must be greater than or equal to 0.')}

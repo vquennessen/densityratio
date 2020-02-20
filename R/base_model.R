@@ -324,14 +324,11 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
     }
   }
 
-  # Troubleshooting plots
-  # plot(1:TimeT, N[1, 1, 1:TimeT, 1], type = 'l', col = 'green', ylim = c(0, 2e4))
-  # for (x in 2:(Num - 1)) {
-  #   lines(1:TimeT, N[x, 1, 1:TimeT, 1], col = 'red')
-  # }
-  # lines(1:TimeT, N[Num, 1, 1:TimeT, 1], col = 'blue')
+  ##### Plotting ######
 
-  ##### Calculate relative biomass, yield, and SSB ############################
+  if (Plotting == T) {
+
+  ##### Calculate relative biomass, yield, and SSB #############################
 
   ##### Relative values #####
 
@@ -355,10 +352,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
       Rel_SSB[a, , cr] <- SSB[a, Time1:TimeT, cr, ENM]/SSB[a, Time1, cr, ENM]
     }
   }
-
-  ##### Plotting ######
-
-  if (Plotting == T) {
 
     # use red-blue color palette
     palette <- colorRampPalette(c('red', 'blue'))
