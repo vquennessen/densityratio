@@ -1,6 +1,6 @@
 Package: densityratio
 Title: Using Density Ratios to Help Manage Fisheries In And Around Marine Reserves
-Version: 0.0.1
+Version: 0.0.1.9000
 Year: 2020
 Authors@R: 
     person(given = "Victoria",
