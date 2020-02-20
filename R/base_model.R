@@ -213,6 +213,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   Rel_yield        <- IA[[29]]    # Relative yield after reserve implementation
   Rel_SSB          <- IA[[30]]    # Relative SSB after reserve implementation
   Density_ratio    <- IA[[31]]    # Density ratios
+  ENM              <- IA[[32]]    # nm value that represents "true" M
 
   ##### Population Dynamics - Time Varying #####################################
 
@@ -332,24 +333,26 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
   ##### Calculate relative biomass, yield, and SSB ############################
 
+  ##### Relative values #####
+
   # calculate relative biomass since reserve implementation
   for (a in 1:A) {
     for (cr in 1:CR) {
-      Rel_biomass[a, , cr] <- Biomass[a, Time1:TimeT, cr, 2]/Biomass[a, Time1, cr, 2]
+      Rel_biomass[a, , cr] <- Biomass[a, Time1:TimeT, cr, ENM]/Biomass[a, Time1, cr, ENM]
     }
   }
 
   # calculate relative biomass since reserve implementation
   for (a in 1:A) {
     for (cr in 1:CR) {
-      Rel_yield[a, , cr] <- Yield[a, Time1:TimeT, cr, 2]/Yield[a, Time1, cr, 2]
+      Rel_yield[a, , cr] <- Yield[a, Time1:TimeT, cr, ENM]/Yield[a, Time1, cr, ENM]
     }
   }
 
   # calculate relative biomass since reserve implementation
   for (a in 1:A) {
     for (cr in 1:CR) {
-      Rel_SSB[a, , cr] <- SSB[a, Time1:TimeT, cr, 2]/SSB[a, Time1, cr, 2]
+      Rel_SSB[a, , cr] <- SSB[a, Time1:TimeT, cr, ENM]/SSB[a, Time1, cr, ENM]
     }
   }
 

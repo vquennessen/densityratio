@@ -391,7 +391,8 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   output <- list(Inside, Outside, TimeT, L, W, S, Mat, A50_mat, CR,
                  Nat_mortality, NM, N, SSB, Abundance_all, Abundance_mature,
                  Biomass, Eps, B0, Count, Sigma_S, NuS, Delta, Gamma, FM, E,
-                 Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,  Density_ratio)
+                 Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,  Density_ratio,
+                 ENM)
 
   return(output)
 
