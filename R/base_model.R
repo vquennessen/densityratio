@@ -56,6 +56,8 @@
 #'       the yield caught in each area in the previous timestep.
 #'    'equal' - Effort is allocated equally between all areas.
 #'    Default value is 'IFD'.
+#' @param BM logical value, are the control rules from Babcock and MacCall 2011?
+#'    Default value is FALSE.
 #' @param Control_rules numeric vector, the control rules to be compared.
 #'    Default value is c(1:6).
 #'
@@ -80,7 +82,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
                        Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DR, Years_sampled = 1, Areas_sampled = 'all',
-                       Ind_sampled = 'all', Allocation = 'IFD',
+                       Ind_sampled = 'all', Allocation = 'IFD', BM = FALSE,
                        Control_rules = c(1:6)) {
 
   ###### Error handling ########################################################
@@ -113,6 +115,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   if (!is.character(Ind_sampled)) {
     stop('Ind_sampled must be a character value.')}
   if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
+  if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (sum(Control_rules %% 1 != 0) != 0) {
     stop('Control_rules must be a vector of integers.')}
 
@@ -311,10 +314,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
       # management
         if (Fishery_management == TRUE && t < TimeT) {
-          E[, t, cr, ] <- control_rule(t, Control_rules, cr, nm, A, E, Count,
-                                       Time1, TimeT, Transects, Nat_mortality,
-                                       Final_DR, Inside, Outside, Areas_sampled,
-                                       Ind_sampled, Years_sampled)
+          E[, t, cr, ] <- control_rule(t, cr, nm, A, E, Count, Time1, TimeT,
+                                       Transects, Nat_mortality, Final_DR,
+                                       Inside, Outside, Areas_sampled,
+                                       Ind_sampled, Years_sampled, BM)
         }
 
       # calculate true density ratio

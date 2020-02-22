@@ -10,7 +10,7 @@ base_model(Species, R0 = 1e+05, A = 5, MPAs = c(3), Time1 = 50,
   Fishing = TRUE, Transects = 24, Adult_movement = TRUE,
   Plotting = FALSE, Final_DR, Years_sampled = 1,
   Areas_sampled = "all", Ind_sampled = "all", Allocation = "IFD",
-  Control_rules = c(1:6))
+  BM = FALSE, Control_rules = c(1:6))
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
@@ -85,6 +85,9 @@ be:
    the yield caught in each area in the previous timestep.
 'equal' - Effort is allocated equally between all areas.
 Default value is 'IFD'.}
+
+\item{BM}{logical value, are the control rules from Babcock and MacCall 2011?
+Default value is FALSE.}
 
 \item{Control_rules}{numeric vector, the control rules to be compared.
 Default value is c(1:6).}
