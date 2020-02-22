@@ -53,9 +53,12 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (!is.numeric(Count)) {stop('Count must be a numeric array.')}
-  if (Years_sampled %% 1 != 0) {stop('Years_sampled must be an integer value.')}
-  if (!is.character(Areas_sampled)) {stop('Areas_sampled must be a character value.')}
-  if (!is.character(Ind_sampled)) {stop('Ind_sampled must be a character value.')}
+  if (Years_sampled %% 1 != 0 && !is.null(Years_sampled)) {
+    stop('Years_sampled must be an integer value or NULL.')}
+  if (!is.character(Areas_sampled) && !is.null(Areas_sampled)) {
+    stop('Areas_sampled must be a character value or NULL.')}
+  if (!is.character(Ind_sampled) && !is.null(Ind_sampled)) {
+    stop('Ind_sampled must be a character value or NULL.')}
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
   if (sum(Inside %% 1 != 0) != 0) {stop('Inside must be a vector of integers.')}
   if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
@@ -68,11 +71,16 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (A <= 0) {stop('A must be greater than 0.')}
   if (sum(Count < 0) > 0) {
     stop('All values in Count must be greater than or equal to 0.')}
-  if (Years_sampled <= 0) {stop('Years_sampled must be greater than 0.')}
-  if (Areas_sampled != 'far' && Areas_sampled != 'all') {
-    stop('Areas_sampled must be either "far" or "all".')}
-  if (Ind_sampled != 'mature' && Ind_sampled != 'all') {
-    stop('Ind_sampled must be either "mature" or "all".')}
+  if (Years_sampled <= 0 && !is.null(Years_sampled)) {
+    stop('Years_sampled must be greater than 0 or NULL.')}
+  if (is.numeric(Years_sampled) && Years_sampled <= 0) {
+    stop('Years_sampled must be greater than 0 or NULL.')}
+  if (is.character(Areas_sampled) && Areas_sampled != 'far' &&
+      Areas_sampled != 'all' ) {
+    stop('Areas_sampled must be either "far" or "all" or NULL.')}
+  if (is.character(Ind_sampled) && Ind_sampled != 'mature' &&
+      Ind_sampled != 'all') {
+    stop('Ind_sampled must be either "mature" or "all" or NULL.')}
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (sum(Inside < 0) > 0) {
     stop('All values in Inside must be greater than or equal to 0.')}
