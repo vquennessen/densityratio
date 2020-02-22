@@ -144,6 +144,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
   if (sum(Control_rules <= 0) > 0) {
     stop('All values in Control_rules must be greater than 0.')}
+  if (is.null(Years_sampled) || is.null(Areas_sampled) || is.null(Ind_sampled)
+      && BM == FALSE) {stop('BM must be TRUE for Years_sampled, Areas_sampled,
+                            or Ind_sampled to be NULL.')}
 
   ##############################################################################
 
