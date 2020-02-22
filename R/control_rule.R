@@ -70,10 +70,12 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
   if (TimeT %% 1 != 0) {stop('TimeT must be an integer value.')}
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
-  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
+  if (!is.numeric(Nat_mortality)) {
+    stop('Nat_mortality must be a numeric vector.')}
   if (!is.numeric(Final_DR)) {stop('Final_DR must be a numeric value.')}
   if (sum(Inside %% 1 != 0) != 0) {stop('Inside must be a vector of integers.')}
-  if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
+  if (sum(Outside %% 1 != 0) != 0) {
+    stop('Outside must be a vector of integers.')}
   if (Years_sampled %% 1 != 0 && !is.null(Years_sampled)) {
     stop('Years_sampled must be an integer value or NULL.')}
   if (!is.character(Areas_sampled) && !is.null(Areas_sampled)) {
@@ -88,7 +90,8 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (nm <= 0 || nm > 3) {
     stop('nm must be greater than 0 and less than or equal to 3.')}
   if (A <= 0) {stop('A must be greater than 0.')}
-  if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
+  if (sum(E < 0) > 0) {
+    stop('All values in E must be greater than or equal to 0.')}
   if (sum(Count < 0) > 0) {
     stop('All values in Count must be greater than or equal to 0.')}
   if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
@@ -101,11 +104,13 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
     stop('All values in Inside must be greater than or equal to 0.')}
   if (sum(Outside < 0) > 0) {
     stop('All values in Outside must be greater than or equal to 0.')}
-  if (Years_sampled <= 0 && !is.null(Years_sampled)) {
+  if (is.numeric(Years_sampled) && Years_sampled <= 0) {
     stop('Years_sampled must be greater than 0 or NULL.')}
-  if (Areas_sampled != 'far' && Areas_sampled != 'all' && !is.null(Areas_sampled)) {
+  if (is.character(Areas_sampled) && Areas_sampled != 'far' &&
+      Areas_sampled != 'all' ) {
     stop('Areas_sampled must be either "far" or "all" or NULL.')}
-  if (Ind_sampled != 'mature' && Ind_sampled != 'all' && !is.null(Ind_sampled)) {
+  if (is.character(Ind_sampled) && Ind_sampled != 'mature' &&
+      Ind_sampled != 'all') {
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
 
   # relational values
@@ -120,7 +125,8 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
     stop('E or Count has an incorrect number of areas.')}
   if(dim(E)[2] != dim(Count)[2] || dim(E)[2] != TimeT) {
     stop('E or Count has an incorrect number of time steps.')}
-  if(dim(Count)[3] != Transects) {stop('Count has the wrong number of transects.')}
+  if(dim(Count)[3] != Transects) {
+    stop('Count has the wrong number of transects.')}
   if(dim(E)[3] != dim(Count)[5]) {
     stop('E or Count has an incorrect number of control rules.')}
   if(dim(E)[4] != dim(Count)[6]) {
