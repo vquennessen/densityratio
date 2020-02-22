@@ -134,12 +134,14 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   if (Final_DR <= 0) {stop('Final_DR must be greater than 0.')}
   if (Years_sampled <= 0 && !is.null(Years_sampled)) {
     stop('Years_sampled must be greater than 0 or NULL.')}
-  if (Areas_sampled != 'far' && Areas_sampled != 'all' && !is.null(Areas_sampled)) {
+  if (is.numeric(Years_sampled) && Years_sampled <= 0) {
+    stop('Years_sampled must be greater than 0 or NULL.')}
+  if (is.character(Areas_sampled) && Areas_sampled != 'far' &&
+      Areas_sampled != 'all' ) {
     stop('Areas_sampled must be either "far" or "all" or NULL.')}
-  if (Ind_sampled != 'mature' && Ind_sampled != 'all' && !is.null(Ind_sampled)) {
+  if (is.character(Ind_sampled) && Ind_sampled != 'mature' &&
+      Ind_sampled != 'all') {
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
-  if (Allocation != 'IFD' && Allocation != 'equal') {
-    stop('Allocation must be either "IFD" or "equal".')}
   if (sum(Control_rules <= 0) > 0) {
     stop('All values in Control_rules must be greater than 0.')}
 
