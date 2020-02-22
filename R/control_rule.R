@@ -168,6 +168,7 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
     }
+
   } else if (BM == TRUE) {
 
     if (cr == 1) {
@@ -238,8 +239,9 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
 
     } else if (cr == 7) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
-                          Ind_sampled, Transects, Inside, Outside)
+      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+                          Areas_sampled = 'all', Ind_sampled = 'all',
+                          Transects, Inside, Outside)
 
       # calculate effort at the next timestep
       E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 100,
