@@ -183,8 +183,6 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
     stop('All values in A50_down must be greater than 0.')}
   if (sum(Alpha < 0) > 0) {
     stop('All values in Alpha must be greater than 0.')}
-  if (sum(F_fin < 0) > 0) {
-    stop('All values in F_fin must be greater than or equal to 0.')}
   if (sum(Beta < 0) > 0) {
     stop('All values in Beta must be greater than or equal to 0.')}
   if (sum(Cf <= 0) > 0) {stop('All values in Cf must be greater than 0.')}
