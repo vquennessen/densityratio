@@ -32,8 +32,6 @@
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
 #'    Default value is 'pool'.
-#' @param A numeric value, the number of total areas in the model. Default
-#'    value is 5.
 #'
 #' @return a numeric vector of numbers at age after enough years with no fishing
 #'    that proportions remain stable over time.
@@ -52,10 +50,9 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65, B0 = 1e+5/1.1,
 #'    Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150, A50_mat = 8,
-#'    Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool', A = 5)
+#'    Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool')
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                     eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
-                     A) {
+                     eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode) {
 
   ###### Error handling ########################################################
 
@@ -78,7 +75,6 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
-  if (A %% 1 != 0) {stop('A must be an integer value.')}
 
   # acceptable values
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
@@ -97,7 +93,6 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
     stop('Recruitment_mode must be either "pool" or "closed".')}
-  if (A <= 0) {stop('A must be greater than 0.')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}

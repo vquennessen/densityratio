@@ -349,7 +349,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                  Recruitment_mode, A)
+                  Recruitment_mode)
 
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
