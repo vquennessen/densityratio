@@ -33,5 +33,5 @@ numeric array of updated N (numbers at age, area, timestep, control
 }
 \examples{
 N <- array(rep(10, 34*5*70*6*3), c(34, 5, 70, 6, 3))
-movement(t = 1, cr = 1, nm = 1, N, A = 5, AMP = 0.10)
+movement(t = 1, cr = 1, nm = 1, N, A = 5, AMP = 0.1)
 }
