@@ -18,7 +18,6 @@ knitr::opts_chunk$set(
 
 ```{r, echo = FALSE}
 rm(list = ls())
-setwd('~/Projects/MS-thesis/code')
 devtools::install_git('https://github.com/vquennessen/densityratio.git')
 library(densityratio)
 ```
