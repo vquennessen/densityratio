@@ -23,12 +23,6 @@
 #'    each age, from age at recruitment to maximum age, on the interval (0, 1).
 #' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
-#' @param R0 numeric value, set arbitrarily, the unfished recruitment. Default
-#'    value is 1e+5.
-#' @param H numeric value, the steepness of the stock-recruitment curve.
-#' @param B0 numeric value, the unfished biomass.
-#' @param Eps numeric array, the recruitment error terms.
-#' @param Sigma_R numeric value, the recruitment standard deviation.
 #' @param Fb numeric value, the historical fishing effort for the fished species.
 #' @param E numeric array, the relative fishing effort displayed in each area,
 #'    at each time step, under each control rule, and for each natural mortality
@@ -53,11 +47,9 @@
 #'    in kg.
 #' @param Fishing logical value, is fishing occurring? Default value is TRUE.
 #' @param Nat_mortality numeric vector, the estimates of natural mortality.
-#' @param Recruitment_mode character value, values can be:
-#'    'closed' - the recruits in each area originate from adults in that area.
-#'    'pool' - the recruits in each area come from a pool of larvae produced by
-#'       adults in all areas.
-#'    Default value is 'pool'.
+#' @param R numeric vector, the estimated recruits coming into each area at the
+#'    current time step, under the current control rule, and with the current
+#'    estimate of natural mortality.
 #'
 #' @return numeric arrays, with updated values of fishing mortality (FM),
 #'    numbers at age (N), Abundance_all, Abundance_mature, Biomass, and spawning
@@ -75,22 +67,23 @@
 #'    L2 = 47.95, K = 0.2022, All_ages = FALSE)
 #' W <- weight(L, WA = 1.68e-5, WB = 3)
 #' Mat <- maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
-#' NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
-#' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
 #' E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
 #' S <- selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
 #'    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
+#' NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
+#' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
+#' R <- recruitment(t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
+#'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
+#'    LDP = 0.1)
 #' pop_dynamics(a = 1, t = 3, cr = 1, nm = 2, Rec_age = 2, Max_age = 35, SSB, N,
-#'    W, Mat, A = 5, R0 = 1e+5, H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5,
-#'    Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Abundance_all, Abundance_mature,
-#'    Biomass, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19),
-#'    Recruitment_mode = 'pool')
+#'    W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Biomass,
+#'    Abundance_all, Abundance_mature, Fishing = TRUE,
+#'    Nat_mortality = c(0.09, 0.14, 0.19), R)
 pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
-                         R0 = 1e+5, H, B0, Eps, Sigma_R, Fb, E, S, NM = 3, FM,
-                         A50_mat, Abundance_all, Abundance_mature, Biomass,
-                         Fishing = T, Nat_mortality, Recruitment_mode = 'pool') {
+                         Fb, E, S, NM = 3, FM, A50_mat, Biomass, Abundance_all,
+                         Abundance_mature, Fishing = T, Nat_mortality, R) {
 
   ###### Error handling ########################################################
 
@@ -106,11 +99,6 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   if (!is.numeric(W)) {stop('W must be a numeric vector.')}
   if (!is.numeric(Mat)) {stop('Mat must be a numeric vector.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
-  if (R0 <= 0) {stop('R0 must be greater than 0.')}
-  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
-  if (!is.numeric(B0)) {stop('B0 must be a numeric value.')}
-  if (!is.numeric(Eps)) {stop('Eps must be a numeric array.')}
-  if (!is.numeric(Sigma_R)) {stop('Sigma_R must be a numeric array.')}
   if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(S)) {stop('S must be a numeric vector.')}
@@ -124,8 +112,6 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   if (!is.numeric(Biomass)) {stop('Biomass must be a numeric array.')}
   if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
   if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
-  if (!is.character(Recruitment_mode)) {
-    stop('Recruitment mode must be a character value.')}
 
   # acceptable values
   if (a <= 0) {stop('a must be greater than 0.')}
@@ -140,10 +126,6 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   if (sum(Mat <= 0) > 0 || sum(Mat > 1) > 0) {
     stop('All values in Mat must be between 0 and 1.')}
   if (A <= 0) {stop('A must be greater than 0.')}
-  if (R0 <= 0) {stop('R0 must be greater than 0.')}
-  if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
-  if (B0 <= 0) {stop('B0 must be greater than 0.')}
-  if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
   if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
   if (sum(S < 0) > 0) {stop('All values in S must be greater than or equal to 0.')}
@@ -159,8 +141,7 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
     stop('All values in Biomass must be greater than or equal to 0.')}
   if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
     stop('All values in Nat_mortality must be between 0 and 1.')}
-  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
-    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (sum(R < 0) > 0) {stop('All values in R must be greater than or equal to 0.')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
@@ -205,8 +186,7 @@ pop_dynamics <- function(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
   ##### Step population foward in time
 
   # Calculate recruitment and add recruits to population
-  N[1, a, t, cr, nm] <- recruitment(a, t, cr, nm, SSB, A, R0, H, B0, Eps,
-                                    Sigma_R, Rec_age, Recruitment_mode)
+  N[1, a, t, cr, nm] <- R[a]
 
   # Ages rec_age + 1 to max_age - 1
   for (i in 2:(num - 1)) {

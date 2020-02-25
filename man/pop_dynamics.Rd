@@ -4,10 +4,9 @@
 \alias{pop_dynamics}
 \title{Population Dynamics}
 \usage{
-pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
-  R0 = 1e+05, H, B0, Eps, Sigma_R, Fb, E, S, NM = 3, FM, A50_mat,
-  Abundance_all, Abundance_mature, Biomass, Fishing = T, Nat_mortality,
-  Recruitment_mode = "pool")
+pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A = 5, Fb,
+  E, S, NM = 3, FM, A50_mat, Biomass, Abundance_all, Abundance_mature,
+  Fishing = T, Nat_mortality, R)
 }
 \arguments{
 \item{a}{temporary numeric value, the current area.}
@@ -39,17 +38,6 @@ each age, from age at recruitment to maximum age, on the interval (0, 1).}
 \item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}
 
-\item{R0}{numeric value, set arbitrarily, the unfished recruitment. Default
-value is 1e+5.}
-
-\item{H}{numeric value, the steepness of the stock-recruitment curve.}
-
-\item{B0}{numeric value, the unfished biomass.}
-
-\item{Eps}{numeric array, the recruitment error terms.}
-
-\item{Sigma_R}{numeric value, the recruitment standard deviation.}
-
 \item{Fb}{numeric value, the historical fishing effort for the fished species.}
 
 \item{E}{numeric array, the relative fishing effort displayed in each area,
@@ -69,6 +57,10 @@ estimates of natural mortality.}
 \item{A50_mat}{numeric value, the first age at which 50\% or more individuals
 are estimated to be mature. on the interval (Rec_age, Max_age).}
 
+\item{Biomass}{numeric array, the total biomass in each area, at each time
+step, under all control rules, with all estimates of natural mortality,
+in kg.}
+
 \item{Abundance_all}{numeric array, the total number of individuals in each
 area, at each timestep, under all control rules, with all estimates of
 natural mortality.}
@@ -77,19 +69,13 @@ natural mortality.}
 each area, at each timestep, under all control rules, with all estimates
 of natural mortality.}
 
-\item{Biomass}{numeric array, the total biomass in each area, at each time
-step, under all control rules, with all estimates of natural mortality,
-in kg.}
-
 \item{Fishing}{logical value, is fishing occurring? Default value is TRUE.}
 
 \item{Nat_mortality}{numeric vector, the estimates of natural mortality.}
 
-\item{Recruitment_mode}{character value, values can be:
-'closed' - the recruits in each area originate from adults in that area.
-'pool' - the recruits in each area come from a pool of larvae produced by
-   adults in all areas.
-Default value is 'pool'.}
+\item{R}{numeric vector, the estimated recruits coming into each area at the
+current time step, under the current control rule, and with the current
+estimate of natural mortality.}
 }
 \value{
 numeric arrays, with updated values of fishing mortality (FM),
@@ -113,16 +99,18 @@ L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    L2 = 47.95, K = 0.2022, All_ages = FALSE)
 W <- weight(L, WA = 1.68e-5, WB = 3)
 Mat <- maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
-NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
-Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
 E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
 S <- selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
+NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
+Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
+R <- recruitment(t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
+   B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
+   LDP = 0.1)
 pop_dynamics(a = 1, t = 3, cr = 1, nm = 2, Rec_age = 2, Max_age = 35, SSB, N,
-   W, Mat, A = 5, R0 = 1e+5, H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5,
-   Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Abundance_all, Abundance_mature,
-   Biomass, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19),
-   Recruitment_mode = 'pool')
+   W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Biomass,
+   Abundance_all, Abundance_mature, Fishing = TRUE,
+   Nat_mortality = c(0.09, 0.14, 0.19), R)
 }
