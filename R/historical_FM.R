@@ -63,6 +63,7 @@ A2  <- par[[8]];  L2   <- par[[9]]
 K   <- par[[10]]
 L50                    <- par[[11]]       # length at 50% maturity
 K_mat                  <- par[[12]]       # slope of maturity curve
+LDP                    <- par[[13]]       # larval drift proportion
 H                      <- par[[14]]       # steepness
 Phi                    <- par[[15]]       # unfished recruits per spawner
 Sigma_R                <- par[[16]]       # recruitment standard deviation
@@ -125,7 +126,8 @@ abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
 
 # calculate stable age distribution
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
-                 eq_time = 150, A50_mat, Stochasticity, Rho_R, Recruitment_mode)
+                 eq_time = 150, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
+                 LDP = 0.1)
 
 # initial final biomass with no fishing
 FM0_biomass <- sum(W*SAD)
@@ -146,11 +148,14 @@ for (i in 2:fn) {
   # Step population forward in time with set fishing level
   for (t in (Rec_age + 1):eq_time) {
 
+    # recruitment
+    R <- recruitment(t, cr = 1, nm = 1, SSB2, A = 1, R0, H, B0, Eps2, Sigma_R,
+                     Rec_age, Recruitment_mode, LDP)
+
     PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
-                       N2, W, Mat, A = 1, R0, H, B0, Eps2, Sigma_R, Fb = 0, E2,
-                       S, NM, FM2, A50_mat, abundance_all2, abundance_mature2,
-                       biomass2, Fishing = T, Nat_mortality = c(M),
-                       Recruitment_mode)
+                       N2, W, Mat, A = 1, Fb = 0, E2, S, NM, FM2, A50_mat,
+                       abundance_all2, abundance_mature2, biomass2, Fishing = T,
+                       Nat_mortality = c(M), R)
 
     FM2[, 1, t, 1, 1]               <- rep(FM_values[i], num)
     N2[, 1, t, 1, 1]                <- PD[[2]]
