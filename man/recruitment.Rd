@@ -4,12 +4,10 @@
 \alias{recruitment}
 \title{Recruitment}
 \usage{
-recruitment(a, t, cr, nm, SSB, A = 5, R0 = 1e+05, H, B0, Eps, Sigma_R,
-  Rec_age, Recruitment_mode)
+recruitment(t, cr, nm, SSB, A = 5, R0 = 1e+05, H, B0, Eps, Sigma_R,
+  Rec_age, Recruitment_mode, LDP = 0.1)
 }
 \arguments{
-\item{a}{temporary numeric value, the current area.}
-
 \item{t}{temporary numeric value, the current time step .}
 
 \item{cr}{temporary numeric value, the current control rule .}
@@ -41,6 +39,10 @@ value is 1e+5.}
 'pool' - the recruits in each area come from a pool of larvae produced by
    adults in all areas.
 Default value is 'pool'.}
+
+\item{LDP}{numeric value, the larval drift proportion, the proportion of
+larvae that drift from one area to an adjacent area before settling.
+Default value is 0.1.}
 }
 \value{
 a numeric value representing the number of new recruits coming into
@@ -55,6 +57,7 @@ a numeric value representing the number of new recruits coming into
 SSB <- array(rep(10, 5*70*6*3), c(5, 70, 6, 3))
 NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
 Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
-recruitment(a = 1, t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
-   B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool')
+recruitment(t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
+   B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
+   LDP = 0.1)
 }

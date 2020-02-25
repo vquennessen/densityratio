@@ -3,7 +3,6 @@
 #' \code{recruitment} calculates the number of new recruits entering the
 #'    population
 #'
-#' @param a temporary numeric value, the current area.
 #' @param t temporary numeric value, the current time step .
 #' @param cr temporary numeric value, the current control rule .
 #' @param nm temporary numeric value, the current natural mortality estimate.
@@ -24,6 +23,9 @@
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
 #'    Default value is 'pool'.
+#' @param LDP numeric value, the larval drift proportion, the proportion of
+#'    larvae that drift from one area to an adjacent area before settling.
+#'    Default value is 0.1.
 #'
 #' @return a numeric value representing the number of new recruits coming into
 #'    the population in area a, at timestep t, under control rule cr, with an
@@ -34,15 +36,15 @@
 #' SSB <- array(rep(10, 5*70*6*3), c(5, 70, 6, 3))
 #' NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
 #' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
-#' recruitment(a = 1, t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
-#'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool')
-recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
-                       Rec_age, Recruitment_mode) {
+#' recruitment(t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
+#'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
+#'    LDP = 0.1)
+recruitment = function(t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
+                       Rec_age, Recruitment_mode, LDP = 0.1) {
 
   ###### Error handling ########################################################
 
   # classes of variables
-  if (a %% 1 != 0) {stop('a must be an integer value.')}
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
@@ -56,9 +58,9 @@ recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
   if (Rec_age %% 1 != 0) {stop('Rec_age must be an integer value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
+  if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
 
   # acceptable values
-  if (a <= 0) {stop('a must be greater than 0.')}
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0 || nm > 3) {
@@ -73,6 +75,7 @@ recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
     stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
 
   # relational values
   if(dim(SSB)[1] != dim(Eps)[1]) {
@@ -83,31 +86,58 @@ recruitment = function(a, t, cr, nm, SSB, A = 5, R0 = 1e+5, H, B0, Eps, Sigma_R,
     stop('SSB or Eps has an incorrect number of control rules.')}
   if(dim(SSB)[4] != dim(Eps)[4]) {
     stop('SSB or Eps has an incorrect number of natural mortality estimates.')}
-  if (a > dim(SSB)[1]) {stop('The given "a" value is too high for SSB.')}
+  if (A > dim(SSB)[1]) {stop('The given "A" value is too high for SSB.')}
   if (t > dim(SSB)[2]) {stop('The given "t" value is too high for SSB.')}
   if (cr > dim(SSB)[3]) {stop('The given "cr" value is too high for SSB.')}
   if (nm > dim(SSB)[4]) {stop('The given "nm" value is too high for SSB.')}
-  if (a > A) {stop('a must be less than or equal to A.')}
 
   ##############################################################################
 
   # Recruitment
   # Based on Babcock & MacCall (2011): Eq. (3)
-  # Dimensions = 1 * 1
+  # Dimensions = 1 * A
+  recruits <- array(rep(0, A), c(1, A))
 
-  # closed recruitment indicates that recruits are only offspring of adults from
-  # the same area
-  if (Recruitment_mode == 'closed') { ssb <- SSB[a, t - Rec_age, cr, nm]}
-
-  # pool recruitment indicates that recruits come from a larval pool produced by
-  # adults from all areas
-  if (Recruitment_mode == 'pool') { ssb <- sum(SSB[, t - Rec_age, cr, nm] / A)}
-
+  # adjust R0 and B0 per area
   adjR0 <- R0 / A
   adjB0 <- B0 / A
 
-  R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
-  recruits <- R1 * (exp(Eps[a, t, cr, nm] - Sigma_R^2 / 2))
+  # closed recruitment indicates that recruits are only offspring of adults from
+  # the same area
+  if (Recruitment_mode == 'closed') {
+
+    ssb <- SSB[, t - Rec_age, cr, nm]
+
+    R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
+    recruits <- R1 * (exp(Eps[a, t, cr, nm] - Sigma_R^2 / 2))
+
+    # larval movement if there are multiple areas
+    if (A > 1) {
+
+      # First area to second area
+      recruits[1] <- (1 - LDP)*recruits[1] + LDP*recruits[2]
+
+      # Intermediate areas to adjacent areas
+      for (a in 2:(A-1)) {
+        recruits[a] <- (1 - 2*LDP)*recruits[a] + LDP*(recruits[a-1] + recruits[a+1])
+      }
+
+      # Last area to next to last area
+      recruits[A] <- (1 - LDP)*recruits[A] + LDP*recruits[A-1]
+
+    }
+
+
+  # 'pool' recruitment indicates that recruits come from a larval pool produced
+  # by adults from all areas
+  } else if (Recruitment_mode == 'pool') {
+
+    ssb <- array(rep(sum(SSB[, t - Rec_age, cr, nm] / A), A), c(1, A))
+
+    R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
+    recruits <- R1 * (exp(Eps[, t, cr, nm] - Sigma_R^2 / 2))
+
+  }
 
   return(recruits)
 
