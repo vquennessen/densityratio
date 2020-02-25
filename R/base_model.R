@@ -687,7 +687,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
   #####
 
-  output <- list(Yield, Biomass, SSB, Density_ratio, N)
+  output <- list(Yield[1:2, , , 2], Biomass[1:3, , , 2], SSB[1:3, , , 2],
+                 Density_ratio[, , 2], N[, 1:3, , , 2])
 
   return(output)
 
