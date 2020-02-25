@@ -9,7 +9,7 @@ initialize_arrays(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
   Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE, D,
   Transects = 24, H, Surveys = TRUE, Fishing = TRUE, Error,
-  Recruitment_mode = "pool")
+  Recruitment_mode = "pool", LDP = 0.1)
 }
 \arguments{
 \item{A}{numeric value, the number of total areas in the model. Default value
@@ -119,6 +119,10 @@ mortality.}
 'pool' - the recruits in each area come from a pool of larvae produced by
    adults in all areas.
 Default value is 'pool'.}
+
+\item{LDP}{numeric value, the larval drift proportion, the proportion of
+larvae that drift from one area to an adjacent area before settling.
+Default value is 0.1.}
 }
 \value{
 initalizes arrays necessary for other functions in the base model,
@@ -153,5 +157,6 @@ initialize_arrays(A = 5,  MPAs = c(3), Time1 = 50, Time2 = 20, R0 = 1e+5,
    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
    P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
    Phi = 1.1, Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65,
-   Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool')
+   Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool',
+   LDP = 0.1)
 }

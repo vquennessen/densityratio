@@ -84,6 +84,9 @@
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
 #'    Default value is 'pool'.
+#' @param LDP numeric value, the larval drift proportion, the proportion of
+#'    larvae that drift from one area to an adjacent area before settling.
+#'    Default value is 0.1.
 #'
 #' @return initalizes arrays necessary for other functions in the base model,
 #'    including TimeT, L, W, S, Mat, A50_mat, CR, Nat_mortality, NM, N, SSB,
@@ -103,7 +106,8 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
 #'    P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
 #'    Phi = 1.1, Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65,
-#'    Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool')
+#'    Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool',
+#'    LDP = 0.1)
 initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
@@ -111,7 +115,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
                               P, X, SP, M, Control_rules, Phi,
                               Stochasticity = TRUE, D, Transects = 24, H,
                               Surveys = TRUE, Fishing = TRUE, Error,
-                              Recruitment_mode = 'pool') {
+                              Recruitment_mode = 'pool', LDP = 0.1) {
 
   ###### Error handling ########################################################
 
@@ -159,6 +163,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (!is.numeric(Error)) {stop('Error must be a numeric value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
+  if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
 
   # acceptable values
   if (A <= 0) {stop('A must be greater than 0.')}
@@ -197,6 +202,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
   if (Error < 0) {stop('Error must be greater than or equal to 0.')}
+  if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
@@ -347,7 +353,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                  Recruitment_mode)
+                  Recruitment_mode, LDP)
 
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
