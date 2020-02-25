@@ -32,6 +32,9 @@
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
 #'    Default value is 'pool'.
+#' @param LDP numeric value, the larval drift proportion, the proportion of
+#'    larvae that drift from one area to an adjacent area before settling.
+#'    Default value is 0.1.
 #'
 #' @return a numeric vector of numbers at age after enough years with no fishing
 #'    that proportions remain stable over time.
@@ -50,9 +53,10 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65, B0 = 1e+5/1.1,
 #'    Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150, A50_mat = 8,
-#'    Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool')
+#'    Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool', LDP = 0.1)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                     eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode) {
+                     eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
+                     LDP = 0.1) {
 
   ###### Error handling ########################################################
 
@@ -75,6 +79,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
+  if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
 
   # acceptable values
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
@@ -93,6 +98,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
     stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
@@ -141,12 +147,15 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   # Step population forward in time with set fishing level
   for (t in (Rec_age + 1):(eq_time - 1)) {
 
+    # recruitment
+    R <- recruitment(t, cr = 1, nm = 1, SSB2, A = 1, R0, H, B0, Eps2, Sigma_R,
+                     Rec_age, Recruitment_mode, LDP)
+
     # biology
     PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
-                       N2, W, Mat, A = 1, R0, H, B0, Eps2, Sigma_R, Fb, E2, S,
-                       NM = 1, FM2, A50_mat, abundance_all2, abundance_mature2,
-                       biomass2, Fishing = F, Nat_mortality = c(M),
-                       Recruitment_mode)
+                       N2, W, Mat, A = 1, Fb, E2, S, NM = 1, FM2, A50_mat,
+                       abundance_all2, abundance_mature2, biomass2, Fishing = F,
+                       Nat_mortality = c(M), R)
 
     FM2[, 1, t, 1, 1]               <- PD[[1]]
     N2[, 1, t, 1, 1]                <- PD[[2]]
