@@ -243,13 +243,17 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
         # If there is adult movement, add movement
         if (Adult_movement == TRUE) { N <- movement(t, cr, nm, N, A, AMP) }
 
+        # Recruitment / larval movement (if applicable)
+        R <- recruitment(t, cr, nm, SSB, A, R0, H, B0, Eps, Sigma_R, Rec_age,
+                         Recruitment_mode, LDP)
+
         for (a in 1:A) {
 
           # biology
-          PD <- pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB, N, W, Mat, A,
-                             R0, H, B0, Eps, Sigma_R, Fb, E, S, NM, FM, A50_mat,
+          PD <- pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB,
+                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
                              Abundance_all, Abundance_mature, Biomass, Fishing,
-                             Nat_mortality, Recruitment_mode)
+                             Nat_mortality, R)
 
           FM[, a, t, cr, nm]               <- PD[[1]]
           N[, a, t, cr, nm]                <- PD[[2]]
@@ -291,13 +295,17 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
         # If there is adult movement, add movement
         if (Adult_movement == TRUE) { N <- movement(t, cr, nm, N, A, AMP) }
 
+        # Recruitment / larval movement (if applicable)
+        R <- recruitment(t, cr, nm, SSB, A, R0, H, B0, Eps, Sigma_R, Rec_age,
+                         Recruitment_mode, LDP)
+
         for (a in 1:A) {
 
           # biology
           PD <- pop_dynamics(a, t, cr, nm, Rec_age, Max_age, SSB,
-                             N, W, Mat, A, R0, H, B0, Eps, Sigma_R, Fb, E, S,
-                             NM, FM, A50_mat, Abundance_all, Abundance_mature,
-                             Biomass, Fishing, Nat_mortality, Recruitment_mode)
+                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
+                             Abundance_all, Abundance_mature, Biomass, Fishing,
+                             Nat_mortality, R)
 
           FM[, a, t, cr, nm]               <- PD[[1]]
           N[, a, t, cr, nm]                <- PD[[2]]
