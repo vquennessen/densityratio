@@ -10,8 +10,8 @@
 #'    value is 1e+5.
 #' @param A numeric value, the number of total areas in the model. Default value
 #'    is 5.
-#' @param MPAs numeric vector, the area numbers to be designated as marine
-#'    reserves at Time1. Default value is c(3).
+#' @param MPA numeric value, the area number to be designated as a marine
+#'    reserve at Time1. Default value is 3.
 #' @param Time1 numeric value, the number of years to run the model before a
 #'    marine reserve is implemented. Default value is 50.
 #' @param Time2 numeric value, the number of years to run the model after a
@@ -96,7 +96,7 @@
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DR = 0.6, Years_sampled = 1,
 #'    Areas_sampled = 'all', Ind_sampled = 'all', Allocation = 'IFD',
 #'    Control_rules = c(1:6))
-base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
+base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', Error = 0.05,
                        Stochasticity = TRUE, Surveys = TRUE,
                        Fishery_management = TRUE, Fishing = TRUE,
@@ -117,7 +117,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
     stop('Study species must be a character string.')}
   if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
-  if (sum(MPAs %% 1 != 0) != 0) {stop('MPAs must be a vector of integers.')}
+  if (MPA %% 1 != 0) {stop('MPA must be an integer value.')}
   if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
   if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
   if (!is.character(Recruitment_mode)) {
@@ -163,8 +163,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   # acceptable values
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
   if (A <= 0) {stop('A must be greater than 0.')}
-  if (sum(MPAs < 0) > 0) {
-    stop('All values in MPAs must be greater than or equal to 0.')}
+  if (MPA <= 0) {stop('MPA must be greater than 0.')}
   if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
   if (Time2 <= 0) {stop('Time2 must be greater than 0.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
@@ -190,6 +189,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
     stop('BM must be TRUE for Areas_sampled to be NULL.')}
   if (is.null(Ind_sampled) && BM == FALSE) {
     stop('BM must be TRUE for Ind_sampled to be NULL.')}
+
+  # relationtional values
+  if (MPA > A) {stop('MPA must be less than or equal to A.')}
 
   ##############################################################################
 

@@ -4,7 +4,7 @@
 \alias{base_model}
 \title{Base Model}
 \usage{
-base_model(Species, R0 = 1e+05, A = 5, MPAs = c(3), Time1 = 50,
+base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Time2 = 20, Recruitment_mode = "pool", Error = 0.05,
   Stochasticity = TRUE, Surveys = TRUE, Fishery_management = TRUE,
   Fishing = TRUE, Transects = 24, Adult_movement = TRUE,
@@ -13,9 +13,8 @@ base_model(Species, R0 = 1e+05, A = 5, MPAs = c(3), Time1 = 50,
   BM = FALSE, Control_rules = c(1:6), Output.FM = FALSE,
   Output.N = FALSE, Output.Abundance.All = FALSE,
   Output.Abundance.Mature = FALSE, Output.Biomass = FALSE,
-  Output.SSB = FALSE, Output.Recruitment = FALSE,
-  Output.Catch = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
-  Output.Density.Ratio = FALSE)
+  Output.SSB = FALSE, Output.Catch = FALSE, Output.Yield = FALSE,
+  Output.Effort = FALSE, Output.Density.Ratio = FALSE)
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
@@ -28,8 +27,8 @@ value is 1e+5.}
 \item{A}{numeric value, the number of total areas in the model. Default value
 is 5.}
 
-\item{MPAs}{numeric vector, the area numbers to be designated as marine
-reserves at Time1. Default value is c(3).}
+\item{MPA}{numeric value, the area number to be designated as a marine
+reserve at Time1. Default value is 3.}
 
 \item{Time1}{numeric value, the number of years to run the model before a
 marine reserve is implemented. Default value is 50.}
@@ -114,9 +113,6 @@ Default value is FALSE.}
 
 \item{Output.SSB}{logical value, should the output include spawning stock
 biomass? Default value is FALSE.}
-
-\item{Output.Recruitment}{logical value, should the output include
-recruitment? Default value is FALSE.}
 
 \item{Output.Catch}{logical value, should the output include catch? Default
 value is FALSE.}
