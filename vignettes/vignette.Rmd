@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, output = FALSE}
 rm(list = ls())
 devtools::install_git('https://github.com/vquennessen/densityratio.git')
 library(densityratio)
