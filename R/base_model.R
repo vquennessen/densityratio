@@ -737,28 +737,22 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
   #####
 
-  output <- c()
+  # initialize output list
+  output <- list()
 
-  if (Output.FM == TRUE) { output <- list(output, FM[, 1:MPA, , , ENM])}
-  if (Output.N == TRUE) { output <- list(output, N[, 1:MPA, , , ENM])}
+  # add output depending on arguments passed to base_model.R
+  if (Output.FM == TRUE) { output$FM <- FM[, 1:MPA, , , ENM] }
+  if (Output.N == TRUE) { output$N <- N[, 1:MPA, , , ENM] }
   if (Output.Abundance.All == TRUE) {
-    output <- list(output, Abundance_all[1:MPA, , , ENM])}
+    output$Abundance_all <- Abundance_all[1:MPA, , , ENM] }
   if (Output.Abundance.Mature == TRUE) {
-    output <- list(output, Abundance_mature[1:MPA, , , ENM])}
-  if (Output.Biomass == TRUE) { output <- list(output, Biomass[1:MPA, , , ENM])}
-  if (Output.SSB == TRUE) { output <- list(output, SSB[1:MPA, , , ENM])}
-  if (Output.Catch == TRUE) { output <- list(output, Catch[, 1:MPA, , , ENM])}
-  if (Output.Yield == TRUE) { output <- list(output, Yield[1:MPA, , , ENM])}
-  if (Output.Effort == TRUE) { output <- list(output, E[1:MPA, , , ENM])}
-  if (Output.Density.Ratio == TRUE) {
-    output <- list(output, Density_ratio[1:MPA, , , ENM])}
-
-  # if there is any output at all, get rid of the first empty output
-  if (sum(Output.FM + Output.N + Output.Abundance.All + Output.Abundance.Mature
-          + Output.Biomass + Output.SSB + Output.Catch + Output.Yield
-          + Output.Effort + Output.Density.Ratio) > 0) {
-    output <- output[[-1]]
-  }
+    output$Abundance_mature <- Abundance_mature[1:MPA, , , ENM] }
+  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, , , ENM] }
+  if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, , , ENM] }
+  if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, , , ENM] }
+  if (Output.Yield == TRUE) { output$Yield <- Yield[1:MPA, , , ENM] }
+  if (Output.Effort == TRUE) { output$Effort <- E[1:MPA, , , ENM] }
+  if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
 
   return(output)
 
