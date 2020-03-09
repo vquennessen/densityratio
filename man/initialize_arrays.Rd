@@ -4,7 +4,7 @@
 \alias{initialize_arrays}
 \title{Initialize arrays}
 \usage{
-initialize_arrays(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
+initialize_arrays(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
   R0 = 1e+05, Rec_age, Max_age, A1, L1, A2, L2, K, WA, WB, K_mat, Fb,
   L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
   Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE, D,
@@ -15,8 +15,8 @@ initialize_arrays(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 \item{A}{numeric value, the number of total areas in the model. Default value
 is 5.}
 
-\item{MPAs}{numeric vector, the area numbers to be designated as marine
-reserves at Time1. Default value is c(3).}
+\item{MPA}{numeric value, the area number to be designated as a marine
+reserve at Time1. Default value is 3.}
 
 \item{Time1}{numeric value, the number of years to run the model before a
 marine reserve is implemented. Default value is 50.}
@@ -149,7 +149,7 @@ initalizes arrays necessary for other functions in the base model,
    spawning stock biomass after reserve implementation), Density_ratio.
 }
 \examples{
-initialize_arrays(A = 5,  MPAs = c(3), Time1 = 50, Time2 = 20, R0 = 1e+5,
+initialize_arrays(A = 5,  MPA = 3, Time1 = 50, Time2 = 20, R0 = 1e+5,
    Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
    K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103, Fb = 0.2, L50 = 39.53,
    Sigma_R = 0.5, Rho_R = 0, Fleets = c('sport', 'hook', 'trawl'),

@@ -90,7 +90,7 @@
 #' @importFrom graphics axis layout legend lines plot
 #'
 #' @examples
-#' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
+#' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 #'    Time2 = 20, Recruitment_mode = 'pool', Error = 0.05, Stochasticity = TRUE,
 #'    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DR = 0.6, Years_sampled = 1,
@@ -230,7 +230,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   ##### Population Dynamics - Non-Time Varying #################################
 
   # Initialize arrays for time-varying dynamics
-  IA <- initialize_arrays(A, MPAs, Time1, Time2, R0, Rec_age, Max_age, A1, L1,
+  IA <- initialize_arrays(A, MPA, Time1, Time2, R0, Rec_age, Max_age, A1, L1,
                           A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R,
                           Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf, P,
                           X, SP, M, Control_rules, Phi, Stochasticity, D,

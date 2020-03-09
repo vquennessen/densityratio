@@ -18,8 +18,8 @@
 #'
 #' @param A numeric value, the number of total areas in the model. Default value
 #'    is 5.
-#' @param MPAs numeric vector, the area numbers to be designated as marine
-#'    reserves at Time1. Default value is c(3).
+#' @param MPA numeric value, the area number to be designated as a marine
+#'    reserve at Time1. Default value is 3.
 #' @param Time1 numeric value, the number of years to run the model before a
 #'    marine reserve is implemented. Default value is 50.
 #' @param Time2 numeric value, the number of years to run the model after a
@@ -98,7 +98,7 @@
 #' @importFrom stats rnorm
 #'
 #' @examples
-#' initialize_arrays(A = 5,  MPAs = c(3), Time1 = 50, Time2 = 20, R0 = 1e+5,
+#' initialize_arrays(A = 5,  MPA = 3, Time1 = 50, Time2 = 20, R0 = 1e+5,
 #'    Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
 #'    K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103, Fb = 0.2, L50 = 39.53,
 #'    Sigma_R = 0.5, Rho_R = 0, Fleets = c('sport', 'hook', 'trawl'),
@@ -108,7 +108,7 @@
 #'    Phi = 1.1, Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65,
 #'    Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool',
 #'    LDP = 0.1)
-initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
+initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
@@ -121,7 +121,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 
   # classes of variables
   if (A %% 1 != 0) {stop('A must be an integer value.')}
-  if (sum(MPAs %% 1 != 0) != 0) {stop('MPAs must be a vector of integers.')}
+  if (MPA %% 1 != 0) {stop('MPA must be an integer value.')}
   if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
   if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
   if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
@@ -167,8 +167,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 
   # acceptable values
   if (A <= 0) {stop('A must be greater than 0.')}
-  if (sum(MPAs < 1) > 0) {
-    stop('All values in MPAs must be greater than or equal to 1.')}
+  if (MPA <= 0) {stop('MPA must be greater than 0.')}
   if (Time1 <= 1) {stop('Time1 must be greater than 1.')}
   if (Time2 <= 1) {stop('Time2 must be greater than 1.')}
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
@@ -205,6 +204,7 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
   if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
 
   # relational values
+  if (MPA > A) {stop('MPA must be less than or equal to A.')}
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
   if (A1 >= A2) {stop('A1 must be less than A2.')}
   if (L1 >= L2) {stop('L1 must be less than L2.')}
@@ -225,8 +225,8 @@ initialize_arrays <- function(A = 5, MPAs = c(3), Time1 = 50, Time2 = 20,
 
   # set areas in and out of marine reserves
   areas <- 1:A
-  Inside <- areas[MPAs]
-  Outside <- areas[-MPAs]
+  Inside <- areas[MPA]
+  Outside <- areas[-MPA]
 
   # total amount of timesteps (years)
   TimeT <- Time1 + Time2
