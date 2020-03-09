@@ -60,6 +60,26 @@
 #'    Default value is FALSE.
 #' @param Control_rules numeric vector, the control rules to be compared.
 #'    Default value is c(1:6).
+#' @param Output.FM logical value, should the output include FM? Default value
+#'    is FALSE.
+#' @param Output.N logical value, should the output include N? Default value is
+#'    FALSE.
+#' @param Output.Abundance.All logical value, should the output include
+#'    Abundance_all? Default value is FALSE.
+#' @param Output.Abundance.Mature logical value, should the output include
+#'    Abundance_mature? Default value is FALSE.
+#' @param Output.Biomass logical value, should the output include biomass?
+#'    Default value is FALSE.
+#' @param Output.SSB logical value, should the output include spawning stock
+#'    biomass? Default value is FALSE.
+#' @param Output.Catch logical value, should the output include catch? Default
+#'    value is FALSE.
+#' @param Output.Yield logical value, should the output include yield? Default
+#'    value is FALSE.
+#' @param Output.Effort logical value, should the output include effort? Default
+#'    value is FALSE.
+#' @param Output.Density.Ratio logical value, should the output include density
+#'    ratios? Default value is FALSE.
 #'
 #' @return a list, containing numerical arrays of the relative biomass, yield,
 #'    and spawning stock biomass, as well as the true density ratios over time
@@ -83,7 +103,12 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DR, Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Allocation = 'IFD', BM = FALSE,
-                       Control_rules = c(1:6)) {
+                       Control_rules = c(1:6), Output.FM = FALSE,
+                       Output.N = FALSE, Output.Abundance.All = FALSE,
+                       Output.Abundance.Mature = FALSE, Output.Biomass = FALSE,
+                       Output.SSB = FALSE, Output.Catch = FALSE,
+                       Output.Yield = FALSE, Output.Effort = FALSE,
+                       Output.Density.Ratio = FALSE) {
 
   ###### Error handling ########################################################
 
@@ -119,6 +144,21 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (sum(Control_rules %% 1 != 0) != 0) {
     stop('Control_rules must be a vector of integers.')}
+  if (!is.logical(Output.FM)) {stop('Output.FM must be a logical value.')}
+  if (!is.logical(Output.N)) {stop('Output.N must be a logical value.')}
+  if (!is.logical(Output.Abundance.All)) {
+    stop('Output.Abundance.All must be a logical value.')}
+  if (!is.logical(Output.Abundance.Mature)) {
+    stop('Output.Abundance.Mature must be a logical value.')}
+  if (!is.logical(Output.Biomass)) {
+    stop('Output.Biomass must be a logical value.')}
+  if (!is.logical(Output.SSB)) {stop('Output.SSB must be a logical value.')}
+  if (!is.logical(Output.Catch)) {stop('Output.Catch must be a logical value.')}
+  if (!is.logical(Output.Yield)) {stop('Output.Yield must be a logical value.')}
+  if (!is.logical(Output.Effort)) {
+    stop('Output.Effort must be a logical value.')}
+  if (!is.logical(Output.Density.Ratio)) {
+    stop('Output.Density.Ratio must be a logical value.')}
 
   # acceptable values
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
@@ -695,8 +735,28 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPAs = c(3), Time1 = 50,
 
   #####
 
-  output <- list(Yield[1:2, , , 2], Biomass[1:3, , , 2], SSB[1:3, , , 2],
-                 Density_ratio, N[, 1:3, , , 2])
+  output <- c()
+
+  if (Output.FM == TRUE) { output <- list(output, FM[, 1:MPA, , , ENM])}
+  if (Output.N == TRUE) { output <- list(output, N[, 1:MPA, , , ENM])}
+  if (Output.Abundance.All == TRUE) {
+    output <- list(output, Abundance_all[1:MPA, , , ENM])}
+  if (Output.Abundance.Mature == TRUE) {
+    output <- list(output, Abundance_mature[1:MPA, , , ENM])}
+  if (Output.Biomass == TRUE) { output <- list(output, Biomass[1:MPA, , , ENM])}
+  if (Output.SSB == TRUE) { output <- list(output, SSB[1:MPA, , , ENM])}
+  if (Output.Catch == TRUE) { output <- list(output, Catch[, 1:MPA, , , ENM])}
+  if (Output.Yield == TRUE) { output <- list(output, Yield[1:MPA, , , ENM])}
+  if (Output.Effort == TRUE) { output <- list(output, E[1:MPA, , , ENM])}
+  if (Output.Density.Ratio == TRUE) {
+    output <- list(output, Density_ratio[1:MPA, , , ENM])}
+
+  # if there is any output at all, get rid of the first empty output
+  if (sum(Output.FM + Output.N + Output.Abundance.All + Output.Abundance.Mature
+          + Output.Biomass + Output.SSB + Output.Catch + Output.Yield
+          + Output.Effort + Output.Density.Ratio) > 0) {
+    output <- output[[-1]]
+  }
 
   return(output)
 

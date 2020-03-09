@@ -10,7 +10,12 @@ base_model(Species, R0 = 1e+05, A = 5, MPAs = c(3), Time1 = 50,
   Fishing = TRUE, Transects = 24, Adult_movement = TRUE,
   Plotting = FALSE, Final_DR, Years_sampled = 1,
   Areas_sampled = "all", Ind_sampled = "all", Allocation = "IFD",
-  BM = FALSE, Control_rules = c(1:6))
+  BM = FALSE, Control_rules = c(1:6), Output.FM = FALSE,
+  Output.N = FALSE, Output.Abundance.All = FALSE,
+  Output.Abundance.Mature = FALSE, Output.Biomass = FALSE,
+  Output.SSB = FALSE, Output.Recruitment = FALSE,
+  Output.Catch = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
+  Output.Density.Ratio = FALSE)
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
@@ -91,6 +96,39 @@ Default value is FALSE.}
 
 \item{Control_rules}{numeric vector, the control rules to be compared.
 Default value is c(1:6).}
+
+\item{Output.FM}{logical value, should the output include FM? Default value
+is FALSE.}
+
+\item{Output.N}{logical value, should the output include N? Default value is
+FALSE.}
+
+\item{Output.Abundance.All}{logical value, should the output include
+Abundance_all? Default value is FALSE.}
+
+\item{Output.Abundance.Mature}{logical value, should the output include
+Abundance_mature? Default value is FALSE.}
+
+\item{Output.Biomass}{logical value, should the output include biomass?
+Default value is FALSE.}
+
+\item{Output.SSB}{logical value, should the output include spawning stock
+biomass? Default value is FALSE.}
+
+\item{Output.Recruitment}{logical value, should the output include
+recruitment? Default value is FALSE.}
+
+\item{Output.Catch}{logical value, should the output include catch? Default
+value is FALSE.}
+
+\item{Output.Yield}{logical value, should the output include yield? Default
+value is FALSE.}
+
+\item{Output.Effort}{logical value, should the output include effort? Default
+value is FALSE.}
+
+\item{Output.Density.Ratio}{logical value, should the output include density
+ratios? Default value is FALSE.}
 }
 \value{
 a list, containing numerical arrays of the relative biomass, yield,
