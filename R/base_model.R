@@ -753,7 +753,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, , , ENM] }
   if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, , , ENM] }
   if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, , , ENM] }
-  if (Output.Yield == TRUE) { output$Yield <- Yield[1:MPA, , , ENM] }
+  if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), , , ENM] }
   if (Output.Effort == TRUE) { output$Effort <- E[1:MPA, , , ENM] }
   if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
 
