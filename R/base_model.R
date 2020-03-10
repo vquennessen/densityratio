@@ -95,7 +95,10 @@
 #'    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DR = 0.6, Years_sampled = 1,
 #'    Areas_sampled = 'all', Ind_sampled = 'all', Allocation = 'IFD',
-#'    Control_rules = c(1:6))
+#'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = TRUE,
+#'    Output.Abundance.All = FALSE, Output.Abundance.Mature = FALSE,
+#'    Output.Biomass = TRUE, Output.SSB = TRUE, Output.Catch = FALSE,
+#'    Output.Yield = TRUE, Output.Effort = TRUE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', Error = 0.05,
                        Stochasticity = TRUE, Surveys = TRUE,
