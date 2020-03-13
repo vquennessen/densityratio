@@ -157,11 +157,11 @@ parameters = function(Species) {
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.528                       # depletion
-    Fb       <-                             # fishing mortality to cause D
-    P        <- 0.247                       # proportion of positive transects
+    Fb       <- 0.24                        # fishing mortality to cause D
+    P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X        <-                             # mean of positive transects
-    SP       <-                             # std of positive transects
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
     Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
                    'shore')
     Alpha    <- c(0.4, 0.33, 0.35, 0.9)     # slope of upcurve per fleet
@@ -193,10 +193,10 @@ parameters = function(Species) {
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.579                       # depletion
     Fb       <- 0.16                        # fishing mortality to cause D
-    P        <-                             # Proportion of positive transects
+    P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X        <-                             # mean of positive transects
-    SP       <-                             # std of positive transects
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
                   'WArec', 'ORrec')
     Alpha    <- c(0.25, 0.25, 0.55, 1)      # slope of upcurve per fleet
@@ -228,10 +228,10 @@ parameters = function(Species) {
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.555                       # depletion
     Fb       <- 0.04                        # fishing mortality to cause D
-    P        <-                             # Proportion of positive transects
+    P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
-    X        <-                             # mean of positive transects
-    SP       <-                             # std of positive transects
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
                   'rec', 'hake', 'research')
     Alpha    <- c(0.3, 0.6, 1, 1, 1)        # slope of upcurve per fleet
@@ -242,7 +242,6 @@ parameters = function(Species) {
     Cf       <- c(0.3908, 0.3122, 0.2246,   # fraction of fishery caught / fleet
                   0.0295, 0.0429)           #       from upcurve to 1
   }
-
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
                 LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
