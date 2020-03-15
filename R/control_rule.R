@@ -6,6 +6,7 @@
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
 #' @param nm temporary numeric value, the current natural mortality estimate.
+#' @param fdr temporary numeric value, the current final target density ratio.
 #' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
 #' @param E numeric array, the relative fishing effort displayed in each area,
@@ -21,7 +22,7 @@
 #' @param Transects numerical value, the number of sampling transects conducted
 #'    in each area to estimate density ratio. Default value is 24.
 #' @param Nat_mortality numeric vector, the estimates of natural mortality.
-#' @param Final_DR numeric value, the final target density ratio.
+#' @param Final_DRs numeric vector, the final target density ratios.
 #' @param Inside numeric vector, the area(s) inside the marine reserve. Default
 #'    is c(3).
 #' @param Outside numeric vector, the area(s) outside the marine reserve.
@@ -49,11 +50,11 @@
 #' E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
 #' Count <- array(rep(5, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
 #' control_rule(t = 51, cr = 1, nm = 1, A = 5, E, Count, Time1 = 50, TimeT = 70,
-#'    Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6,
-#'    Inside = c(3), Outside = c(1, 2, 4, 5), Areas_sampled = 'all',
-#'    Ind_sampled = 'all', Years_sampled = 1)
-control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
-                         Transects = 24, Nat_mortality, Final_DR,
+#'    Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
+#'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
+#'    Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1)
+control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
+                         TimeT = 70, Transects = 24, Nat_mortality, Final_DRs,
                          Inside = c(3), Outside = c(1, 2, 4, 5),
                          Areas_sampled = 'all', Ind_sampled = 'all',
                          Years_sampled = 1, BM = FALSE) {
@@ -64,6 +65,7 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(Count)) {stop('Count must be a numeric array.')}
@@ -72,7 +74,7 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
   if (!is.numeric(Nat_mortality)) {
     stop('Nat_mortality must be a numeric vector.')}
-  if (!is.numeric(Final_DR)) {stop('Final_DR must be a numeric value.')}
+  if (!is.numeric(Final_DRs)) {stop('Final_DRs must be a numeric vector.')}
   if (sum(Inside %% 1 != 0) != 0) {stop('Inside must be a vector of integers.')}
   if (sum(Outside %% 1 != 0) != 0) {
     stop('Outside must be a vector of integers.')}
@@ -89,6 +91,7 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0 || nm > 3) {
     stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (A <= 0) {stop('A must be greater than 0.')}
   if (sum(E < 0) > 0) {
     stop('All values in E must be greater than or equal to 0.')}
@@ -99,7 +102,8 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
     stop('All values in Nat_mortality must be between 0 and 1.')}
-  if (Final_DR <= 0) {stop('Final_DR must be greater than 0.')}
+  if (sum(Final_DRs <= 0) > 0) {
+    stop('All values in Final_DRs must be greater than 0.')}
   if (sum(Inside < 0) > 0) {
     stop('All values in Inside must be greater than or equal to 0.')}
   if (sum(Outside < 0) > 0) {
@@ -131,11 +135,15 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
     stop('E or Count has an incorrect number of control rules.')}
   if(dim(E)[4] != dim(Count)[6]) {
     stop('E or Count has an incorrect number of natural mortality estimates.')}
+  if(dim(E)[5] != dim(Count)[7]) {
+    stop('E or Count has an incorrect number of final density ratios.')}
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
   if (length(Nat_mortality) > dim(E)[4]) {
     stop('Incorrect number of natural mortality estimates.')}
   if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
+  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
+  if (fdr > FDR) {stop('fdr value is too high.')}
 
   ##############################################################################
 
@@ -146,121 +154,122 @@ control_rule <- function(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
     # static control rules, with constant target density ratios
     if (cr <= 3) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
-                          Ind_sampled, Transects, Inside, Outside)
+      DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
+                          Areas_sampled, Ind_sampled, Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = Final_DR,
-                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
-                                     Time1)
+      E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
+                                          target_DR = Final_DR[fdr],
+                                          floor_DR = 0.2,
+                                          effort_inc_allowed = 0.1, Time1)
 
       # transient control rules with shifting target density ratios
     } else if (cr <= 6) {
 
-      target_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm)
+      target_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm, fdr)
 
       # calculate density ratio
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled, Areas_sampled,
-                          Ind_sampled, Transects, Inside, Outside)
+      DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
+                          Areas_sampled, Ind_sampled, Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR[t - Time1 + 1],
-                                     floor_DR = 0.2, effort_inc_allowed = 0.1,
-                                     Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr, E, DR,
+                                        target_DR[t - Time1 + 1], floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
     }
 
   } else if (BM == TRUE) {
 
     if (cr == 1) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 100,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 100,
                                      floor_DR = 0, effort_inc_allowed = 0.1,
                                      Time1)
 
     } else if (cr == 2) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 3,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 3,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 0.6,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
     } else if (cr == 3) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 0.6,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
     } else if (cr == 4) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'far', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 0.6,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
     } else if (cr == 5) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'mature',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 0.6,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
     } else if (cr == 6) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.8,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 0.8,
                                      floor_DR = 0.2, effort_inc_allowed = 0.1,
                                      Time1)
 
     } else if (cr == 7) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 100,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 100,
                                      floor_DR = 0, effort_inc_allowed = 0,
                                      Time1)
 
     } else if (cr == 8) {
 
-      DR <- density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+      DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, ] <- management(t, cr, E, DR, target_DR = 0.6,
+      E[, t + 1, cr, ] <- management(t, cr, fdr = 1, E, DR, target_DR = 0.6,
                                      floor_DR = 0.2, effort_inc_allowed = 0,
                                      Time1)
     }
   }
 
-  return(E[, t + 1, cr, ])
+  return(E[, t + 1, cr, , fdr])
 
 }
