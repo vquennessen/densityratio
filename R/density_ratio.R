@@ -6,6 +6,7 @@
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
 #' @param nm temporary numeric value, the current natural mortality estimate.
+#' @param fdr temporary numeric value, the current final target density ratio.
 #' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
 #' @param Count numeric array, the number of individuals estimated to be in each
@@ -41,7 +42,7 @@
 #' density_ratio(t = 2, cr = 1, nm = 1, A = 5, Count, Years_sampled = 1,
 #'    Areas_sampled = 'all', Ind_sampled = 'all', Transects = 24,
 #'    Inside = c(3), Outside = c(1, 2, 4, 5))
-density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
+density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
                            Areas_sampled = 'all', Ind_sampled = 'all',
                            Transects = 24, Inside, Outside) {
 
@@ -51,6 +52,7 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (!is.numeric(Count)) {stop('Count must be a numeric array.')}
   if (Years_sampled %% 1 != 0 && !is.null(Years_sampled)) {
@@ -68,6 +70,7 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0 || nm > 3) {
     stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (A <= 0) {stop('A must be greater than 0.')}
   if (sum(Count < 0) > 0) {
     stop('All values in Count must be greater than or equal to 0.')}
@@ -99,6 +102,7 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   if (t > dim(Count)[2]) {stop('The given "t" value is too high for Count.')}
   if (cr > dim(Count)[3]) {stop('The given "cr" value is too high for Count.')}
   if (nm > dim(Count)[6]) {stop('The given "nm" value is too high for Count.')}
+  if (fdr > dim(Count)[5]) {stop('The given "fdr" value is too high for Count.')}
 
   ##############################################################################
 
@@ -128,9 +132,9 @@ density_ratio <- function (t, cr, nm, A, Count, Years_sampled = 1,
   # calculate counts outside marine reserve
   if (is.character(Areas_sampled)) {
     if (Areas_sampled == 'far') {
-      count_out <- Count[c(1, A), years, , ind, cr, nm]
+      count_out <- Count[c(1, A), years, , ind, cr, nm, fdr]
     } else if (Areas_sampled == 'all') {
-      count_out <- Count[Outside, years, , ind, cr, nm]
+      count_out <- Count[Outside, years, , ind, cr, nm, fdr]
     }
   }
 
