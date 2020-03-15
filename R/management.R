@@ -5,6 +5,7 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
+#' @param fdr temporary numeric value, the current final target density ratio.
 #' @param E numeric array, the relative fishing effort displayed in each area,
 #'    at each time step, under each control rule, and for each natural mortality
 #'    estimate.
@@ -26,11 +27,12 @@
 #' @export
 #'
 #' @examples
-#' E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' management(t = 51, cr = 1, E, DR = 0.8, target_DR = 0.6, floor_DR = 0.2,
 #'    effort_inc_allowed = 0.10, Time1 = 50)
 
-management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
+management <- function(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
                        effort_inc_allowed = 0.10, Time1 = 50) {
 
   ###### Error handling ########################################################
@@ -38,6 +40,7 @@ management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(DR)) {stop('DR must be a numeric value.')}
   if (!is.numeric(target_DR)) {stop('target_DR must be a numeric value.')}
@@ -49,6 +52,7 @@ management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
   if (DR <= 0) {stop('DR must be greater than 0.')}
   if (target_DR <= 0) {stop('target_DR must be greater than 0.')}
@@ -60,6 +64,7 @@ management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
   # relational values
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
+  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
 
   ##############################################################################
 
@@ -68,23 +73,23 @@ management <- function(t, cr, E, DR, target_DR, floor_DR = 0.2,
   # allowed effort increase value (typically 10%)
   if (DR > target_DR) {
 
-    E[, t + 1, cr, ] <- E[, t, cr, ]*(1 - effort_inc_allowed)
+    E[, t + 1, cr, , fdr] <- E[, t, cr, , fdr]*(1 + effort_inc_allowed)
 
   # If the density ratio is lower than the target density ratio but
   # greater than the floor density ratio, allow effort in each area to decrease
   # by the allowed effort increase value (typically 10%)
   } else if (DR <= target_DR & DR > floor_DR) {
 
-    E[, t + 1, cr, ] <- E[, t, cr, ]*(1 + effort_inc_allowed)
+    E[, t + 1, cr, , fdr] <- E[, t, cr, , fdr]*(1 - effort_inc_allowed)
 
   # Finally, if the density ratio is below the floor density ratio, effort is
   # decreased back down to 10% of the original value
   } else if (DR <= floor_DR) {
 
-    E[, t + 1, cr, ] <- E[, Time1, cr, ]*0.10
+    E[, t + 1, cr, , fdr] <- E[, Time1, cr, , fdr]*0.10
 
   }
 
-  return(E[, t + 1, cr, ])
+  return(E[, t + 1, cr, , fdr])
 
 }
