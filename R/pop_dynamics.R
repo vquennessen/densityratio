@@ -201,32 +201,19 @@ pop_dynamics <- function(a, t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   N[1, a, t, cr, nm, fdr] <- R[a]
 
   # Ages rec_age + 1 to max_age - 1
-
-  NatM <- Nat_mortality[nm]                     # Natural mortality estimate
-
   for (i in 2:(num - 1)) {
-    newN <- N[i, a, t, cr, nm, fdr]             # N at next time step
-    N_AT <- N[i - 1, a, t - 1, cr, nm, fdr]     # N at last age / time step
-    FM_AT <- FM[i - 1, a, t - 1, cr, nm, fdr]   # FM at last age / time step
-    newN <- N_AT * exp(-1 * (FM_AT + NatM))
+    N[i, a, t, cr, nm, fdr] <- N[i - 1, a, t - 1, cr, nm, fdr] * exp(-1 * (FM[i - 1, a, t - 1, cr, nm, fdr] + Nat_mortality[nm]))
   }
 
   # Final age bin
-  newN <- N[num, a, t, cr, nm, fdr]           # N at next time step
-  N_AT <- N[num - 1, a, t - 1, cr, nm, fdr]   # N at last age / time step
-  FM_AT <- FM[num - 1, a, t - 1, cr, nm, fdr] # FM at last age / time step
-  N_T <- N[num, a, t - 1, cr, nm, fdr]        # N at last time step
-  FM_T <- FM[num, a, t - 1, cr, nm, fdr]      # FM at last time step
-  NatM <- Nat_mortality[nm]                   # Natural mortality estimate
-
-  newN <- N_AT * exp(-1 * (FM_AT + NatM)) + N_T * exp(-1 * (FM_T + NatM))
+  N[num, a, t, cr, nm, fdr] <- N[num - 1, a, t - 1, cr, nm, fdr] * exp(-1 * (FM[num - 1, a, t - 1, cr, nm, fdr] + Nat_mortality[nm])) +
+    N[num, a, t - 1, cr, nm, fdr] * exp(-1 * (FM[num, a, t - 1, cr, nm, fdr] + Nat_mortality[nm]))
 
   # Calculate abundance of all fish
   Abundance_all[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr])
 
   # Calculate abundance of mature fish
-  start_age <- A50_mat - Rec_age + 1
-  Abundance_mature[a, t, cr, nm, fdr] <- sum(N[start_age:num, a, t, cr, nm, fdr])
+  Abundance_mature[a, t, cr, nm, fdr] <- sum(N[A50_mat:(Max_age - Rec_age + 1), a, t, cr, nm, fdr])
 
   # Calculate biomass of all fish
   Biomass[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr] * W)
