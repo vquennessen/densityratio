@@ -95,7 +95,7 @@
 #'    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4, 0.6, 0.8),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-#'    Allocation = 'IFD', Control_rules = c(1:6), Output.FM = FALSE,
+#'    Allocation = 'IFD', BM = FALSE, Control_rules = c(1:6), Output.FM = FALSE,
 #'    Output.N = TRUE, Output.Abundance.All = FALSE,
 #'    Output.Abundance.Mature = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
 #'    Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
@@ -400,7 +400,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
         # calculate true density ratio
         Density_ratio <- true_DR(t, cr, fdr, Abundance_all, Inside, Outside,
-                                 Density_ratio, Time1, Error)
+                                 Density_ratio, Time1, ENM)
 
       }
     }
