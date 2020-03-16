@@ -4,7 +4,7 @@
 \alias{sampling}
 \title{Sampling}
 \usage{
-sampling(a, t, cr, nm, Delta, Gamma, Abundance_all, Abundance_mature,
+sampling(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all, Abundance_mature,
   Transects = 24, X, Count, NuS, A = 5)
 }
 \arguments{
@@ -15,6 +15,8 @@ sampling(a, t, cr, nm, Delta, Gamma, Abundance_all, Abundance_mature,
 \item{cr}{temporary numeric value, the current control rule.}
 
 \item{nm}{temporary numeric value, the current natural mortality estimate.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{Delta}{numeric value, the proportion of positive transects divided by
 depletion, also known as the constant of proportionality}
@@ -57,11 +59,15 @@ a two-dimentional numeric array with updated observed counts for the
    array.
 }
 \examples{
-Abundance_all <- array(rep(340, 5*70*6*3), c(5, 70, 6, 3))
-Abundance_mature <- array(rep(280, 5*70*6*3), c(5, 70, 6, 3))
-Count <- array(rep(50, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
-NuS <- array(stats::rnorm(5*70*6*3, 0, 0.89), c(5, 70, 6, 3))
-sampling(a = 1, t = 51, cr = 1, nm = 1, Delta = 1.6, Gamma = 31.6,
+n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+Abundance_all <- array(rep(340, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+Abundance_mature <- array(rep(280, A*TimeT*CR*NM*FDR),
+   c(A, TimeT, CR, NM, FDR))
+Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),
+   c(A, TimeT, Transects, 2, CR, NM, FDR))
+NuS <- array(stats::rnorm(A*TimeT*CR*NM*FDR, 0, 0.89),
+   c(A, TimeT, CR, NM, FDR))
+sampling(a = 1, t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
    Abundance_all, Abundance_mature, Transects = 24, X = 15.42, Count, NuS,
    A = 5)
 }
