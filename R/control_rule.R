@@ -47,10 +47,12 @@
 #' @export
 #'
 #' @examples
-#' E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
-#' Count <- array(rep(5, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
-#' control_rule(t = 51, cr = 1, nm = 1, A = 5, E, Count, Time1 = 50, TimeT = 70,
-#'    Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+#' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+#' Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
+#'    c(A, TimeT, Transects, 2, CR, NM, FDR))
+#' control_rule(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
+#'    TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
 #'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
 #'    Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1)
 control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
@@ -172,7 +174,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
                           Areas_sampled, Ind_sampled, Transects, Inside, Outside)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, fdr] <- management(t, cr, fdr, E, DR,
+      E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
                                         target_DR[t - Time1 + 1], floor_DR = 0.2,
                                         effort_inc_allowed = 0.1, Time1)
     }
