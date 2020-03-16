@@ -27,7 +27,8 @@ transient_DR <- function(Time1 = 50, TimeT = 70, Final_DRs, Nat_mortality, nm,
   # classes of variables
   if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
   if (TimeT %% 1 != 0) {stop('TimeT must be an integer value.')}
-  if (!is.numeric(Final_DRs)) {stop('Final_DRs must be a numeric vector.')}  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
+  if (!is.numeric(Final_DRs)) {stop('Final_DRs must be a numeric vector.')}
+  if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
 
