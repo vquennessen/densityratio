@@ -20,6 +20,7 @@
 #'    is 5.
 #' @param MPA numeric value, the area number to be designated as a marine
 #'    reserve at Time1. Default value is 3.
+#' @param Final_DRs numeric vector, the final target density ratios.
 #' @param Time1 numeric value, the number of years to run the model before a
 #'    marine reserve is implemented. Default value is 50.
 #' @param Time2 numeric value, the number of years to run the model after a
@@ -98,17 +99,17 @@
 #' @importFrom stats rnorm
 #'
 #' @examples
-#' initialize_arrays(A = 5,  MPA = 3, Time1 = 50, Time2 = 20, R0 = 1e+5,
-#'    Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
-#'    K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103, Fb = 0.2, L50 = 39.53,
-#'    Sigma_R = 0.5, Rho_R = 0, Fleets = c('sport', 'hook', 'trawl'),
-#'    Alpha = c(0.33, 0.6, 0.64), A50_up = c(2, 5, 10), A50_down = c(6, 16, 35),
-#'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
-#'    P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
-#'    Phi = 1.1, Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65,
-#'    Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool',
-#'    LDP = 0.1)
-initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
+#' initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
+#'    Time2 = 20, R0 = 1e+5, Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21,
+#'    A2 = 15, L2 = 47.95, K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103,
+#'    Fb = 0.2, L50 = 39.53, Sigma_R = 0.5, Rho_R = 0,
+#'    Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
+#'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
+#'    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
+#'    SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
+#'    Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
+#'    Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1)
+initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
@@ -122,6 +123,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
   # classes of variables
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (MPA %% 1 != 0) {stop('MPA must be an integer value.')}
+  if (!is.numeric(Final_DRs)) {stop('Final_DRs must be a numeric vector.')}
   if (Time1 %% 1 != 0) {stop('Time1 must be an integer value.')}
   if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
   if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
@@ -168,6 +170,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
   # acceptable values
   if (A <= 0) {stop('A must be greater than 0.')}
   if (MPA <= 0) {stop('MPA must be greater than 0.')}
+  if (sum(Final_DRs <= 0) > 0) {
+    stop('All values in Final_DRs must be greater than 0.')}
   if (Time1 <= 1) {stop('Time1 must be greater than 1.')}
   if (Time2 <= 1) {stop('Time2 must be greater than 1.')}
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
@@ -228,6 +232,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
   Inside <- areas[MPA]
   Outside <- areas[-MPA]
 
+  # final density ratios
+  FDR <- length(Final_DRs)
+
   # total amount of timesteps (years)
   TimeT <- Time1 + Time2
 
@@ -265,52 +272,52 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
   NM <- length(Nat_mortality)
 
   # Initialize age-structured population size matrix
-  # Dimensions = age * area * time * CR * M values (3)
-  N <- array(rep(0, num*A*TimeT*CR*NM), c(num, A, TimeT, CR, NM))
+  # Dimensions = age * area * time * CR * M * FDR values (3)
+  N <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
 
   # Initialize spawning stock biomass array
-  # Dimensions = area * time * cr * M values (3)
-  SSB <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+  # Dimensions = area * time * cr * M * FDR values (3)
+  SSB <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # Initialize abundance arrays
-  # Dimensions = area * time * CR * M values (3)
-  Abundance_all <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
-  Abundance_mature <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+  # Dimensions = area * time * CR * M * FDR values (3)
+  Abundance_all <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+  Abundance_mature <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # Initialize biomass array
-  # Dimensions = area * time * CR * M values (3)
-  Biomass <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+  # Dimensions = area * time * CR * M * FDR values (3)
+  Biomass <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # Recruitment normal variable
-  # Dimensions = area * timeT * CR * M values (3)
+  # Dimensions = area * timeT * CR * M * FDR values (3)
   if (Stochasticity == T) {
-    NuR <- array(rnorm(A*TimeT*CR*NM, 0, Sigma_R), c(A, TimeT, CR, NM))
+    NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, Sigma_R), c(A, TimeT, CR, NM, FDR))
   } else if (Stochasticity == F) {
-    NuR <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+    NuR <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
   }
 
   # Recruitment error
-  # Dimensions = area * timeT * CR * M values (3)
-  Eps <- epsilon(A, TimeT, CR, NM, NuR, Rho_R)
+  # Dimensions = area * timeT * CR * M * FDR values (3)
+  Eps <- epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R)
 
   # Unfished spawning stock biomass
   B0 <- R0 / Phi
 
   # Initialize count array
-  # Dimensions = area * time * transects * 2 * CR * M values (3)
-  Count <- array(rep(0, A*TimeT*Transects*2*CR*NM),
-                 c(A, TimeT, Transects, 2, CR, NM))
+  # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
+  Count <- array(rep(0, A*TimeT*Transects*2*CR*NM*FDR),
+                 c(A, TimeT, Transects, 2, CR, NM, FDR))
 
   # Calculate standard deviation of normal variable for sampling
   # Based on Babcock & MacCall (2011): Eq. (15)
   Sigma_S <- sqrt(log(1 + (SP / X)^2))
 
   # Sampling normal variable
-  # Dimensions = area * timeT * CR * M values (3)
+  # Dimensions = area * timeT * CR * M * FDR values (3)
   if (Stochasticity == T) {
-    NuS <- array(rnorm(A*TimeT*CR*NM, 0, Sigma_S), c(A, TimeT, CR, NM))
+    NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, Sigma_S), c(A, TimeT, CR, NM, FDR))
   } else if (Stochasticity == F) {
-    NuS <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+    NuS <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM))
   }
 
   # Calculate delta - constant of proportionality
@@ -322,30 +329,26 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
   Gamma <- X / D
 
   # Initialize fishing mortality rate
-  # Dimensions = age * area * time * CR * M values (3)
-  FM <- array(rep(0, num*A*TimeT*CR*NM), c(num, A, TimeT, CR, NM))
+  # Dimensions = age * area * time * CR * M * FDR values (3)
+  FM <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
 
   # Initialize fishing effort in each area
-  # Dimensions = area * time * CR * M values (3)
-  E <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+  # Dimensions = area * time * CR * M * FDR values (3)
+  E <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # Initialize catch-at-age matrix
-  # Dimensions = age * area * time * CR * M values (3)
-  Catch <- array(rep(0, num*A*TimeT*CR*NM), c(num, A, TimeT, CR, NM))
+  # Dimensions = age * area * time * CR * M * FDR values (3)
+  Catch <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
 
   # Initialize yield matrix
-  # Dimensions = area * time * CR * M values (3)
-  Yield <- array(rep(0, A*TimeT*CR*NM), c(A, TimeT, CR, NM))
+  # Dimensions = area * time * CR * M * FDR values (3)
+  Yield <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
+  # set constant fishing effort for first 50 years
   if (Fishing == T) {
 
     # Initial fishing effort
-    E[, 1:Time1, , ] <- rep(1/A, A*CR*Time1*NM)
-
-    # Set constant fishing mortality rate for first 50 years
-    ENM <- ifelse(Error == 0, 1, 2)
-    fm <- f_mortality(a = 1, t = 1, cr = 1, nm = ENM, FM, A, Fb, E, S)
-    FM[, , 1:Time1, , ] <- rep(fm, A*Time1*CR*NM)
+    E[, 1:Time1, , , ] <- rep(1/A, A*CR*Time1*NM*FDR)
 
   }
 
@@ -361,16 +364,23 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
     for (t in 1:Rec_age) {
       for (cr in 1:CR) {
         for (nm in 1:NM) {
-        N[, a, t, cr, nm] <- SAD
-        Abundance_all[a, t, cr, nm] <- sum(N[, a, t, cr, nm])
-        Abundance_mature[a, t, cr, nm] <- sum(N[A50_mat:(Max_age-Rec_age + 1),
-                                                a, t, cr, nm])
-        Biomass[a, t, cr, nm] <- sum(N[, a, t, cr, nm] * W)
-        SSB[a, t, cr, nm] <- sum(N[, a, t, cr, nm]*W*Mat)
-        E[a, t, cr, nm] <- 0.2
-        Catch[, a, t, cr, nm] <- catch(a, t, cr, nm, FM, Nat_mortality, N, A,
-                                       Fb, E, Catch)
-        Yield[a, t, cr, nm] <- sum(Catch[, a, t, cr, nm]*W)
+          for (fdr in 1:FDR) {
+
+            N[, a, t, cr, nm, fdr] <- SAD
+            FM[, a, t, cr, nm, fdr] <- f_mortality(a, t, cr, nm, fdr, FM, A,
+                                                   Fb, E, S)
+            Abundance_all[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr])
+            Abundance_mature[a, t, cr, nm, fdr] <- sum(N[A50_mat:(Max_age-Rec_age + 1),
+                                                         a, t, cr, nm, fdr])
+            Biomass[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr] * W)
+            SSB[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr]*W*Mat)
+            E[a, t, cr, nm, fdr] <- 0.2
+            Catch[, a, t, cr, nm, fdr] <- catch(a, t, cr, nm, fdr, FM,
+                                                Nat_mortality, N, A, Fb, E,
+                                                Catch)
+            Yield[a, t, cr, nm, fdr] <- sum(Catch[, a, t, cr, nm, fdr]*W)
+
+          }
         }
       }
     }
@@ -378,21 +388,24 @@ initialize_arrays <- function(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
 
   # initialize relative biomass matrix
   # Dimensions = area * time2 + 1 * CR
-  Rel_biomass <- array(rep(0, A*(Time2 + 1)*CR), c(A, Time2 + 1, CR))
+  Rel_biomass <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
 
   # initialize relative yield matrix
   # Dimensions = area * time2 + 1 * CR
-  Rel_yield <- array(rep(0, A*(Time2 + 1)*CR), c(A, Time2 + 1, CR))
+  Rel_yield <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
 
   # initialize relative spawning stock biomass matrix
   # Dimensions = area * time2 + 1 * CR
-  Rel_SSB <- array(rep(0, A*(Time2 + 1)*CR), c(A, Time2 + 1, CR))
+  Rel_SSB <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
 
   # initialize density ratio matrix
   # Dimensions = timeT * CR
-  Density_ratio <- array(rep(0, (Time2 + 1)*CR), c(Time2 + 1, CR))
+  Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
 
-  output <- list(Inside, Outside, TimeT, L, W, S, Mat, A50_mat, CR,
+  # ENM value - the nm value that represents the 'true' population
+  ENM <- ifelse(Error == 0, 1, 2)
+
+  output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                  Nat_mortality, NM, N, SSB, Abundance_all, Abundance_mature,
                  Biomass, Eps, B0, Count, Sigma_S, NuS, Delta, Gamma, FM, E,
                  Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,  Density_ratio,

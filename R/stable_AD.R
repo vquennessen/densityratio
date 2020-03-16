@@ -51,9 +51,10 @@
 #'    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
-#' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65, B0 = 1e+5/1.1,
-#'    Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150, A50_mat = 8,
-#'    Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool', LDP = 0.1)
+#' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65,
+#'    B0 = 1e+5/1.1, Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150,
+#'    A50_mat = 8, Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool',
+#'    LDP = 0.1)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                      eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
                      LDP = 0.1) {
@@ -112,68 +113,68 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   num <- length(ages)
 
   # Initialize population size and fishing mortality arrays
-  # Dimensions = age * 1 * time * 1 * 1
-  N2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1))
-  FM2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1))
+  # Dimensions = age * 1 * time * 1 * 1 * 1
+  N2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
+  FM2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
 
   # Initialize effort, biomass, and SSB arrays
-  # Dimensions = 1 * time * 1 * 1
-  E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1))
-  biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
-  SSB2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
-  abundance_all2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
-  abundance_mature2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+  # Dimensions = 1 * time * 1 * 1 * 1
+  E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1, 1))
+  biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  SSB2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  abundance_all2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  abundance_mature2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
   # Recruitment normal variable
-  # Dimensions = area * timeT * CR * 1
-  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+  # Dimensions = 1 * timeT * 1 * 1 * 1
+  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
   # Recruitment error
   # Dimensions = area * timeT * CR * 1
-  Eps2 <- epsilon(A = 1, eq_time, CR = 1, NM = 1, nuR2, Rho_R)
+  Eps2 <- epsilon(A = 1, eq_time, CR = 1, NM = 1, FDR = 1, nuR2, Rho_R)
 
   # Start each age class with 10 individuals
   # Enter FM, N, abundance, and biomasses for time = 1 to Rec_age
   # Dimensions = age * area * time * CR * M values (3)
   start_age <- A50_mat - Rec_age + 1
   for (t in 1:(Rec_age + 1)) {
-    N2[, 1, t, 1, 1] <- rep(100, num)
-    biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1] * W)
-    SSB2[1] <- sum(N2[, 1, t, 1, 1]*W*Mat)
-    abundance_all2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1])
-    abundance_mature2[1, t, 1, 1] <- sum(N2[start_age:num, 1, t, 1, 1])
+    N2[, 1, t, 1, 1, 1] <- rep(100, num)
+    biomass2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
+    SSB2[1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
+    abundance_all2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
+    abundance_mature2[1, t, 1, 1, 1] <- sum(N2[start_age:num, 1, t, 1, 1, 1])
   }
 
   # Step population forward in time with set fishing level
   for (t in (Rec_age + 1):(eq_time - 1)) {
 
     # recruitment
-    R <- recruitment(t, cr = 1, nm = 1, SSB2, A = 1, R0, H, B0, Eps2, Sigma_R,
-                     Rec_age, Recruitment_mode, LDP)
+    R <- recruitment(t, cr = 1, nm = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
+                     Sigma_R, Rec_age, Recruitment_mode, LDP)
 
     # biology
-    PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
-                       N2, W, Mat, A = 1, Fb, E2, S, NM = 1, FM2, A50_mat,
+    PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age,
+                       SSB2, N2, W, Mat, A = 1, Fb, E2, S, NM = 1, FM2, A50_mat,
                        abundance_all2, abundance_mature2, biomass2, Fishing = F,
                        Nat_mortality = c(M), R)
 
-    FM2[, 1, t, 1, 1]               <- PD[[1]]
-    N2[, 1, t, 1, 1]                <- PD[[2]]
-    abundance_all2[1, t, 1, 1]      <- PD[[3]]
-    abundance_mature2[1, t, 1, 1]   <- PD[[4]]
-    biomass2[1, t, 1, 1]            <- PD[[5]]
-    SSB2[1, t, 1, 1]                <- PD[[6]]
+    FM2[, 1, t, 1, 1, 1]               <- PD[[1]]
+    N2[, 1, t, 1, 1, 1]                <- PD[[2]]
+    abundance_all2[1, t, 1, 1, 1]      <- PD[[3]]
+    abundance_mature2[1, t, 1, 1, 1]   <- PD[[4]]
+    biomass2[1, t, 1, 1, 1]            <- PD[[5]]
+    SSB2[1, t, 1, 1, 1]                <- PD[[6]]
 
   }
 
   # plotting for troubleshooting
-  # plot(1:eq_time, N2[1, 1, 1:eq_time, 1], type = 'l', ylim = c(0, 2e4), col = 'green')
-  # for (x in 2:(Num - 1)) {
-  #   lines(1:eq_time, N2[x, 1, 1:eq_time, 1], col = 'red')
-  # }
-  # lines(1:eq_time, N2[Num, 1, 1:eq_time, 1], col = 'blue')
+  plot(1:eq_time, N2[1, 1, 1:eq_time, 1, 1, 1], type = 'l', ylim = c(0, 2e4), col = 'green')
+  for (x in 2:(num - 1)) {
+    lines(1:eq_time, N2[x, 1, 1:eq_time, 1, 1, 1], col = 'red')
+  }
+  lines(1:eq_time, N2[num, 1, 1:eq_time, 1, 1, 1], col = 'blue')
 
-  SAD <- N2[, 1, eq_time - 1, 1, 1]
+  SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
 
   return(SAD)
 

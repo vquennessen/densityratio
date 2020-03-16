@@ -4,8 +4,8 @@
 \alias{recruitment}
 \title{Recruitment}
 \usage{
-recruitment(t, cr, nm, SSB, A = 5, R0 = 1e+05, H, B0, Eps, Sigma_R,
-  Rec_age, Recruitment_mode, LDP = 0.1)
+recruitment(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+05, H, B0, Eps,
+  Sigma_R, Rec_age, Recruitment_mode, LDP = 0.1)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step .}
@@ -13,6 +13,8 @@ recruitment(t, cr, nm, SSB, A = 5, R0 = 1e+05, H, B0, Eps, Sigma_R,
 \item{cr}{temporary numeric value, the current control rule .}
 
 \item{nm}{temporary numeric value, the current natural mortality estimate.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{SSB}{numeric array, the spawning stock biomass of the whole stock for
 each area, at each timestep, under each control rule, and for each
@@ -54,10 +56,11 @@ a numeric value representing the number of new recruits coming into
    population
 }
 \examples{
-SSB <- array(rep(10, 5*70*6*3), c(5, 70, 6, 3))
-NuR <- array(rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
-Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
-recruitment(t = 3, cr = 1, nm = 2, SSB, A = 5, R0 = 1e+5, H = 0.65,
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+SSB <- array(rep(10, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
+Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
+recruitment(t = 3, cr = 1, nm = 2, fdr = 1, SSB, A = 5, R0 = 1e+5, H = 0.65,
    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
    LDP = 0.1)
 }

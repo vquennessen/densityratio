@@ -4,13 +4,15 @@
 \alias{true_DR}
 \title{True density ratio}
 \usage{
-true_DR(t, cr, Abundance_all, Inside = c(3), Outside = c(1, 2, 4, 5),
-  Density_ratio, Time1 = 50, Error)
+true_DR(t, cr, fdr, Abundance_all, Inside = 3, Outside = c(1, 2, 4, 5),
+  Density_ratio, Time1 = 50, ENM)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{Abundance_all}{numeric array, the total number of individuals in each
 area, at each timestep, under all control rules, with all estimates of
@@ -28,8 +30,7 @@ under each control rule, and for each estimate of natural mortality.}
 \item{Time1}{numeric value, the number of years to run the model before a
 marine reserve is implemented. Default value is 50.}
 
-\item{Error}{numeric value, the error between estimated and correct natural
-mortality.}
+\item{ENM}{numeric value, the nm value that represents the 'true' population.}
 }
 \value{
 a numeric array that updates the true density ratios for the most
@@ -40,8 +41,9 @@ a numeric array that updates the true density ratios for the most
    updating the Density_ratio array.
 }
 \examples{
-Abundance_all <- array(rep(3400, 5*70*6*3), c(5, 70, 6, 3))
-Density_ratio <- array(rep(0, (20 + 1)*6), c(20 + 1, 6))
-true_DR(t = 51, cr = 1, Abundance_all, Inside = c(3), Outside = c(1, 2, 4, 5),
-   Density_ratio, Time1 = 50, Error = 0.05)
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Time2= 20
+Abundance_all <- array(rep(3400, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
+true_DR(t = 51, cr = 1, fdr = 1, Abundance_all, Inside = 3,
+   Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, ENM = 2)
 }

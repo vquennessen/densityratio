@@ -4,7 +4,7 @@
 \alias{epsilon}
 \title{Epsilon}
 \usage{
-epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
+epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0)
 }
 \arguments{
 \item{A}{numeric value, the number of total areas in the model. Default value
@@ -18,6 +18,8 @@ value is 6.}
 
 \item{NM}{numeric value, the total number of estimated values of natural
 mortality. Default value is 3.}
+
+\item{FDR}{numeric value, the total number of final density ratios.}
 
 \item{NuR}{numeric vector, the recruitment random normal variable, pulled
 from a normal distribution of mean 0 and standard deviation equal to
@@ -35,6 +37,7 @@ a numeric vector of recruitment error terms, of dimensions
 equation 4 in Babcock & MacCall (2011).
 }
 \examples{
-NuR <- array(stats::rnorm(5*70*6*3, 0, 0.5), c(5, 70, 6, 3))
-epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, NuR, Rho_R = 0)
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+NuR <- array(stats::rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
+epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
 }

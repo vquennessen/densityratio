@@ -4,13 +4,15 @@
 \alias{management}
 \title{Management}
 \usage{
-management(t, cr, E, DR, target_DR, floor_DR = 0.2,
+management(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
   effort_inc_allowed = 0.1, Time1 = 50)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{E}{numeric array, the relative fishing effort displayed in each area,
 at each time step, under each control rule, and for each natural mortality
@@ -42,7 +44,8 @@ a numeric vector of fishing effort for the next timestep, under the
    given the control rule and estimated density ratio.
 }
 \examples{
-E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
-management(t = 51, cr = 1, E, DR = 0.8, target_DR = 0.6, floor_DR = 0.2,
-   effort_inc_allowed = 0.10, Time1 = 50)
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+management(t = 51, cr = 1, fdr = 1, E, DR = 0.8, target_DR = 0.6,
+   floor_DR = 0.2, effort_inc_allowed = 0.10, Time1 = 50)
 }

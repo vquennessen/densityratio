@@ -4,7 +4,7 @@
 \alias{transient_DR}
 \title{Transient DR}
 \usage{
-transient_DR(Time1 = 50, TimeT = 70, Final_DR, Nat_mortality, nm)
+transient_DR(Time1 = 50, TimeT = 70, Final_DRs, Nat_mortality, nm, fdr)
 }
 \arguments{
 \item{Time1}{numeric value, the number of years to run the model before a
@@ -13,11 +13,13 @@ marine reserve is implemented. Default value is 50.}
 \item{TimeT}{numeric value, the number of years to run the model total.
 Default value is 70.}
 
-\item{Final_DR}{numeric value, the final target density ratio.}
+\item{Final_DRs}{numeric vector, the final target density ratios.}
 
 \item{Nat_mortality}{numeric vector, the estimates of natural mortality.}
 
 \item{nm}{temporary numeric value, the current natural mortality estimate.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 }
 \value{
 a numeric vector, the target density ratios over all timesteps with
@@ -28,6 +30,6 @@ a numeric vector, the target density ratios over all timesteps with
    with management, assuming a transient control rule is being used.
 }
 \examples{
-transient_DR(Time1 = 50, TimeT = 70, Final_DR = 0.6,
-   Nat_mortality = c(0.09, 0.14, 0.19), nm = 1)
+transient_DR(Time1 = 50, TimeT = 70, Final_DRs = c(0.2, 0.4, 0.6, 0.8),
+   Nat_mortality = c(0.09, 0.14, 0.19), nm = 1, fdr = 1)
 }

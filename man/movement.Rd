@@ -4,7 +4,7 @@
 \alias{movement}
 \title{Movement}
 \usage{
-movement(t, cr, nm, N, A, AMP = 0.1)
+movement(t, cr, nm, fdr, N, A, AMP = 0.1)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -12,6 +12,8 @@ movement(t, cr, nm, N, A, AMP = 0.1)
 \item{cr}{temporary numeric value, the current control rule.}
 
 \item{nm}{temporary numeric value, the current natural mortality estimate.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{N}{numeric array, the number of individuals at each age, in each
 area, at each timestep, under each control rule, and for each estimate of
@@ -32,6 +34,7 @@ numeric array of updated N (numbers at age, area, timestep, control
 \code{movement} redistributes individuals amongst areas.
 }
 \examples{
-N <- array(rep(10, 34*5*70*6*3), c(34, 5, 70, 6, 3))
-movement(t = 1, cr = 1, nm = 1, N, A = 5, AMP = 0.1)
+n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
+movement(t = 1, cr = 1, nm = 1, fdr = 1, N, A = 5, AMP = 0.1)
 }

@@ -7,6 +7,7 @@
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
 #' @param nm temporary numeric value, the current natural mortality estimate.
+#' @param fdr temporary numeric value, the current final target density ratio.
 #' @param Delta numeric value, the proportion of positive transects divided by
 #'    depletion, also known as the constant of proportionality
 #' @param Gamma numeric value, the average value of a positive transect divided
@@ -38,14 +39,15 @@
 #' @importFrom stats rbinom
 #'
 #' @examples
-#' Abundance_all <- array(rep(340, 5*70*6*3), c(5, 70, 6, 3))
-#' Abundance_mature <- array(rep(280, 5*70*6*3), c(5, 70, 6, 3))
-#' Count <- array(rep(50, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
-#' NuS <- array(stats::rnorm(5*70*6*3, 0, 0.89), c(5, 70, 6, 3))
-#' sampling(a = 1, t = 51, cr = 1, nm = 1, Delta = 1.6, Gamma = 31.6,
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+#' Abundance_all <- array(rep(340, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+#' Abundance_mature <- array(rep(280, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+#' Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR), c(A, TimeT, Transects, 2, CR, NM, FDR))
+#' NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.89), c(A, TimeT, CR, NM, FDR))
+#' sampling(a = 1, t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
 #'    Abundance_all, Abundance_mature, Transects = 24, X = 15.42, Count, NuS,
 #'    A = 5)
-sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
+sampling <- function(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all,
                      Abundance_mature, Transects = 24, X, Count, NuS, A = 5) {
 
   ###### Error handling ########################################################
@@ -55,6 +57,7 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.numeric(Delta)) {stop('Delta must be a numeric value.')}
   if (!is.numeric(Gamma)) {stop('Gamma must be a numeric value.')}
   if (!is.numeric(Abundance_all)) {
@@ -73,6 +76,7 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0 || nm > 3) {
     stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (Delta <= 0) {stop('Delta must be greater than 0.')}
   if (Gamma <= 0) {stop('Gamma must be greater than 0.')}
   if (sum(Abundance_all < 0) > 0) {
@@ -95,15 +99,21 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
   if (dim(Abundance_all)[4] != dim(Abundance_mature)[4]) {
     stop('Abundance_all or Abundance_mature has an incorrect number of natural
          mortality estimates.')}
+  if (dim(Abundance_all)[5] != dim(Abundance_mature)[5]) {
+    stop('Abundance_all or Abundance_mature has an incorrect number of final
+         density ratios.')}
   if (dim(Count)[1] != dim(NuS)[1] || dim(Abundance_all)[1] != A) {
     stop('Count or NuS has an incorrect number of areas.')}
   if (dim(Count)[2] != dim(NuS)[2]) {
     stop('Count or NuS has an incorrect number of time steps.')}
-  if (dim(Count)[3] != Transects) {stop('Count has the wrong number of transects.')}
+  if (dim(Count)[3] != Transects) {
+    stop('Count has the wrong number of transects.')}
   if (dim(Count)[5] != dim(NuS)[3]) {
     stop('Count or NuS has an incorrect number of control rules.')}
   if (dim(Count)[6] != dim(NuS)[4]) {
     stop('Count or NuS has an incorrect number of natural mortality estimates.')}
+  if (dim(Count)[7] != dim(NuS)[5]) {
+    stop('Count or NuS has an incorrect number of final density ratios.')}
   if (a > A) {stop('The given "a" value is too high.')}
   if (t > dim(Abundance_all)[2] || t > dim(Count)[2]) {
     stop('The given "t" value is too high for Abundance_all or Count.')}
@@ -111,17 +121,21 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
     stop('The given "cr" value is too high for Abundance_all or Count.')}
   if (nm > dim(Abundance_all)[4] || nm > dim(Count)[6]) {
     stop('The given "nm" value is too high for Abundance_all or Count.')}
+  if (fdr > dim(Abundance_all)[5] || fdr > dim(Count)[7]) {
+    stop('The given "fdr" value is too high for Abundance_all or Count.')}
 
   ##############################################################################
 
   # Total population size across all areas
-  total_all <- sum(Abundance_all[, t - 1, cr, nm])
-  total_mature <- sum(Abundance_mature[, t - 1, cr, nm])
+  total_all <- sum(Abundance_all[, t - 1, cr, nm, fdr])
+  total_mature <- sum(Abundance_mature[, t - 1, cr, nm, fdr])
 
   # Calculate odds ratio of seeing a fish
   # Based on Babcock & MacCall (2011): Eq. (12)
-  odds_all <-  (Delta * Abundance_all[, t - 1, cr, nm]) / (total_all / A)
-  odds_mature <-  (Delta * Abundance_mature[, t - 1, cr, nm]) / (total_mature / A)
+  A_all <- Abundance_all[, t - 1, cr, nm, fdr]
+  A_mature <- Abundance_mature[, t - 1, cr, nm, fdr]
+  odds_all <-  (Delta * A_all) / (total_all / A)
+  odds_mature <-  (Delta * A_mature) / (total_mature / A)
 
   # Calculate probability based on odds ratio
   p_all <- 1 / (1 + exp(odds_all))
@@ -133,8 +147,11 @@ sampling <- function(a, t, cr, nm, Delta, Gamma, Abundance_all,
   presence_mature <- rbinom(Transects, 1, p_mature)
 
   # Calculate species count given transects with positive visuals
-  Count[a, t, , 1, cr, nm] <- presence_all*(Gamma*Abundance_all[a, t - 1, cr, nm]*exp(NuS[a, t - 1, cr, nm]))
-  Count[a, t, , 2, cr, nm] <- presence_mature*(Gamma*Abundance_mature[a, t - 1, cr, nm]*exp(NuS[a, t - 1, cr, nm]))
+  nus <- NuS[a, t - 1, cr, nm, fdr]
+  All <- Gamma*Abundance_all[a, t - 1, cr, nm, fdr]*exp(nus)
+  Mature <- Gamma*Abundance_mature[a, t - 1, cr, nm, fdr]*exp(nus)
+  Count[a, t, , 1, cr, nm, fdr] <- presence_all*(All)
+  Count[a, t, , 2, cr, nm, fdr] <- presence_mature*(Mature)
 
-  return(Count[a, t, , , cr, nm])
+  return(Count[a, t, , , cr, nm, fdr])
 }

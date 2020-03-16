@@ -4,11 +4,11 @@
 \alias{initialize_arrays}
 \title{Initialize arrays}
 \usage{
-initialize_arrays(A = 5, MPA = 3, Time1 = 50, Time2 = 20,
-  R0 = 1e+05, Rec_age, Max_age, A1, L1, A2, L2, K, WA, WB, K_mat, Fb,
-  L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
-  Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE, D,
-  Transects = 24, H, Surveys = TRUE, Fishing = TRUE, Error,
+initialize_arrays(A = 5, MPA = 3, Final_DRs, Time1 = 50,
+  Time2 = 20, R0 = 1e+05, Rec_age, Max_age, A1, L1, A2, L2, K, WA, WB,
+  K_mat, Fb, L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down,
+  F_fin, Beta, Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE,
+  D, Transects = 24, H, Surveys = TRUE, Fishing = TRUE, Error,
   Recruitment_mode = "pool", LDP = 0.1)
 }
 \arguments{
@@ -17,6 +17,8 @@ is 5.}
 
 \item{MPA}{numeric value, the area number to be designated as a marine
 reserve at Time1. Default value is 3.}
+
+\item{Final_DRs}{numeric vector, the final target density ratios.}
 
 \item{Time1}{numeric value, the number of years to run the model before a
 marine reserve is implemented. Default value is 50.}
@@ -149,14 +151,14 @@ initalizes arrays necessary for other functions in the base model,
    spawning stock biomass after reserve implementation), Density_ratio.
 }
 \examples{
-initialize_arrays(A = 5,  MPA = 3, Time1 = 50, Time2 = 20, R0 = 1e+5,
-   Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15, L2 = 47.95,
-   K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103, Fb = 0.2, L50 = 39.53,
-   Sigma_R = 0.5, Rho_R = 0, Fleets = c('sport', 'hook', 'trawl'),
-   Alpha = c(0.33, 0.6, 0.64), A50_up = c(2, 5, 10), A50_down = c(6, 16, 35),
-   F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01),
-   P = 0.77, X = 15.42, SP = 16.97, M = 0.14, Control_rules= c(1:6),
-   Phi = 1.1, Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65,
-   Surveys = TRUE, Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool',
-   LDP = 0.1)
+initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
+   Time2 = 20, R0 = 1e+5, Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21,
+   A2 = 15, L2 = 47.95, K = 0.2022, WA = 1.68e-5, WB = 3, K_mat = -0.4103,
+   Fb = 0.2, L50 = 39.53, Sigma_R = 0.5, Rho_R = 0,
+   Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
+   A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
+   Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
+   SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
+   Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
+   Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1)
 }
