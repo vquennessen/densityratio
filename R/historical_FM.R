@@ -100,12 +100,12 @@ S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
 NM <- 1
 
 # Recruitment error = 0 without stochasticity
-Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
 ##### Initialize arrays #####
 
 # Fishing effort stays constant
-E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1))
+E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1, 1))
 
 # Initialize FM and depletion levels
 FM_values <- seq(from = 0, to = 1, by = 0.01)
@@ -116,13 +116,13 @@ dep <- rep(0, fn)
 
 # Initialize population size and catch arrays
 # Dimensions = age * 1 * time * 1
-N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1))
+N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
 
 # Initialize biomass, SSB, and recruitment error
 # Dimensions = 1 * time * 1
-SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
-                                             c(1, eq_time, 1, 1))
+                                             c(1, eq_time, 1, 1, 1))
 
 # calculate stable age distribution
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
@@ -133,40 +133,41 @@ SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
 FM0_biomass <- sum(W*SAD)
 
 for (t in 1:Rec_age) {
-  N2[, 1, t, 1, 1] <- SAD
-  abundance_all2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1])
-  abundance_mature2[1, t, 1, 1] <- sum(N2[A50_mat:(Max_age-Rec_age + 1), 1, t, 1, 1])
-  biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1] * W)
-  SSB2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1]*W*Mat)
+  N2[, 1, t, 1, 1, 1] <- SAD
+  abundance_all2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
+  abundance_mature2[1, t, 1, 1, 1] <- sum(N2[A50_mat:(Max_age-Rec_age + 1),
+                                             1, t, 1, 1, 1])
+  biomass2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
+  SSB2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
 }
 
 # Substitute in values for Fb to get depletion level
 for (i in 2:fn) {
 
-  FM2 <- array(rep(FM_values[i], num*eq_time), c(num, 1, eq_time, 1, 1))
+  FM2 <- array(rep(FM_values[i], num*eq_time), c(num, 1, eq_time, 1, 1, 1))
 
   # Step population forward in time with set fishing level
   for (t in (Rec_age + 1):eq_time) {
 
     # recruitment
-    R <- recruitment(t, cr = 1, nm = 1, SSB2, A = 1, R0, H, B0, Eps2, Sigma_R,
-                     Rec_age, Recruitment_mode, LDP)
+    R <- recruitment(t, cr = 1, nm = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
+                     Sigma_R, Rec_age, Recruitment_mode, LDP)
 
-    PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, Rec_age, Max_age, SSB2,
-                       N2, W, Mat, A = 1, Fb = 0, E2, S, NM, FM2, A50_mat,
+    PD <- pop_dynamics(a = 1, t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age,
+                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, NM, FM2, A50_mat,
                        abundance_all2, abundance_mature2, biomass2, Fishing = T,
                        Nat_mortality = c(M), R)
 
-    FM2[, 1, t, 1, 1]               <- rep(FM_values[i], num)
-    N2[, 1, t, 1, 1]                <- PD[[2]]
-    abundance_all2[1, t, 1, 1]      <- PD[[3]]
-    abundance_mature2[1, t, 1, 1]   <- PD[[4]]
-    biomass2[1, t, 1, 1]            <- PD[[5]]
-    SSB2[1, t, 1, 1]                <- PD[[6]]
+    FM2[, 1, t, 1, 1, 1]               <- rep(FM_values[i], num)
+    N2[, 1, t, 1, 1, 1]                <- PD[[2]]
+    abundance_all2[1, t, 1, 1, 1]      <- PD[[3]]
+    abundance_mature2[1, t, 1, 1, 1]   <- PD[[4]]
+    biomass2[1, t, 1, 1, 1]            <- PD[[5]]
+    SSB2[1, t, 1, 1, 1]                <- PD[[6]]
 
   }
 
-  dep[i] <- 1 - (biomass2[1, eq_time, 1, 1] / FM0_biomass)
+  dep[i] <- 1 - (biomass2[1, eq_time, 1, 1, 1] / FM0_biomass)
 
 }
 
