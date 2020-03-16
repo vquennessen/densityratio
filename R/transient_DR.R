@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' transient_DR(Time1 = 50, TimeT = 70, Final_DRs = (0.2, 0.4, 0.6, 0.8),
+#' transient_DR(Time1 = 50, TimeT = 70, Final_DRs = c(0.2, 0.4, 0.6, 0.8),
 #'    Nat_mortality = c(0.09, 0.14, 0.19), nm = 1, fdr = 1)
 transient_DR <- function(Time1 = 50, TimeT = 70, Final_DRs, Nat_mortality, nm,
                          fdr) {
