@@ -4,7 +4,7 @@
 \alias{density_ratio}
 \title{Density ratio}
 \usage{
-density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
+density_ratio(t, cr, nm, fdr, A, Count, Years_sampled = 1,
   Areas_sampled = "all", Ind_sampled = "all", Transects = 24, Inside,
   Outside)
 }
@@ -14,6 +14,8 @@ density_ratio(t, cr, nm, A, Count, Years_sampled = 1,
 \item{cr}{temporary numeric value, the current control rule.}
 
 \item{nm}{temporary numeric value, the current natural mortality estimate.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}
