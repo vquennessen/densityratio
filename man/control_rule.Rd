@@ -4,8 +4,8 @@
 \alias{control_rule}
 \title{Control rule}
 \usage{
-control_rule(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
-  Transects = 24, Nat_mortality, Final_DR, Inside = c(3),
+control_rule(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
+  Transects = 24, Nat_mortality, Final_DRs, Inside = c(3),
   Outside = c(1, 2, 4, 5), Areas_sampled = "all",
   Ind_sampled = "all", Years_sampled = 1, BM = FALSE)
 }
@@ -15,6 +15,8 @@ control_rule(t, cr, nm, A = 5, E, Count, Time1 = 50, TimeT = 70,
 \item{cr}{temporary numeric value, the current control rule.}
 
 \item{nm}{temporary numeric value, the current natural mortality estimate.}
+
+\item{fdr}{temporary numeric value, the current final target density ratio.}
 
 \item{A}{numeric value, the number of total areas in the model. Default
 value is 5.}
@@ -38,7 +40,7 @@ in each area to estimate density ratio. Default value is 24.}
 
 \item{Nat_mortality}{numeric vector, the estimates of natural mortality.}
 
-\item{Final_DR}{numeric value, the final target density ratio.}
+\item{Final_DRs}{numeric vector, the final target density ratios.}
 
 \item{Inside}{numeric vector, the area(s) inside the marine reserve. Default
 is c(3).}
@@ -76,7 +78,7 @@ a numeric vector of fishing effort for the next timestep, under the
 E <- array(rep(1, 5*70*6*3), c(5, 70, 6, 3))
 Count <- array(rep(5, 5*70*24*2*6*3), c(5, 70, 24, 2, 6, 3))
 control_rule(t = 51, cr = 1, nm = 1, A = 5, E, Count, Time1 = 50, TimeT = 70,
-   Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19), Final_DR = 0.6,
-   Inside = c(3), Outside = c(1, 2, 4, 5), Areas_sampled = 'all',
-   Ind_sampled = 'all', Years_sampled = 1)
+   Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
+   Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
+   Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1)
 }

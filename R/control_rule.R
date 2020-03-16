@@ -143,7 +143,6 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
     stop('Incorrect number of natural mortality estimates.')}
   if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
   if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
-  if (fdr > FDR) {stop('fdr value is too high.')}
 
   ##############################################################################
 
@@ -159,14 +158,14 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
-                                          target_DR = Final_DR[fdr],
+                                          target_DR = Final_DRs[fdr],
                                           floor_DR = 0.2,
                                           effort_inc_allowed = 0.1, Time1)
 
       # transient control rules with shifting target density ratios
     } else if (cr <= 6) {
 
-      target_DR <- transient_DR(Time1, TimeT, Final_DR, Nat_mortality, nm, fdr)
+      target_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm, fdr)
 
       # calculate density ratio
       DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
