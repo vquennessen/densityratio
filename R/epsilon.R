@@ -63,7 +63,7 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0) {
   Eps <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # eps[, 1, ]
-  Eps[, 1, , ] <- NuR[, 1, , ]*sqrt(1 + Rho_R^2)
+  Eps[, 1, , , ] <- NuR[, 1, , , ]*sqrt(1 + Rho_R^2)
 
   # fill in rest of epsilon vector
   for (a in 1:A) {
@@ -71,7 +71,7 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0) {
       for (cr in 1:CR) {
         for (nm in 1:NM) {
           for (fdr in 1:FDR) {
-            Eps[a, t, cr, nm, fdr] <- Rho_R*Eps[a, t-1, cr, nm] +
+            Eps[a, t, cr, nm, fdr] <- Rho_R*Eps[a, t-1, cr, nm, fdr] +
               NuR[a, t, cr, nm, fdr]*sqrt(1 + Rho_R^2)
           }
         }
