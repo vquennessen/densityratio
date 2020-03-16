@@ -45,5 +45,5 @@ A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Time2= 20
 Abundance_all <- array(rep(3400, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
 true_DR(t = 51, cr = 1, fdr = 1, Abundance_all, Inside = 3,
-   Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, Error = 0.05)
+   Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, ENM = 2)
 }
