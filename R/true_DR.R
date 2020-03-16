@@ -17,8 +17,7 @@
 #'    under each control rule, and for each estimate of natural mortality.
 #' @param Time1 numeric value, the number of years to run the model before a
 #'    marine reserve is implemented. Default value is 50.
-#' @param Error numeric value, the error between estimated and correct natural
-#'    mortality.
+#' @param ENM numeric value, the nm value that represents the 'true' population.
 #'
 #' @return a numeric array that updates the true density ratios for the most
 #'    current timestep and control rule.
@@ -31,7 +30,7 @@
 #' true_DR(t = 51, cr = 1, fdr = 1, Abundance_all, Inside = 3,
 #'    Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, Error = 0.05)
 true_DR <- function(t, cr, fdr, Abundance_all, Inside = 3,
-                    Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, Error) {
+                    Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, ENM) {
 
   ###### Error handling ########################################################
 
@@ -74,9 +73,6 @@ true_DR <- function(t, cr, fdr, Abundance_all, Inside = 3,
     stop('Abundance_all has the wrong number of final density ratios.')}
 
   ##############################################################################
-
-  # adjust nm for case when Error = 0 or not
-  ENM <- ifelse(Error == 0, 1, 2)
 
   # Density of fish outside marine reserve(s)
   Outside_density <- sum(Abundance_all[Outside, t, cr, ENM, fdr]) / length(Outside)
