@@ -8,7 +8,7 @@ base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Time2 = 20, Recruitment_mode = "pool", Error = 0.05,
   Stochasticity = TRUE, Surveys = TRUE, Fishery_management = TRUE,
   Fishing = TRUE, Transects = 24, Adult_movement = TRUE,
-  Plotting = FALSE, Final_DR, Years_sampled = 1,
+  Plotting = FALSE, Final_DRs, Years_sampled = 1,
   Areas_sampled = "all", Ind_sampled = "all", Allocation = "IFD",
   BM = FALSE, Control_rules = c(1:6), Output.FM = FALSE,
   Output.N = FALSE, Output.Abundance.All = FALSE,
@@ -65,7 +65,7 @@ value is TRUE.}
 \item{Plotting}{logical value, should individual runs be plotted? Default
 value is FALSE.}
 
-\item{Final_DR}{numeric value, the final target density ratio.}
+\item{Final_DRs}{numeric vector, the final target density ratios.}
 
 \item{Years_sampled}{numeric value, the number of years of sampling upon
 which to base the estimate of density ratio. Default value is 1.}
@@ -139,7 +139,11 @@ a list, containing numerical arrays of the relative biomass, yield,
 base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
    Time2 = 20, Recruitment_mode = 'pool', Error = 0.05, Stochasticity = TRUE,
    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-   Adult_movement = TRUE, Plotting = TRUE, Final_DR = 0.6, Years_sampled = 1,
-   Areas_sampled = 'all', Ind_sampled = 'all', Allocation = 'IFD',
-   Control_rules = c(1:6))
+   Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4, 0.6, 0.8),
+   Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
+   Allocation = 'IFD', Control_rules = c(1:6), Output.FM = FALSE,
+   Output.N = TRUE, Output.Abundance.All = FALSE,
+   Output.Abundance.Mature = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
+   Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
+   Output.Density.Ratio = TRUE)
 }
