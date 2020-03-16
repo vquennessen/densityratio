@@ -62,7 +62,7 @@
 #' SSB <- array(rep(548, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Biomass <- array(rep(568, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Abundance_all <- array(rep(3400, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-#' Abundance_mature <- array(rep(2800, A*TimeT*CR*NM*FDR3),
+#' Abundance_mature <- array(rep(2800, A*TimeT*CR*NM*FDR),
 #'    c(A, TimeT, CR, NM, FDR))
 #' N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 #' FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
@@ -201,29 +201,42 @@ pop_dynamics <- function(a, t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   N[1, a, t, cr, nm, fdr] <- R[a]
 
   # Ages rec_age + 1 to max_age - 1
+  newN <- N[i, a, t, cr, nm, fdr]           # N at next time step
+  N_AT <- N[i - 1, a, t - 1, cr, nm, fdr]   # N at last age / time step
+  FM_AT <- FM[i - 1, a, t - 1, cr, nm, fdr] # FM at last age / time step
+  NatM <- Nat_mortality[nm]                   # Natural mortality estimate
+
   for (i in 2:(num - 1)) {
-    N[i, a, t, cr, nm] <- N[i - 1, a, t - 1, cr, nm] * exp(-1 * (FM[i - 1, a, t - 1, cr, nm] + Nat_mortality[nm]))
+    newN <- N_AT * exp(-1 * (FM_AT + NatM))
   }
 
   # Final age bin
-  N[num, a, t, cr, nm] <- N[num - 1, a, t - 1, cr, nm] * exp(-1 * (FM[num - 1, a, t - 1, cr, nm] + Nat_mortality[nm])) +
-    N[num, a, t - 1, cr, nm] * exp(-1 * (FM[num, a, t - 1, cr, nm] + Nat_mortality[nm]))
+  newN <- N[num, a, t, cr, nm, fdr]           # N at next time step
+  N_AT <- N[num - 1, a, t - 1, cr, nm, fdr]   # N at last age / time step
+  FM_AT <- FM[num - 1, a, t - 1, cr, nm, fdr] # FM at last age / time step
+  N_T <- N[num, a, t - 1, cr, nm, fdr]        # N at last time step
+  FM_T <- FM[num, a, t - 1, cr, nm, fdr]      # FM at last time step
+  NatM <- Nat_mortality[nm]                   # Natural mortality estimate
+
+  newN <- N_AT * exp(-1 * (FM_AT + NatM)) + N_T * exp(-1 * (FM_T + NatM))
 
   # Calculate abundance of all fish
-  Abundance_all[a, t, cr, nm] <- sum(N[, a, t, cr, nm])
+  Abundance_all[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr])
 
   # Calculate abundance of mature fish
-  Abundance_mature[a, t, cr, nm] <- sum(N[A50_mat:(Max_age - Rec_age + 1), a, t, cr, nm])
+  Abundance_mature[a, t, cr, nm, fdr] <- sum(N[A50_mat:(Max_age - Rec_age + 1),
+                                               a, t, cr, nm, fdr])
 
   # Calculate biomass of all fish
-  Biomass[a, t, cr, nm] <- sum(N[, a, t, cr, nm] * W)
+  Biomass[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr] * W)
 
   # Calculate spawning stock biomass
-  SSB[a, t, cr, nm] <- sum(N[, a, t, cr, nm]*W*Mat)
+  SSB[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr]*W*Mat)
 
-  output <- list(FM[, a, t, cr, nm], N[, a, t, cr, nm],
-                 Abundance_all[a, t, cr, nm], Abundance_mature[a, t, cr, nm],
-                 Biomass[a, t, cr, nm], SSB[a, t, cr, nm])
+  output <- list(FM[, a, t, cr, nm, fdr], N[, a, t, cr, nm, fdr],
+                 Abundance_all[a, t, cr, nm, fdr],
+                 Abundance_mature[a, t, cr, nm, fdr],
+                 Biomass[a, t, cr, nm, fdr], SSB[a, t, cr, nm, fdr])
 
   return(output)
 
