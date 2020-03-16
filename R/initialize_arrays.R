@@ -344,15 +344,11 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Dimensions = area * time * CR * M * FDR values (3)
   Yield <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
+  # set constant fishing effort for first 50 years
   if (Fishing == T) {
 
     # Initial fishing effort
-    E[, 1:Time1, , ] <- rep(1/A, A*CR*Time1*NM*FDR)
-
-    # Set constant fishing mortality rate for first 50 years
-    ENM <- ifelse(Error == 0, 1, 2)
-    fm <- f_mortality(a = 1, t = 1, cr = 1, nm = ENM, FM, A, Fb, E, S)
-    FM[, , 1:Time1, , ] <- rep(fm, A*Time1*CR*NM*FDR)
+    E[, 1:Time1, , , ] <- rep(1/A, A*CR*Time1*NM*FDR)
 
   }
 
@@ -371,6 +367,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
           for (fdr in 1:FDR) {
 
             N[, a, t, cr, nm, fdr] <- SAD
+            FM[, a, t, cr, nm, fdr] <- f_mortality(a, t, cr, nm, fdr, FM, A,
+                                                   Fb, E, S)
             Abundance_all[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr])
             Abundance_mature[a, t, cr, nm, fdr] <- sum(N[A50_mat:(Max_age-Rec_age + 1),
                                                          a, t, cr, nm, fdr])
@@ -403,6 +401,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # initialize density ratio matrix
   # Dimensions = timeT * CR
   Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
+
+  # ENM value - the nm value that represents the 'true' population
+  ENM <- ifelse(Error == 0, 1, 2)
 
   output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                  Nat_mortality, NM, N, SSB, Abundance_all, Abundance_mature,
