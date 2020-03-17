@@ -167,14 +167,14 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
   }
 
-  # plotting for troubleshooting
-  plot(1:eq_time, N2[1, 1, 1:eq_time, 1, 1, 1], type = 'l', ylim = c(0, 2e4), col = 'green')
-  for (x in 2:(num - 1)) {
-    lines(1:eq_time, N2[x, 1, 1:eq_time, 1, 1, 1], col = 'red')
-  }
-  lines(1:eq_time, N2[num, 1, 1:eq_time, 1, 1, 1], col = 'blue')
-
-  SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
+  # # plotting for troubleshooting
+  # plot(1:eq_time, N2[1, 1, 1:eq_time, 1, 1, 1], type = 'l', ylim = c(0, 2e4), col = 'green')
+  # for (x in 2:(num - 1)) {
+  #   lines(1:eq_time, N2[x, 1, 1:eq_time, 1, 1, 1], col = 'red')
+  # }
+  # lines(1:eq_time, N2[num, 1, 1:eq_time, 1, 1, 1], col = 'blue')
+  #
+  # SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
 
   return(SAD)
 
