@@ -173,8 +173,8 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   #   lines(1:eq_time, N2[x, 1, 1:eq_time, 1, 1, 1], col = 'red')
   # }
   # lines(1:eq_time, N2[num, 1, 1:eq_time, 1, 1, 1], col = 'blue')
-  #
-  # SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
+
+  SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
 
   return(SAD)
 
