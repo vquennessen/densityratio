@@ -386,18 +386,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     }
   }
 
-  # initialize relative biomass matrix
-  # Dimensions = area * time2 + 1 * CR
-  Rel_biomass <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
-
-  # initialize relative yield matrix
-  # Dimensions = area * time2 + 1 * CR
-  Rel_yield <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
-
-  # initialize relative spawning stock biomass matrix
-  # Dimensions = area * time2 + 1 * CR
-  Rel_SSB <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
-
   # initialize density ratio matrix
   # Dimensions = timeT * CR
   Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
@@ -408,8 +396,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                  Nat_mortality, NM, N, SSB, Abundance_all, Abundance_mature,
                  Biomass, Eps, B0, Count, Sigma_S, NuS, Delta, Gamma, FM, E,
-                 Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,  Density_ratio,
-                 ENM)
+                 Catch, Yield, Density_ratio, ENM)
 
   return(output)
 

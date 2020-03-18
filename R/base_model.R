@@ -406,6 +406,375 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     }
   }
 
+  ##### Plotting ###############################################################
+
+  if (Plotting == T) {
+
+    ##### Calculate relative biomass, yield, and SSB #############################
+
+    # initialize relative biomass, yield, and ssb arrays
+    # Dimensions = area * time2 + 1 * CR * FDR
+    Rel_biomass <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
+    Rel_yield <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
+    Rel_SSB <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
+
+    ##### Relative values #####
+
+    # calculate relative biomass since reserve implementation
+    for (a in 1:A) {
+      for (cr in 1:CR) {
+        for (fdr in 1:FDR) {
+          Rel_biomass[a, , cr, fdr] <- Biomass[a, Time1:TimeT, cr, ENM, fdr]/Biomass[a, Time1, cr, ENM, fdr]
+        }
+      }
+    }
+
+    # calculate relative biomass since reserve implementation
+    for (a in 1:A) {
+      for (cr in 1:CR) {
+        for (fdr in 1:FDR) {
+          Rel_yield[a, , cr, fdr] <- Yield[a, Time1:TimeT, cr, ENM, fdr]/Yield[a, Time1, cr, ENM, fdr]
+        }
+      }
+    }
+
+    # calculate relative biomass since reserve implementation
+    for (a in 1:A) {
+      for (cr in 1:CR) {
+        for (fdr in 1:FDR) {
+          Rel_SSB[a, , cr, fdr] <- SSB[a, Time1:TimeT, cr, ENM, fdr]/SSB[a, Time1, cr, ENM, fdr]
+        }
+      }
+    }
+
+    # use red-blue color palette
+    palette <- colorRampPalette(c('red', 'blue'))
+    color <- palette(CR)
+
+    # set line types - solid for correct M, dashed for high M, dotted for low M
+    line_type <- c(2, 1, 3, 2, 1, 3)
+
+    # set layout matrix for all plots
+    layout_m <- matrix(c(1, 3, 2, 3), nrow = 2, ncol = 2, byrow = T)
+
+    # set legend title and text and position
+    legend_title <- expression(bold('Control Rule'))
+    legend_text <- c("\n Static \n Low M", "\n Static \n Correct M",
+                     "\n Static \n High M", "\n Transient \n Low M",
+                     "\n Transient \n Correct M", "\n Transient \n High M")
+    position <- 'left'
+
+    # transient DR for population with correct M
+    ENM <- ifelse(Error == 0, 1, 2)
+    y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM)
+
+    ##### Plot relative biomass over time after reserve implementation #########
+
+    # y-axis limits
+    y1 <- 0
+    y2 <- 4
+    y_by <- (y2 - y1)/2
+
+    # x-axis limits
+    x1 <- 0
+    x2 <- Time2
+    x_by <- x2/4
+
+    # DR y-axis limits
+    y1_dr <- 0
+    y2_dr <- 2
+    by_dr <- y2_dr/2
+
+    for (fdr in 1:FDR) {
+      for (a in 1:3) {
+
+        # set plotting layout
+        layout(mat = layout_m,
+               widths = c(2, 0.4), # Widths of the 2 columns
+               heights = c(4, 2)) # Heights of the 2 rows
+
+        area <- ifelse(a < 2, 'far from', ifelse(a == 3, 'in', 'near'))
+        title <- sprintf('Final DR: ', fdr, ' - Relative biomass: %s reserve', area)
+
+        # plot the relative biomass
+        par(mar = c(0.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = title, # title of plot
+             ylab = 'Relative Biomass', # axis labels
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(x1, x2), # set x-axis limits
+             ylim = c(y1, y2),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        ytick <- seq(y1, y2, by = y_by) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Rel_biomass[a, , cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1) # set line type
+        }
+
+        # add a gray dotted line at y = 1
+        lines(0:Time2, rep(1, Time2 + 1), col = 'gray', lty = 3)
+
+        # plot the density ratios over time
+        par(mar = c(4.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = 'Density Ratios Over Time', # title of plot
+             ylab = 'Density Ratio', # axis labels
+             xlab = 'Years since marine reserve implementation',
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(0, Time2), # set x-axis limits
+             ylim = c(0, y2_dr),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        dr_ytick <- seq(y1_dr, y2_dr, by_dr) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = dr_ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        # set specific x-axis
+        xtick <- seq(x1, x2, by = x_by) # set x axis tick marks
+        axis(side = 1, # specify x axis
+             at = xtick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Density_ratio[x1:x2 + 1, cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1)} # set line type
+
+        # add a gray dotted line at target_DR over time
+        lines(0:Time2, y_DR, col = 'gray', lty = 3)
+
+        # add a legend
+        par(mar = c(0.1, 0.1, 0.1, 0.1))
+        plot(1, type = 'n', axes = F, xlab = '', ylab = '')
+        legend(x = position, inset = 0, horiz = F, # position
+               col = color, # apply color palette
+               lwd = 2, # apply line thicknesses
+               lty = line_type, # apply line patterns
+               title = legend_title, # add legend title
+               legend = legend_text, # add legend labels
+               seg.len = 3, # adjust length of lines
+               cex = 1.1, # adjust legend text size
+               bty = 'n')
+
+      }
+    }
+
+    ##### Plot relative yield over time after reserve implementation ###########
+
+    # y-axis limits
+    yy1 <- 0
+    yy2 <- 3
+    yy_by <- (yy2 - yy1)/2
+
+    for (fdr in 1:FDR) {
+      for (a in 1:2) {
+
+        # set plotting layout
+        layout(mat = layout_m,
+               widths = c(2, 0.4), # Widths of the 2 columns
+               heights = c(4, 2)) # Heights of the 2 rows
+
+        area <- ifelse(a == 1, 'far from', 'near')
+        title <- sprintf('Final DR: ', fdr, ' - Relative yield: %s reserve', area)
+
+        # plot the relative yield
+        par(mar = c(0.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = title, # title of plot
+             ylab = 'Relative Yield', # axis labels
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(x1, x2), # set x-axis limits
+             ylim = c(yy1, yy2),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        yytick <- seq(yy1, yy2, by = yy_by) # set yaxis tick marks
+        axis(side = 2, # specify y axis
+             at = yytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Rel_yield[a, , cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1) # set line type
+        }
+
+        # add a gray dotted line at y = 1
+        lines(0:Time2, rep(1, Time2 + 1), col = 'gray', lty = 3)
+
+        # plot the density ratio over time
+        par(mar = c(4.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = 'Density Ratios Over Time', # title of plot
+             ylab = 'Density Ratio', # axis labels
+             xlab = 'Years since marine reserve implementation',
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(0, Time2), # set x-axis limits
+             ylim = c(0, y2_dr),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        dr_ytick <- seq(y1_dr, y2_dr, by_dr) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = dr_ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        # set specific x-axis
+        xtick <- seq(x1, x2, by = x_by) # set x axis tick marks
+        axis(side = 1, # specify x axis
+             at = xtick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Density_ratio[x1:x2 + 1, cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1)} # set line type
+
+        # add a gray dotted line at target_DR over time
+        lines(0:Time2, y_DR, col = 'gray', lty = 3)
+
+        # add a legend
+        par(mar = c(0.1, 0.1, 0.1, 0.1))
+        plot(1, type = 'n', axes = F, xlab = '', ylab = '')
+        legend(x = position, inset = 0, horiz = F, # position
+               col = color, # apply color palette
+               lwd = 2, # apply line thicknesses
+               lty = line_type, # apply line patterns
+               title = legend_title, # add legend title
+               legend = legend_text, # add legend labels
+               seg.len = 3, # adjust length of lines
+               cex = 1.1, # adjust legend text size
+               bty = 'n')
+
+      }
+    }
+
+    ###### Plot relative SSB over time after reserve implementation ##############
+
+    # y-axis limits
+    yyy1 <- 0
+    yyy2 <- 2
+    yyy_by <- (yyy2 - yyy1)/2
+
+    for (fdr in 1:FDR) {
+      for (a in 1:3) {
+
+        # set plotting layout
+        layout(mat = layout_m,
+               widths = c(2, 0.4), # Widths of the 2 columns
+               heights = c(4, 2)) # Heights of the 2 rows
+
+        area <- ifelse(a < 2, 'far from', ifelse(a == 3, 'in', 'near'))
+        title <- sprintf('Final DR ', fdr, ' - Relative SSB: %s reserve', area)
+
+        # plot the relative SSB
+        par(mar = c(0.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = title, # title of plot
+             ylab = 'Relative SSB', # axis labels
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(x1, x2), # set x-axis limits
+             ylim = c(yyy1, yyy2),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        yyytick <- seq(yyy1, yyy2, by = yyy_by) # set yaxis tick marks
+        axis(side = 2, # specify y axis
+             at = yyytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Rel_SSB[a, , cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1) # set line type
+        }
+
+        # add a gray dotted line at y = 1
+        lines(0:Time2, rep(1, Time2 + 1), col = 'gray', lty = 3)
+
+        # plot the density ratio over time
+        par(mar = c(4.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = 'Density Ratios Over Time', # title of plot
+             ylab = 'Density Ratio', # axis labels
+             xlab = 'Years since marine reserve implementation',
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(0, Time2), # set x-axis limits
+             ylim = c(0, y2_dr),
+             cex.lab = 1.5, cex.main = 1.5
+        )
+
+        # set specific y-axis
+        dr_ytick <- seq(y1_dr, y2_dr, by_dr) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = dr_ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        # set specific x-axis
+        dr_xtick <- seq(0, Time2, by = Time2/4) # set x axis tick marks
+        axis(side = 1, # specify x axis
+             at = dr_xtick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Density_ratio[x1:x2 + 1, cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1)} # set line type
+
+        # add a gray dotted line at target_DR over time
+        lines(0:Time2, y_DR, col = 'gray', lty = 3)
+
+        # add a legend
+        par(mar = c(0.1, 0.1, 0.1, 0.1))
+        plot(1, type = 'n', axes = F, xlab = '', ylab = '')
+        legend(x = position, inset = 0, horiz = F, # position
+               col = color, # apply color palette
+               lwd = 2, # apply line thicknesses
+               lty = line_type, # apply line patterns
+               title = legend_title, # add legend title
+               legend = legend_text, # add legend labels
+               seg.len = 3, # adjust length of lines
+               cex = 1.1, # adjust legend text size
+               bty = 'n')
+
+      }
+    }
+
+
+    }
+
+  #####
+
   # initialize output list
   output <- list()
 
