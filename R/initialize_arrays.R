@@ -265,7 +265,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Selectivity at age (updated)
   # Dimensions = 1 * age
   S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
-                     A50_down, Alpha, F_fin, Beta, Cf)
+                   A50_down, Alpha, F_fin, Beta, Cf)
 
   # Cutoff for maturity
   A50_mat <- ages[min(which(Mat > 0.5))]
@@ -363,32 +363,29 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Stable age distribution, derived from equilibrium conditions with Fb = 0
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                  eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                  Recruitment_mode, LDP)
+                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+                   Recruitment_mode, LDP)
 
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
-  for (a in 1:A) {
-    for (t in 1:Rec_age) {
-      for (cr in 1:CR) {
-        for (nm in 1:NM) {
-          for (fdr in 1:FDR) {
+  for (t in 1:Rec_age) {
+    for (cr in 1:CR) {
+      for (nm in 1:NM) {
+        for (fdr in 1:FDR) {
 
-            N[, a, t, cr, nm, fdr] <- SAD
-            FM[, a, t, cr, nm, fdr] <- f_mortality(a, t, cr, nm, fdr, FM, A,
-                                                   Fb, E, S)
-            Abundance_all[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr])
-            Abundance_mature[a, t, cr, nm, fdr] <- sum(N[A50_mat:(Max_age-Rec_age + 1),
-                                                         a, t, cr, nm, fdr])
-            Biomass[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr] * W)
-            SSB[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr]*W*Mat)
-            E[a, t, cr, nm, fdr] <- 0.2
-            Catch[, a, t, cr, nm, fdr] <- catch(a, t, cr, nm, fdr, FM,
-                                                Nat_mortality, N, A, Fb, E,
-                                                Catch)
-            Yield[a, t, cr, nm, fdr] <- sum(Catch[, a, t, cr, nm, fdr]*W)
+          N[, , t, cr, nm, fdr] <- array(rep(SAD, A), c(num, A))
+          FM[, , t, cr, nm, fdr] <- f_mortality(t, cr, nm, fdr, FM, A,
+                                                Fb, E, S)
+          Abundance_all[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr])
+          Abundance_mature[, t, cr, nm, fdr] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),
+                                                          , t, cr, nm, fdr])
+          Biomass[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr] * W)
+          SSB[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr]*W*Mat)
+          E[, t, cr, nm, fdr] <- rep(0.2, A)
+          Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
+                                             Nat_mortality, N, A, Fb, E, Catch)
+          Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
 
-          }
         }
       }
     }
