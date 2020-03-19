@@ -4,12 +4,10 @@
 \alias{sampling}
 \title{Sampling}
 \usage{
-sampling(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all, Abundance_mature,
+sampling(t, cr, nm, fdr, Delta, Gamma, Abundance_all, Abundance_mature,
   Transects = 24, X, Count, NuS, A = 5)
 }
 \arguments{
-\item{a}{temporary numeric value, the current area.}
-
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
@@ -64,7 +62,6 @@ Abundance_all <- array(rep(340, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Abundance_mature <- array(rep(280, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR), c(A, TimeT, Transects, 2, CR, NM, FDR))
 NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.89), c(A, TimeT, CR, NM, FDR))
-sampling(a = 1, t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
-   Abundance_all, Abundance_mature, Transects = 24, X = 15.42, Count, NuS,
-   A = 5)
+sampling(t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
+   Abundance_all, Abundance_mature, Transects, X = 15.42, Count, NuS, A)
 }

@@ -3,7 +3,6 @@
 #' \code{sampling} samples from the current population to update the Count
 #'    array.
 #'
-#' @param a temporary numeric value, the current area.
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
 #' @param nm temporary numeric value, the current natural mortality estimate.
@@ -44,16 +43,14 @@
 #' Abundance_mature <- array(rep(280, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR), c(A, TimeT, Transects, 2, CR, NM, FDR))
 #' NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.89), c(A, TimeT, CR, NM, FDR))
-#' sampling(a = 1, t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
-#'    Abundance_all, Abundance_mature, Transects = 24, X = 15.42, Count, NuS,
-#'    A = 5)
-sampling <- function(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all,
+#' sampling(t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
+#'    Abundance_all, Abundance_mature, Transects, X = 15.42, Count, NuS, A)
+sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance_all,
                      Abundance_mature, Transects = 24, X, Count, NuS, A = 5) {
 
   ###### Error handling ########################################################
 
   # classes of variables
-  if (a %% 1 != 0) {stop('a must be an integer value.')}
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
@@ -71,7 +68,6 @@ sampling <- function(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all,
   if (A %% 1 != 0) {stop('A must be an integer value.')}
 
   # acceptable values
-  if (a <= 0) {stop('a must be greater than 0.')}
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0 || nm > 3) {
@@ -114,7 +110,6 @@ sampling <- function(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all,
     stop('Count or NuS has an incorrect number of natural mortality estimates.')}
   if (dim(Count)[7] != dim(NuS)[5]) {
     stop('Count or NuS has an incorrect number of final density ratios.')}
-  if (a > A) {stop('The given "a" value is too high.')}
   if (t > dim(Abundance_all)[2] || t > dim(Count)[2]) {
     stop('The given "t" value is too high for Abundance_all or Count.')}
   if (cr > dim(Abundance_all)[3]|| cr > dim(Count)[5]) {
@@ -143,15 +138,17 @@ sampling <- function(a, t, cr, nm, fdr, Delta, Gamma, Abundance_all,
 
   # Determine if species is seen at least once
   # Dimensions = 1 * transects
-  presence_all <- rbinom(Transects, 1, p_all)
-  presence_mature <- rbinom(Transects, 1, p_mature)
+  presence_all <- array(rbinom(Transects, 1, p_all), c(Transects, 1))
+  if (sum(presence_all) == 0) { r <- sample(1:24, 1); presence_all[r] = 1}
+  presence_mature <- array(rbinom(Transects, 1, p_mature), c(Transects, 1))
+  if (sum(presence_mature) == 0) { r <- sample(1:24, 1); presence_mature[r] = 1}
 
   # Calculate species count given transects with positive visuals
-  nus <- NuS[a, t - 1, cr, nm, fdr]
-  All <- Gamma*Abundance_all[a, t - 1, cr, nm, fdr]*exp(nus)
-  Mature <- Gamma*Abundance_mature[a, t - 1, cr, nm, fdr]*exp(nus)
-  Count[a, t, , 1, cr, nm, fdr] <- presence_all*(All)
-  Count[a, t, , 2, cr, nm, fdr] <- presence_mature*(Mature)
+  nus <- NuS[, t - 1, cr, nm, fdr]
+  All <- Gamma*Abundance_all[, t - 1, cr, nm, fdr]*exp(nus)
+  Mature <- Gamma*Abundance_mature[, t - 1, cr, nm, fdr]*exp(nus)
+  Count[, t, , 1, cr, nm, fdr] <- presence_all %*% All
+  Count[, t, , 2, cr, nm, fdr] <- presence_mature %*% Mature
 
-  return(Count[a, t, , , cr, nm, fdr])
+  return(Count[, t, , , cr, nm, fdr])
 }
