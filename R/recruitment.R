@@ -23,6 +23,10 @@
 #'    'closed' - the recruits in each area originate from adults in that area.
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
+#'    'regional_DD' - larvae experience regional density dependence before
+#'       settling evenly across all areas
+#'    'local_DD' - larvae experience local density dependence before settling
+#'       evely across all areas
 #'    Default value is 'pool'.
 #' @param LDP numeric value, the larval drift proportion, the proportion of
 #'    larvae that drift from one area to an adjacent area before settling.
@@ -77,8 +81,10 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   if (B0 <= 0) {stop('B0 must be greater than 0.')}
   if (Sigma_R <= 0) {stop('Sigma_R must be greater than 0.')}
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
-  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
-    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed' &&
+      Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
+    stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
+         "local_DD".')}
   if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
 
   # relational values
@@ -126,8 +132,8 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
     R1 <- num / denom
 
-    # density dependence across all areas and recruits distributed evenly across
-    # areas; OR larvae distributed evenly across areas then local density
+    # regional / stock larval density dependence and recruits distributed evenly
+    # across areas; OR larvae distributed evenly across areas then local density
     # dependence in each area
   } else if (Recruitment_mode == 'regional_DD') {
 
@@ -137,7 +143,7 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
     R1 <- num / denom
 
-    # larval density dependence within areas and larvae settle in equal amounts
+    # larval density dependence within areas and recruitment in equal amounts
     # in each area
   } else if (Recruitment_mode == 'local_DD') {
 
