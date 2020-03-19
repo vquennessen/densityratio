@@ -4,13 +4,11 @@
 \alias{pop_dynamics}
 \title{Population Dynamics}
 \usage{
-pop_dynamics(a, t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
-  Fb, E, S, NM = 3, FM, A50_mat, Biomass, Abundance_all,
-  Abundance_mature, Fishing = T, Nat_mortality, R)
+pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5, Fb,
+  E, S, NM = 3, FM, A50_mat, Biomass, Abundance_all, Abundance_mature,
+  Fishing = T, Nat_mortality, R)
 }
 \arguments{
-\item{a}{temporary numeric value, the current area.}
-
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
@@ -113,8 +111,8 @@ Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
 R <- recruitment(t = 3, cr = 1, nm = 2, fdr = 1, SSB, A = 5, R0 = 1e+5,
    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
    Recruitment_mode = 'pool', LDP = 0.1)
-pop_dynamics(a = 1, t = 3, cr = 1, nm = 2, fdr = 1, Rec_age = 2,
-   Max_age = 35, SSB, N, W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM,
-   A50_mat = 8, Biomass, Abundance_all, Abundance_mature, Fishing = TRUE,
+pop_dynamics(t = 3, cr = 1, nm = 2, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
+   N, W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Biomass,
+   Abundance_all, Abundance_mature, Fishing = TRUE,
    Nat_mortality = c(0.09, 0.14, 0.19), R)
 }
