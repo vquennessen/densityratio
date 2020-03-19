@@ -136,7 +136,8 @@ sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance_all,
   p_all <- 1 / (1 + exp(odds_all))
   p_mature <- 1 / (1 + exp(odds_mature))
 
-  # Determine if species is seen at least once
+  # Determine if species is seen at least once, and replace a random 0 with a 1
+  #   if all zeros to prevent errors in calculating density ratio
   # Dimensions = 1 * transects
   presence_all <- array(rbinom(Transects, 1, p_all), c(Transects, 1))
   if (sum(presence_all) == 0) { r <- sample(1:24, 1); presence_all[r] = 1}
