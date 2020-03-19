@@ -141,7 +141,7 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   }
 
   # calculate density ratio
-  DR <- (sum(count_out)/(Transects*nrow(count_out)))/(sum(count_in)/Transects)
+  DR <- (sum(count_out)/(nrow(count_out)))/(sum(count_in))
 
   return(DR)
 
