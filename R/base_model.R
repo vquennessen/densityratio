@@ -270,11 +270,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   E                <- IA[[26]]    # nominal fishing effort in each area
   Catch            <- IA[[27]]    # Catch at age
   Yield            <- IA[[28]]    # Yield per area
-  Rel_biomass      <- IA[[29]]    # Relative biomass after reserve implementation
-  Rel_yield        <- IA[[30]]    # Relative yield after reserve implementation
-  Rel_SSB          <- IA[[31]]    # Relative SSB after reserve implementation
-  Density_ratio    <- IA[[32]]    # Density ratios
-  ENM              <- IA[[33]]    # nm value that represents "true" M
+  Density_ratio    <- IA[[29]]    # Density ratios
+  ENM              <- IA[[30]]    # nm value that represents "true" M
 
   ##### Population Dynamics - Time Varying #####################################
 
@@ -466,7 +463,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
     # transient DR for population with correct M
     ENM <- ifelse(Error == 0, 1, 2)
-    y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM)
 
     ##### Plot relative biomass over time after reserve implementation #########
 
@@ -486,6 +482,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     by_dr <- y2_dr/2
 
     for (fdr in 1:FDR) {
+
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+
       for (a in 1:3) {
 
         # set plotting layout
@@ -583,6 +582,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     yy_by <- (yy2 - yy1)/2
 
     for (fdr in 1:FDR) {
+
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+
       for (a in 1:2) {
 
         # set plotting layout
@@ -680,6 +682,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     yyy_by <- (yyy2 - yyy1)/2
 
     for (fdr in 1:FDR) {
+
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+
       for (a in 1:3) {
 
         # set plotting layout
