@@ -120,6 +120,10 @@ mortality.}
 'closed' - the recruits in each area originate from adults in that area.
 'pool' - the recruits in each area come from a pool of larvae produced by
    adults in all areas.
+'regional_DD' - larvae experience regional density dependence before
+   settling evenly across all areas
+'local_DD' - larvae experience local density dependence before settling
+   evely across all areas
 Default value is 'pool'.}
 
 \item{LDP}{numeric value, the larval drift proportion, the proportion of
