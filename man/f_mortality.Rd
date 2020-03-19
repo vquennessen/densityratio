@@ -4,11 +4,9 @@
 \alias{f_mortality}
 \title{Fishing mortality}
 \usage{
-f_mortality(a, t, cr, nm, fdr, FM, A, Fb, E, S)
+f_mortality(t, cr, nm, fdr, FM, A, Fb, E, S)
 }
 \arguments{
-\item{a}{temporary numeric value, the current area.}
-
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
@@ -46,12 +44,12 @@ a numeric vector that corresponds to the fishing mortality at each
 \examples{
 n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
 FM <- array(rep(0, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-E <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    L2 = 47.95, K = 0.2022, All_ages = FALSE)
 S <- selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
-f_mortality(a = 1, t = 1, cr = 1, nm = 1, fdr = 1, FM, A = 5, Fb = 0.2, E, S)
+f_mortality(t = 1, cr = 1, nm = 1, fdr = 1, FM, A = 5, Fb = 0.2, E, S)
 }
