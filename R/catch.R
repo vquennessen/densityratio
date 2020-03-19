@@ -5,7 +5,6 @@
 #' natural mortality (M) are proportional to fish abundance (N) and act
 #' simultaneously  and uniformly throughout the year, i.e. dN/dt = -(M+F)*N.
 #'
-#' @param a temporary numeric value, the current area.
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
 #' @param nm temporary numeric value, the current natural mortality estimate.
@@ -37,15 +36,14 @@
 #' N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 #' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Catch <- array(rep(2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-#' catch(a = 1, t = 1, cr = 1, nm = 1, fdr = 1, FM,
+#' catch(t = 1, cr = 1, nm = 1, fdr = 1, FM,
 #'    Nat_mortality = c(0.09, 0.14, 0.19), N, A = 5, Fb = 0.2, E, Catch)
 
-catch <- function(a, t, cr, nm, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
+catch <- function(t, cr, nm, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
 
   ###### Error handling ########################################################
 
   # classes of variables
-  if (a %% 1 != 0) {stop('a must be an integer value.')}
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
   if (nm %% 1 != 0) {stop('nm must be an integer value.')}
@@ -59,7 +57,6 @@ catch <- function(a, t, cr, nm, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
   if (!is.numeric(Catch)) {stop('Catch must be a numeric array.')}
 
   # acceptable values
-  if (a <= 0) {stop('a must be greater than 0.')}
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
   if (nm <= 0 || nm > 3) {
@@ -87,21 +84,19 @@ catch <- function(a, t, cr, nm, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
     stop('N, E, FM, or Catch has an incorrect number of control rules.')}
   if(dim(N)[5] != dim(E)[4] || dim(N)[5] != dim(Catch)[5] || dim(N)[5] != dim(FM)[5]) {
     stop('N, E, FM, or Catch has an incorrect number of values in Nat_mortality.')}
-  if (a > dim(N)[2]) {stop('The given "a" value is too high for N.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
   if (nm > dim(N)[5]) {stop('The given "nm" value is too high for N.')}
-  if (a > A) {stop('a must be less than or equal to A.')}
 
   ##############################################################################
 
   # calculate the coefficient
-  coeff <- FM[ , a, t, cr, nm, fdr]/(Nat_mortality[nm] + FM[ , a, t, cr, nm, fdr])
+  coeff <- FM[ , , t, cr, nm, fdr]/(Nat_mortality[nm] + FM[ , , t, cr, nm, fdr])
 
   # calculate catch at age
-  Catch[ , a, t, cr, nm, fdr] <- coeff * N[ , a, t, cr, nm, fdr] * exp(-1*Nat_mortality[nm]
-                                                             - FM[ , a, t, cr, nm, fdr])
+  Catch[ , , t, cr, nm, fdr] <- coeff * N[ , , t, cr, nm, fdr] * exp(-1*Nat_mortality[nm]
+                                                             - FM[ , , t, cr, nm, fdr])
 
-  return(Catch[, a, t, cr, nm, fdr])
+  return(Catch[, , t, cr, nm, fdr])
 
 }
