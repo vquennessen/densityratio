@@ -20,6 +20,10 @@
 #'    'closed' - the recruits in each area originate from adults in that area.
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
+#'    'regional_DD' - larvae experience regional density dependence before
+#'       settling evenly across all areas
+#'    'local_DD' - larvae experience local density dependence before settling
+#'       evely across all areas
 #'    Default value is 'pool'.
 #' @param Error numeric value, the error between estimated and correct natural
 #'    mortality.
@@ -170,8 +174,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (MPA <= 0) {stop('MPA must be greater than 0.')}
   if (Time1 <= 0) {stop('Time1 must be greater than 0.')}
   if (Time2 <= 0) {stop('Time2 must be greater than 0.')}
-  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
-    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed' &&
+      Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
+    stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
+         "local_DD".')}
   if (Error < 0) {stop('Error must be greater than or equal to 0.')}
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (sum(Final_DRs <= 0) > 0) {

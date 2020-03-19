@@ -84,6 +84,10 @@
 #'    'closed' - the recruits in each area originate from adults in that area.
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
+#'    'regional_DD' - larvae experience regional density dependence before
+#'       settling evenly across all areas
+#'    'local_DD' - larvae experience local density dependence before settling
+#'       evely across all areas
 #'    Default value is 'pool'.
 #' @param LDP numeric value, the larval drift proportion, the proportion of
 #'    larvae that drift from one area to an adjacent area before settling.
@@ -205,6 +209,10 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
   if (Error < 0) {stop('Error must be greater than or equal to 0.')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed' &&
+      Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
+    stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
+         "local_DD".')}
   if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
 
   # relational values

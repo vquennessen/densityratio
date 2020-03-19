@@ -17,6 +17,10 @@
 #'    'closed' - the recruits in each area originate from adults in that area.
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
 #'       adults in all areas.
+#'    'regional_DD' - larvae experience regional density dependence before
+#'       settling evenly across all areas
+#'    'local_DD' - larvae experience local density dependence before settling
+#'       evely across all areas
 #'    Default value is 'pool'.
 #'
 #' @return a numeric value, the historical value of fishing mortality that would
@@ -46,8 +50,10 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5,
   # acceptable values
   if (eq_time <= 0) {stop('eq_time must be greater than 0.')}
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
-  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed') {
-    stop('Recruitment_mode must be either "pool" or "closed".')}
+  if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed' &&
+      Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
+    stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
+         "local_DD".')}
 
   ##############################################################################
 
