@@ -300,37 +300,34 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
           R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
                            Rec_age, Recruitment_mode, LDP)
 
-          for (a in 1:A) {
+          # biology
+          PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
+                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
+                             Abundance_all, Abundance_mature, Biomass, Fishing,
+                             Nat_mortality, R)
 
-            # biology
-            PD <- pop_dynamics(a, t, cr, nm, fdr, Rec_age, Max_age, SSB,
-                               N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
-                               Abundance_all, Abundance_mature, Biomass, Fishing,
-                               Nat_mortality, R)
+          FM[, , t, cr, nm, fdr]               <- PD[[1]]
+          N[, , t, cr, nm, fdr]                <- PD[[2]]
+          Abundance_all[, t, cr, nm, fdr]      <- PD[[3]]
+          Abundance_mature[, t, cr, nm, fdr]   <- PD[[4]]
+          Biomass[, t, cr, nm, fdr]            <- PD[[5]]
+          SSB[, t, cr, nm, fdr]                <- PD[[6]]
 
-            FM[, a, t, cr, nm, fdr]               <- PD[[1]]
-            N[, a, t, cr, nm, fdr]                <- PD[[2]]
-            Abundance_all[a, t, cr, nm, fdr]      <- PD[[3]]
-            Abundance_mature[a, t, cr, nm, fdr]   <- PD[[4]]
-            Biomass[a, t, cr, nm, fdr]            <- PD[[5]]
-            SSB[a, t, cr, nm, fdr]                <- PD[[6]]
+          # sampling
+          if (Surveys == TRUE) {
+            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
+                                                    Gamma, Abundance_all,
+                                                    Abundance_mature,
+                                                    Transects, X, Count, NuS,
+                                                    A)
+          }
 
-            # sampling
-            if (Surveys == TRUE) {
-              Count[a, t, , , cr, nm, fdr] <- sampling(a, t, cr, nm, fdr, Delta,
-                                                       Gamma, Abundance_all,
-                                                       Abundance_mature,
-                                                       Transects, X, Count, NuS,
-                                                       A)
-            }
-
-            # fishing
-            if (Fishing == TRUE) {
-              Catch[, a, t, cr, nm, fdr] <- catch(a, t, cr, nm, fdr, FM,
-                                                  Nat_mortality, N, A, Fb, E,
-                                                  Catch)
-              Yield[a, t, cr, nm, fdr] <- sum(Catch[, a, t, cr, nm, fdr]*W)
-            }
+          # fishing
+          if (Fishing == TRUE) {
+            Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
+                                               Nat_mortality, N, A, Fb, E,
+                                               Catch)
+            Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
           }
         }
       }
@@ -358,38 +355,38 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
           R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
                            Rec_age, Recruitment_mode, LDP)
 
-          for (a in 1:A) {
 
-            # biology
-            PD <- pop_dynamics(a, t, cr, nm, fdr, Rec_age, Max_age, SSB,
-                               N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
-                               Abundance_all, Abundance_mature, Biomass, Fishing,
-                               Nat_mortality, R)
 
-            FM[, a, t, cr, nm, fdr]               <- PD[[1]]
-            N[, a, t, cr, nm, fdr]                <- PD[[2]]
-            Abundance_all[a, t, cr, nm, fdr]      <- PD[[3]]
-            Abundance_mature[a, t, cr, nm, fdr]   <- PD[[4]]
-            Biomass[a, t, cr, nm, fdr]            <- PD[[5]]
-            SSB[a, t, cr, nm, fdr]                <- PD[[6]]
+          # biology
+          PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
+                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
+                             Abundance_all, Abundance_mature, Biomass, Fishing,
+                             Nat_mortality, R)
 
-            # sampling
-            if (Surveys == TRUE) {
-              Count[a, t, , , cr, nm, fdr] <- sampling(a, t, cr, nm, fdr, Delta,
-                                                       Gamma, Abundance_all,
-                                                       Abundance_mature,
-                                                       Transects, X, Count, NuS,
-                                                       A)
-            }
+          FM[, , t, cr, nm, fdr]               <- PD[[1]]
+          N[, , t, cr, nm, fdr]                <- PD[[2]]
+          Abundance_all[, t, cr, nm, fdr]      <- PD[[3]]
+          Abundance_mature[, t, cr, nm, fdr]   <- PD[[4]]
+          Biomass[, t, cr, nm, fdr]            <- PD[[5]]
+          SSB[, t, cr, nm, fdr]                <- PD[[6]]
 
-            # fishing
-            if (Fishing == TRUE) {
-              Catch[, a, t, cr, nm, fdr] <- catch(a, t, cr, nm, fdr, FM,
-                                                  Nat_mortality, N, A, Fb, E,
-                                                  Catch)
-              Yield[a, t, cr, nm, fdr] <- sum(Catch[, a, t, cr, nm, fdr]*W)
-            }
+          # sampling
+          if (Surveys == TRUE) {
+            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
+                                                    Gamma, Abundance_all,
+                                                    Abundance_mature,
+                                                    Transects, X, Count, NuS,
+                                                    A)
           }
+
+          # fishing
+          if (Fishing == TRUE) {
+            Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
+                                               Nat_mortality, N, A, Fb, E,
+                                               Catch)
+            Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
+          }
+
         }
 
         # management
@@ -402,9 +399,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         }
 
         # calculate true density ratio
-        Density_ratio <- true_DR(t, cr, fdr, Abundance_all, Inside, Outside,
-                                 Density_ratio, Time1, ENM)
-
+        Density_ratio[t - Time1 + 1, cr, fdr] <- true_DR(t, cr, fdr,
+                                                         Abundance_all, Inside,
+                                                         Outside, Density_ratio,
+                                                         Time1, ENM)
       }
     }
   }
@@ -782,7 +780,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     }
 
 
-    }
+  }
 
   #####
 
