@@ -11,6 +11,8 @@
 #'    determine the historic fishing mortality. Default value is 150.
 #' @param R0 numeric value, set arbitrarily, the unfished recruitment. Default
 #'    value is 1e+5.
+#' @param LDP numeric value, the proportion of larvae that drift to adjacent
+#'    areas. Default value is 0.1.
 #' @param Stochasticity logical vector, does recruitment contain a stochastic
 #'    component? Default value is FALSE.
 #' @param Recruitment_mode character value, values can be:
@@ -30,9 +32,9 @@
 #' @importFrom graphics plot abline
 #'
 #' @examples
-#' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5,
+#' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, LDP = 0.1,
 #'    Stochasticity = FALSE, Recruitment_mode = 'pool')
-historical_FM <- function(Species, eq_time = 150, R0 = 1e+5,
+historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
                           Stochasticity = FALSE, Recruitment_mode = 'pool') {
 
   ###### Error handling ########################################################
@@ -69,21 +71,20 @@ A2  <- par[[8]];  L2   <- par[[9]]
 K   <- par[[10]]
 L50                    <- par[[11]]       # length at 50% maturity
 K_mat                  <- par[[12]]       # slope of maturity curve
-LDP                    <- par[[13]]       # larval drift proportion
-H                      <- par[[14]]       # steepness
-Phi                    <- par[[15]]       # unfished recruits per spawner
-Sigma_R                <- par[[16]]       # recruitment standard deviation
-Rho_R                  <- par[[17]]       # recruitment autocorrelation
+H                      <- par[[13]]       # steepness
+Phi                    <- par[[14]]       # unfished recruits per spawner
+Sigma_R                <- par[[15]]       # recruitment standard deviation
+Rho_R                  <- par[[16]]       # recruitment autocorrelation
                                           #       in PISCO monitoring data
-D                      <- par[[19]]
-SP                     <- par[[23]]       # std of positive transects
-Fleets                 <- par[[24]]       # fishery fleet names
-Alpha                  <- par[[25]]       # slope for upcurve
-Beta                   <- par[[26]]       # slope for downcurve
-F_fin                  <- par[[27]]       # F_fin for fishery, 0 if asymptotic
-A50_up                 <- par[[28]]       # L50 for upcurve
-A50_down               <- par[[29]]       # L50 for downcurve
-Cf                     <- par[[30]]       # fraction of fishery caught / fleet
+D                      <- par[[18]]
+SP                     <- par[[22]]       # std of positive transects
+Fleets                 <- par[[23]]       # fishery fleet names
+Alpha                  <- par[[24]]       # slope for upcurve
+Beta                   <- par[[25]]       # slope for downcurve
+F_fin                  <- par[[26]]       # F_fin for fishery, 0 if asymptotic
+A50_up                 <- par[[27]]       # L50 for upcurve
+A50_down               <- par[[28]]       # L50 for downcurve
+Cf                     <- par[[29]]       # fraction of fishery caught / fleet
 
 ##### Calculate set values #####
 ages <- Rec_age:Max_age                            # applicable ages
@@ -101,9 +102,6 @@ B0 <- R0/Phi
 # selectivity at age
 S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                    A50_down, Alpha, F_fin, Beta, Cf)
-
-# NM - number of estimates of natural mortality
-NM <- 1
 
 # Recruitment error = 0 without stochasticity
 Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
@@ -127,8 +125,7 @@ N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
 # Initialize biomass, SSB, and recruitment error
 # Dimensions = 1 * time * 1
 SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
-abundance_all2 <- abundance_mature2 <- array(rep(0, eq_time),
-                                             c(1, eq_time, 1, 1, 1))
+abundance2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1, 1))
 
 # calculate stable age distribution
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
@@ -140,9 +137,7 @@ FM0_biomass <- sum(W*SAD)
 
 for (t in 1:Rec_age) {
   N2[, 1, t, 1, 1, 1] <- SAD
-  abundance_all2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
-  abundance_mature2[1, t, 1, 1, 1] <- sum(N2[A50_mat:(Max_age-Rec_age + 1),
-                                             1, t, 1, 1, 1])
+  abundance2[1, t, 1, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
   biomass2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
   SSB2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
 }
@@ -160,16 +155,15 @@ for (i in 2:fn) {
                      Sigma_R, Rec_age, Recruitment_mode, LDP)
 
     PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age,
-                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, NM, FM2, A50_mat,
-                       abundance_all2, abundance_mature2, biomass2, Fishing = T,
+                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, NM = 1, FM2,
+                       A50_mat, biomass2, abundance2, Fishing = T,
                        Nat_mortality = c(M), R)
 
     FM2[, , t, 1, 1, 1]               <- rep(FM_values[i], num)
     N2[, , t, 1, 1, 1]                <- PD[[2]]
-    abundance_all2[, t, 1, 1, 1]      <- PD[[3]]
-    abundance_mature2[, t, 1, 1, 1]   <- PD[[4]]
-    biomass2[, t, 1, 1, 1]            <- PD[[5]]
-    SSB2[, t, 1, 1, 1]                <- PD[[6]]
+    biomass2[, t, 1, 1, 1]            <- PD[[3]]
+    SSB2[, t, 1, 1, 1]                <- PD[[4]]
+    abundance2[, t, 1, 1, 1, 1]       <- PD[[5]]
 
   }
 
