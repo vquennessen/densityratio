@@ -4,8 +4,8 @@
 \alias{sampling}
 \title{Sampling}
 \usage{
-sampling(t, cr, nm, fdr, Delta, Gamma, Abundance_all, Abundance_mature,
-  Transects = 24, X, Count, NuS, A = 5)
+sampling(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24, X,
+  Count, NuS, A = 5, Ind_sampled = "all")
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -22,13 +22,9 @@ depletion, also known as the constant of proportionality}
 \item{Gamma}{numeric value, the average value of a positive transect divided
 by depletion}
 
-\item{Abundance_all}{numeric array, the total number of individuals in each
-area, at each timestep, under all control rules, with all estimates of
-natural mortality.}
-
-\item{Abundance_mature}{numeric array, the number of mature individuals in
-each area, at each timestep, under all control rules, with all estimates
-of natural mortality.}
+\item{Abundance}{numeric array, the total number of all and/or mature
+individuals in each area, at each timestep, under all control rules, with
+all estimates of natural mortality.}
 
 \item{Transects}{numerical value, the number of sampling transects conducted
 in each area to estimate density ratio. Default value is 24.}
@@ -45,6 +41,12 @@ distribution with mean 0 and sd Sigma_S.}
 
 \item{A}{numeric value, the number of total areas in the model. Default value
 is 5.}
+
+\item{Ind_sampled}{character value, the individuals to be sampled to
+calculate density ratio. Values can be:
+'all' - sample all individuals.
+'mature' - sample only mature individuals.
+Default value is 'all'.}
 }
 \value{
 a two-dimentional numeric array with updated observed counts for the
@@ -58,10 +60,11 @@ a two-dimentional numeric array with updated observed counts for the
 }
 \examples{
 n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
-Abundance_all <- array(rep(340, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Abundance_mature <- array(rep(280, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR), c(A, TimeT, Transects, 2, CR, NM, FDR))
+Abundance <- array(rep(340, A*TimeT*CR*NM*FDR*1),
+   c(A, TimeT, CR, NM, FDR, 1))
+Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),
+   c(A, TimeT, Transects, 2, CR, NM, FDR))
 NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.89), c(A, TimeT, CR, NM, FDR))
 sampling(t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
-   Abundance_all, Abundance_mature, Transects, X = 15.42, Count, NuS, A)
+   Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
 }
