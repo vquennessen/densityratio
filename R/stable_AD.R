@@ -20,11 +20,11 @@
 #'    maximum age, on the interval (0, 1).
 #' @param M numeric value, the natural mortality on the interval (0, 1).
 #' @param eq_time numeric value, the number of years to run the function to
-#'    determine the stable age distribution.
+#'    determine the stable age distribution. Default value is 150.
 #' @param A50_mat numeric value, the first age at which 50\% or more individuals
 #'    are estimated to be mature, on the interval (Rec_age, Max_age).
 #' @param Stochasticity logical vector, does recruitment contain a stochastic
-#'    component? Default value is TRUE.
+#'    component? Default value is FALSE.
 #' @param Rho_R numeric value, the recruitment autocorrelation on the interval
 #'    (-1, 1). Default value is 0.
 #' @param Recruitment_mode character value, values can be:
@@ -60,8 +60,8 @@
 #'    A50_mat = 8, Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool',
 #'    LDP = 0.1)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                     eq_time, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
-                     LDP = 0.1) {
+                     eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+                     Recruitment_mode = 'pool', LDP = 0.1) {
 
   ###### Error handling ########################################################
 
@@ -128,8 +128,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1, 1))
   biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
   SSB2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
-  abundance_all2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
-  abundance_mature2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  abundance2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1, 1))
 
   # Recruitment normal variable
   # Dimensions = 1 * timeT * 1 * 1 * 1
@@ -147,8 +146,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
     N2[, 1, t, 1, 1, 1] <- rep(100, num)
     biomass2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
     SSB2[1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
-    abundance_all2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
-    abundance_mature2[1, t, 1, 1, 1] <- sum(N2[start_age:num, 1, t, 1, 1, 1])
+    abundance2[1, t, 1, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
   }
 
   # Step population forward in time with set fishing level
@@ -159,17 +157,17 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                      Sigma_R, Rec_age, Recruitment_mode, LDP)
 
     # biology
-    PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age,
-                       SSB2, N2, W, Mat, A = 1, Fb, E2, S, NM = 1, FM2, A50_mat,
-                       abundance_all2, abundance_mature2, biomass2, Fishing = F,
-                       Nat_mortality = c(M), R)
+    PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age, SSB = SSB2,
+                       N = N2, W, Mat, A = 1, Fb, E = E2, S, NM = 1, FM = FM2,
+                       A50_mat, Biomass = biomass2, Abundance = abundance2,
+                       Fishing = T, Nat_mortality = c(M), R,
+                       Ind_sampled = 'all')
 
-    FM2[, , t, 1, 1, 1]               <- PD[[1]]
-    N2[, , t, 1, 1, 1]                <- PD[[2]]
-    abundance_all2[, t, 1, 1, 1]      <- PD[[3]]
-    abundance_mature2[, t, 1, 1, 1]   <- PD[[4]]
-    biomass2[, t, 1, 1, 1]            <- PD[[5]]
-    SSB2[, t, 1, 1, 1]                <- PD[[6]]
+    FM2[, 1, t, 1, 1, 1]               <- PD[[1]]
+    N2[, 1, t, 1, 1, 1]                <- PD[[2]]
+    biomass2[1, t, 1, 1, 1]            <- PD[[3]]
+    SSB2[1, t, 1, 1, 1]                <- PD[[4]]
+    abundance2[1, t, 1, 1, 1, 1]       <- PD[[5]]
 
   }
 
