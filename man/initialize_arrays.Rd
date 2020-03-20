@@ -9,7 +9,7 @@ initialize_arrays(A = 5, MPA = 3, Final_DRs, Time1 = 50,
   K_mat, Fb, L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down,
   F_fin, Beta, Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE,
   D, Transects = 24, H, Surveys = TRUE, Fishing = TRUE, Error,
-  Recruitment_mode = "pool", LDP = 0.1)
+  Recruitment_mode = "pool", LDP = 0.1, Ind_sampled = "all")
 }
 \arguments{
 \item{A}{numeric value, the number of total areas in the model. Default value
@@ -129,13 +129,18 @@ Default value is 'pool'.}
 \item{LDP}{numeric value, the larval drift proportion, the proportion of
 larvae that drift from one area to an adjacent area before settling.
 Default value is 0.1.}
+
+\item{Ind_sampled}{character value, the individuals to be sampled to
+calculate density ratio. Values can be:
+'all' - sample all individuals.
+'mature' - sample only mature individuals.
+Default value is 'all'.}
 }
 \value{
 initalizes arrays necessary for other functions in the base model,
-   including TimeT, L, W, S, Mat, A50_mat, CR, Nat_mortality, NM, N, SSB,
-   Abundance_all, Abundance_mature, Biomass, Eps, B0, Count, Sigma_S, NuS,
-   Delta, Gamma, FM, E, Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,
-   Density_ratio
+   including Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
+   Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
+   Gamma, FM, E, Catch, Yield, Density_ratio, ENM, Abundance
 }
 \description{
 \code{initialize_arrays} returns arrays necessary for other functions in the
@@ -145,12 +150,12 @@ initalizes arrays necessary for other functions in the base model,
    mature), CR (number of control rules to be compared), Nat_mortality
    (values of estimated natural mortality), NM (number of estimates of
    natural mortality), N (numbers at age array), SSB (spawning stock biomass
-   array), Abundance_all (total abundance array), Abundance_mature (mature
-   abundance array), Eps (recruitment error), B0 (unfished biomass), Count
-   (estimated counts based on sampling array), Sigma_S (sampling random
-   variable standard deviation), NuS (sampling random variable), Delta
-   (constant of proportionality), Gamma, FM (fishing mortality), E (effort),
-   Catch, Yield, Rel_Biomass (relative biomass after reserve implementation),
+   array), Abundance (abundance of all/mature individuals array),
+   Eps (recruitment error), B0 (unfished biomass), Count (estimated counts
+   based on sampling array), Sigma_S (sampling random variable standard
+   deviation), NuS (sampling random variable), Delta (constant of
+   proportionality), Gamma, FM (fishing mortality), E (effort), Catch, Yield,
+   Rel_Biomass (relative biomass after reserve implementation),
    Rel_yield (relative yield after reserve implementation), Rel_SSB (relative
    spawning stock biomass after reserve implementation), Density_ratio.
 }
@@ -164,5 +169,6 @@ initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
    SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
    Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
-   Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1)
+   Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1,
+   Ind_sampled = 'all')
 }

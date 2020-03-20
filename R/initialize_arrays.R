@@ -7,12 +7,12 @@
 #'    mature), CR (number of control rules to be compared), Nat_mortality
 #'    (values of estimated natural mortality), NM (number of estimates of
 #'    natural mortality), N (numbers at age array), SSB (spawning stock biomass
-#'    array), Abundance_all (total abundance array), Abundance_mature (mature
-#'    abundance array), Eps (recruitment error), B0 (unfished biomass), Count
-#'    (estimated counts based on sampling array), Sigma_S (sampling random
-#'    variable standard deviation), NuS (sampling random variable), Delta
-#'    (constant of proportionality), Gamma, FM (fishing mortality), E (effort),
-#'    Catch, Yield, Rel_Biomass (relative biomass after reserve implementation),
+#'    array), Abundance (abundance of all/mature individuals array),
+#'    Eps (recruitment error), B0 (unfished biomass), Count (estimated counts
+#'    based on sampling array), Sigma_S (sampling random variable standard
+#'    deviation), NuS (sampling random variable), Delta (constant of
+#'    proportionality), Gamma, FM (fishing mortality), E (effort), Catch, Yield,
+#'    Rel_Biomass (relative biomass after reserve implementation),
 #'    Rel_yield (relative yield after reserve implementation), Rel_SSB (relative
 #'    spawning stock biomass after reserve implementation), Density_ratio.
 #'
@@ -92,12 +92,16 @@
 #' @param LDP numeric value, the larval drift proportion, the proportion of
 #'    larvae that drift from one area to an adjacent area before settling.
 #'    Default value is 0.1.
+#' @param Ind_sampled character value, the individuals to be sampled to
+#'    calculate density ratio. Values can be:
+#'    'all' - sample all individuals.
+#'    'mature' - sample only mature individuals.
+#'    Default value is 'all'.
 #'
 #' @return initalizes arrays necessary for other functions in the base model,
-#'    including TimeT, L, W, S, Mat, A50_mat, CR, Nat_mortality, NM, N, SSB,
-#'    Abundance_all, Abundance_mature, Biomass, Eps, B0, Count, Sigma_S, NuS,
-#'    Delta, Gamma, FM, E, Catch, Yield, Rel_biomass, Rel_yield, Rel_SSB,
-#'    Density_ratio
+#'    including Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
+#'    Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
+#'    Gamma, FM, E, Catch, Yield, Density_ratio, ENM, Abundance
 #' @export
 #'
 #' @importFrom stats rnorm
@@ -112,7 +116,8 @@
 #'    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
 #'    SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
 #'    Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
-#'    Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1)
+#'    Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1,
+#'    Ind_sampled = 'all')
 initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
@@ -120,7 +125,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               P, X, SP, M, Control_rules, Phi,
                               Stochasticity = TRUE, D, Transects = 24, H,
                               Surveys = TRUE, Fishing = TRUE, Error,
-                              Recruitment_mode = 'pool', LDP = 0.1) {
+                              Recruitment_mode = 'pool', LDP = 0.1,
+                              Ind_sampled = 'all') {
 
   ###### Error handling ########################################################
 
@@ -265,7 +271,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Selectivity at age (updated)
   # Dimensions = 1 * age
   S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
-                     A50_down, Alpha, F_fin, Beta, Cf)
+                   A50_down, Alpha, F_fin, Beta, Cf)
 
   # Cutoff for maturity
   A50_mat <- ages[min(which(Mat > 0.5))]
@@ -289,8 +295,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   # Initialize abundance arrays
   # Dimensions = area * time * CR * M * FDR values (3)
-  Abundance_all <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-  Abundance_mature <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+  dimension <- ifelse(is.null(Ind_sampled) || Ind_sampled == 'mature', 2, 1)
+  Abundance <- array(rep(0, A*TimeT*CR*NM*FDR*dimension),
+                     c(A, TimeT, CR, NM, FDR, dimension))
 
   # Initialize biomass array
   # Dimensions = area * time * CR * M * FDR values (3)
@@ -313,8 +320,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
-  Count <- array(rep(0, A*TimeT*Transects*2*CR*NM*FDR),
-                 c(A, TimeT, Transects, 2, CR, NM, FDR))
+  Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
+                 c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
   # Calculate standard deviation of normal variable for sampling
   # Based on Babcock & MacCall (2011): Eq. (15)
@@ -363,48 +370,56 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Stable age distribution, derived from equilibrium conditions with Fb = 0
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                  eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                  Recruitment_mode, LDP)
-
-  # Enter N, abundance, biomasses, and E for time = 1 to rec_age
-  # Dimensions = age * area * time * CR
-  for (a in 1:A) {
-    for (t in 1:Rec_age) {
-      for (cr in 1:CR) {
-        for (nm in 1:NM) {
-          for (fdr in 1:FDR) {
-
-            N[, a, t, cr, nm, fdr] <- SAD
-            FM[, a, t, cr, nm, fdr] <- f_mortality(a, t, cr, nm, fdr, FM, A,
-                                                   Fb, E, S)
-            Abundance_all[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr])
-            Abundance_mature[a, t, cr, nm, fdr] <- sum(N[A50_mat:(Max_age-Rec_age + 1),
-                                                         a, t, cr, nm, fdr])
-            Biomass[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr] * W)
-            SSB[a, t, cr, nm, fdr] <- sum(N[, a, t, cr, nm, fdr]*W*Mat)
-            E[a, t, cr, nm, fdr] <- 0.2
-            Catch[, a, t, cr, nm, fdr] <- catch(a, t, cr, nm, fdr, FM,
-                                                Nat_mortality, N, A, Fb, E,
-                                                Catch)
-            Yield[a, t, cr, nm, fdr] <- sum(Catch[, a, t, cr, nm, fdr]*W)
-
-          }
-        }
-      }
-    }
-  }
+                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+                   Recruitment_mode, LDP)
 
   # initialize density ratio matrix
-  # Dimensions = timeT * CR
-  Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
+  # Dimensions = timeT * CR * FDR
+  Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 
   # ENM value - the nm value that represents the 'true' population
   ENM <- ifelse(Error == 0, 1, 2)
 
+  # Enter N, abundance, biomasses, and E for time = 1 to rec_age
+  # Dimensions = age * area * time * CR
+  for (t in 1:Rec_age) {
+    for (cr in 1:CR) {
+      for (fdr in 1:FDR) {
+        for (nm in 1:NM) {
+          N[, , t, cr, nm, fdr] <- array(rep(SAD, A), c(num, A))
+          FM[, , t, cr, nm, fdr] <- f_mortality(t, cr, nm, fdr, FM, A,
+                                                Fb, E, S)
+          Biomass[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr] * W)
+          SSB[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr]*W*Mat)
+          E[, t, cr, nm, fdr] <- rep(0.2, A)
+          Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
+                                             Nat_mortality, N, A, Fb, E, Catch)
+          Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
+          Abundance[, t, cr, nm, fdr, 1] <- colSums(N[, , t, cr, nm, fdr])
+
+          # Abundance
+          if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
+            Abundance[, t, cr, nm, fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),
+                                                        , t, cr, nm, fdr])}
+          if (t > 1) {
+            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
+                                                  Gamma, Abundance, Transects,
+                                                  X, Count, NuS, A, Ind_sampled)
+
+          }
+
+        }
+
+        Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
+                                             Outside, Density_ratio, ENM)
+      }
+    }
+  }
+
   output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
-                 Nat_mortality, NM, N, SSB, Abundance_all, Abundance_mature,
-                 Biomass, Eps, B0, Count, Sigma_S, NuS, Delta, Gamma, FM, E,
-                 Catch, Yield, Density_ratio, ENM)
+                 Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S,
+                 NuS, Delta, Gamma, FM, E, Catch, Yield, Density_ratio, ENM,
+                 Abundance)
 
   return(output)
 

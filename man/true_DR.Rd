@@ -4,8 +4,8 @@
 \alias{true_DR}
 \title{True density ratio}
 \usage{
-true_DR(t, cr, fdr, Abundance_all, Inside = 3, Outside = c(1, 2, 4, 5),
-  Density_ratio, Time1 = 50, ENM)
+true_DR(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
+  Density_ratio, ENM)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -14,21 +14,18 @@ true_DR(t, cr, fdr, Abundance_all, Inside = 3, Outside = c(1, 2, 4, 5),
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
-\item{Abundance_all}{numeric array, the total number of individuals in each
-area, at each timestep, under all control rules, with all estimates of
-natural mortality.}
+\item{Abundance}{numeric array, the total number of individuals in each area,
+at each timestep, under all control rules, with all estimates of natural
+mortality.}
 
 \item{Inside}{numeric vector, the area(s) inside the marine reserve. Default
-is c(3).}
+value is 3.}
 
 \item{Outside}{numeric vector, the area(s) outside the marine reserve.
-Default is c(1, 2, 4, 5).}
+Default value is c(1, 2, 4, 5).}
 
 \item{Density_ratio}{numeric array, the true density ratios at each timestep,
 under each control rule, and for each estimate of natural mortality.}
-
-\item{Time1}{numeric value, the number of years to run the model before a
-marine reserve is implemented. Default value is 50.}
 
 \item{ENM}{numeric value, the nm value that represents the 'true' population.}
 }
@@ -42,8 +39,9 @@ a numeric array that updates the true density ratios for the most
 }
 \examples{
 A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Time2= 20
-Abundance_all <- array(rep(3400, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Density_ratio <- array(rep(0, (Time2 + 1)*CR*FDR), c(Time2 + 1, CR, FDR))
-true_DR(t = 51, cr = 1, fdr = 1, Abundance_all, Inside = 3,
-   Outside = c(1, 2, 4, 5), Density_ratio, Time1 = 50, ENM = 2)
+Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
+c(A, TimeT, CR, NM, FDR, 1))
+Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
+true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
+   Outside = c(1, 2, 4, 5), Density_ratio, ENM = 2)
 }

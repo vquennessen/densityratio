@@ -43,7 +43,6 @@ parameters = function(Species) {
     K        <- 0.2022
     L50      <- 39.53                       # length at 50% maturity
     K_mat    <- -0.4103                     # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
     H        <- 0.65                        # steepness
     Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
@@ -76,7 +75,6 @@ parameters = function(Species) {
     K        <- 0.21
     L50      <- 43.69                       # length at 50% maturity
     K_mat    <- -0.66                       # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
     H        <- 0.77                        # steepness
     Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
@@ -113,7 +111,6 @@ parameters = function(Species) {
     K <- 0.18
     L50      <- 25.702                      # length at 50% maturity
     K_mat    <- -0.743                      # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
     H        <- 0.7                         # steepness
     Phi      <- 0.71                        # unfished recruits per spawner
     Sigma_R  <- 1                           # recruitment standard deviation
@@ -150,7 +147,6 @@ parameters = function(Species) {
     K <- 0.225
     L50      <- 43                          # length at 50% maturity
     K_mat    <- -0.7                        # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
     H        <- 0.7                         # steepness
     Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
@@ -185,7 +181,6 @@ parameters = function(Species) {
     K        <- 0.128
     L50      <- 56.7                        # length at 50% maturity
     K_mat    <- -0.27                       # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
     H        <- 0.7                         # steepness
     Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.55                        # recruitment standard deviation
@@ -220,7 +215,6 @@ parameters = function(Species) {
     K        <- 0.129
     L50      <- 42                          # length at 50% maturity
     K_mat    <- -0.25                       # slope of maturity curve
-    LDP      <- 0.1                         # larval drift proportion
     H        <- 0.773                       # steepness
     Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
@@ -243,9 +237,9 @@ parameters = function(Species) {
                   0.0295, 0.0429)           #       from upcurve to 1
   }
 
-  output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat,
-                LDP, H, Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets,
-                Alpha, Beta, F_fin, A50_up, A50_down, Cf)
+  output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat, H,
+                 Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets, Alpha, Beta,
+                 F_fin, A50_up, A50_down, Cf)
 
   return(output)
 

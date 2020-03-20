@@ -4,8 +4,9 @@
 \alias{stable_AD}
 \title{Stable Age Distribution}
 \usage{
-stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M, eq_time,
-  A50_mat, Stochasticity, Rho_R, Recruitment_mode, LDP = 0.1)
+stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
+  eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+  Recruitment_mode = "pool", LDP = 0.1)
 }
 \arguments{
 \item{Rec_age}{numeric value, the age at recruitment, in years.}
@@ -35,13 +36,13 @@ maximum age, on the interval (0, 1).}
 \item{M}{numeric value, the natural mortality on the interval (0, 1).}
 
 \item{eq_time}{numeric value, the number of years to run the function to
-determine the stable age distribution.}
+determine the stable age distribution. Default value is 150.}
 
 \item{A50_mat}{numeric value, the first age at which 50\% or more individuals
 are estimated to be mature, on the interval (Rec_age, Max_age).}
 
 \item{Stochasticity}{logical vector, does recruitment contain a stochastic
-component? Default value is TRUE.}
+component? Default value is FALSE.}
 
 \item{Rho_R}{numeric value, the recruitment autocorrelation on the interval
 (-1, 1). Default value is 0.}

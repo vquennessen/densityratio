@@ -127,8 +127,8 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   } else if (Recruitment_mode == 'pool') {
 
     ssb <- SSB[, t - Rec_age, cr, nm, fdr]
-    num <- 0.8 * adjR0 * H * sum(ssb) / A
-    denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
+    num <- 0.8 * adjR0 * H * sum(ssb)
+    denom <- A * 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
     R1 <- num / denom
 
@@ -141,7 +141,7 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
     num <- 0.8 * R0 * H * ssb
     denom <- A * (0.2 * B0 * (1 - H) + (H - 0.2) * ssb)
 
-    R1 <- num / denom
+    R1 <- rep(num / denom, A)
 
     # larval density dependence within areas and recruitment in equal amounts
     # in each area

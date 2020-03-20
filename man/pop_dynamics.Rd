@@ -4,13 +4,11 @@
 \alias{pop_dynamics}
 \title{Population Dynamics}
 \usage{
-pop_dynamics(a, t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
-  Fb, E, S, NM = 3, FM, A50_mat, Biomass, Abundance_all,
-  Abundance_mature, Fishing = T, Nat_mortality, R)
+pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5, Fb,
+  E, S, NM = 3, FM, A50_mat, Biomass, Abundance, Fishing = T,
+  Nat_mortality, R, Ind_sampled = "all")
 }
 \arguments{
-\item{a}{temporary numeric value, the current area.}
-
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
@@ -63,13 +61,9 @@ are estimated to be mature. on the interval (Rec_age, Max_age).}
 step, under all control rules, with all estimates of natural mortality,
 in kg.}
 
-\item{Abundance_all}{numeric array, the total number of individuals in each
-area, at each timestep, under all control rules, with all estimates of
-natural mortality.}
-
-\item{Abundance_mature}{numeric array, the number of mature individuals in
-each area, at each timestep, under all control rules, with all estimates
-of natural mortality.}
+\item{Abundance}{numeric array, the total number of all and/or mature
+individuals in each area, at each timestep, under all control rules, with
+all estimates of natural mortality.}
 
 \item{Fishing}{logical value, is fishing occurring? Default value is TRUE.}
 
@@ -78,11 +72,16 @@ of natural mortality.}
 \item{R}{numeric vector, the estimated recruits coming into each area at the
 current time step, under the current control rule, and with the current
 estimate of natural mortality.}
+
+\item{Ind_sampled}{character value, the individuals to be sampled to
+calculate density ratio. Values can be:
+'all' - sample all individuals.
+'mature' - sample only mature individuals.
+Default value is 'all'.}
 }
 \value{
 numeric arrays, with updated values of fishing mortality (FM),
-   numbers at age (N), Abundance_all, Abundance_mature, Biomass, and spawning
-   stock biomass (SSB).
+   numbers at age (N), Abundance, Biomass, and spawning stock biomass (SSB).
 }
 \description{
 \code{pop_dynamics} returns updated values for fishing mortality, numbers at
@@ -94,9 +93,7 @@ numeric arrays, with updated values of fishing mortality (FM),
 n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
 SSB <- array(rep(548, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Biomass <- array(rep(568, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Abundance_all <- array(rep(3400, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Abundance_mature <- array(rep(2800, A*TimeT*CR*NM*FDR),
-   c(A, TimeT, CR, NM, FDR))
+Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1), c(A, TimeT, CR, NM, FDR, 1))
 N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
@@ -113,8 +110,8 @@ Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
 R <- recruitment(t = 3, cr = 1, nm = 2, fdr = 1, SSB, A = 5, R0 = 1e+5,
    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
    Recruitment_mode = 'pool', LDP = 0.1)
-pop_dynamics(a = 1, t = 3, cr = 1, nm = 2, fdr = 1, Rec_age = 2,
-   Max_age = 35, SSB, N, W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM,
-   A50_mat = 8, Biomass, Abundance_all, Abundance_mature, Fishing = TRUE,
-   Nat_mortality = c(0.09, 0.14, 0.19), R)
+pop_dynamics(t = 3, cr = 1, nm = 2, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
+   N, W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Biomass,
+   Abundance, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19), R,
+   Ind_sampled = 'all')
 }
