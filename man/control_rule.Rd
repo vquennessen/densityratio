@@ -5,7 +5,7 @@
 \title{Control rule}
 \usage{
 control_rule(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
-  Transects = 24, Nat_mortality, Final_DRs, Inside = c(3),
+  Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
   Outside = c(1, 2, 4, 5), Areas_sampled = "all",
   Ind_sampled = "all", Years_sampled = 1, BM = FALSE)
 }
@@ -82,5 +82,5 @@ Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
 control_rule(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
    TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
-   Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1)
+   Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1, BM = FALSE)
 }
