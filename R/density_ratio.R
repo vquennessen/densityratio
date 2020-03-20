@@ -41,7 +41,7 @@
 #' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
 #' Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
 #'    c(A, TimeT, Transects, 2, CR, NM, FDR))
-#' density_ratio(t = 2, cr = 1, nm = 1, fdr = 1, A = 5, Count,
+#' density_ratio(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, Count,
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Transects = 24, Inside = 3, Outside = c(1, 2, 4, 5))
 density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
