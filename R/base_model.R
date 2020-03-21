@@ -94,16 +94,15 @@
 #' @importFrom graphics axis layout legend lines plot
 #'
 #' @examples
-#' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-#'    Time2 = 20, Recruitment_mode = 'pool', Error = 0.05, Stochasticity = TRUE,
+#' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
+#'    Time2 = 10, Recruitment_mode = 'pool', Error = 0.05, Stochasticity = FALSE,
 #'    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-#'    Adult_movement = TRUE, Plotting = TRUE,
-#'    Final_DRs = c(0.2, 0.4, 0.6, 0.8, 1), Years_sampled = 1,
-#'    Areas_sampled = 'all', Ind_sampled = 'all', Allocation = 'IFD',
-#'    BM = FALSE, LDP = 0.1, Control_rules = c(1:6), Output.FM = FALSE,
-#'    Output.N = TRUE, Output.Abundance = FALSE, Output.Biomass = TRUE,
-#'    Output.SSB = TRUE, Output.Catch = FALSE, Output.Yield = TRUE,
-#'    Output.Effort = TRUE, Output.Density.Ratio = TRUE)
+#'    Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4),
+#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
+#'    Allocation = 'IFD', BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
+#'    Output.FM = FALSE, Output.N = TRUE, Output.Abundance = FALSE,
+#'    Output.Biomass = TRUE, Output.SSB = TRUE, Output.Catch = FALSE,
+#'    Output.Yield = TRUE, Output.Effort = TRUE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', Error = 0.05,
                        Stochasticity = TRUE, Surveys = TRUE,

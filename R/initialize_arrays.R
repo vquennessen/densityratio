@@ -295,7 +295,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   # Initialize abundance arrays
   # Dimensions = area * time * CR * M * FDR values (3)
-  dimension <- ifelse(is.null(Ind_sampled) || Ind_sampled == 'mature', 2, 1)
+  dimension <- ifelse(Ind_sampled == 'all', 1, 2)
   Abundance <- array(rep(0, A*TimeT*CR*NM*FDR*dimension),
                      c(A, TimeT, CR, NM, FDR, dimension))
 
@@ -330,9 +330,11 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Sampling normal variable
   # Dimensions = area * timeT * CR * M * FDR values (3)
   if (Stochasticity == T) {
-    NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, Sigma_S), c(A, TimeT, CR, NM, FDR))
+    NuS <- array(rnorm(A*TimeT*CR*NM*FDR*dimension, 0, Sigma_S),
+                 c(A, TimeT, CR, NM, FDR, dimension))
   } else if (Stochasticity == F) {
-    NuS <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+    NuS <- array(rep(0, A*TimeT*CR*NM*FDR*dimension),
+                 c(A, TimeT, CR, NM, FDR, dimension))
   }
 
   # Calculate delta - constant of proportionality
