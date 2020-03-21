@@ -432,13 +432,14 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         # set plotting layout
         layout(mat = layout_m,
                widths = c(2, 0.4), # Widths of the 2 columns
-               heights = c(4, 2)) # Heights of the 2 rows
+               heights = c(4, 2))  # Heights of the 2 rows
 
         area <- ifelse(a < 2, 'far from', ifelse(a == 3, 'in', 'near'))
-        title <- sprintf('Final DR: ', fdr, ' - Relative biomass: %s reserve', area)
+        title <- paste('Final DR: ', Final_DRs[fdr],
+                       sprintf(' - Relative biomass: %s reserve', area), sep = '')
 
         # plot the relative biomass
-        par(mar = c(0.1, 4.5, 3.1, 0.1))
+        par(mar = c(0.1, 4.5, 4.1, 0.1))
         plot(1, type = 'l', # make an empty line graph
              main = title, # title of plot
              ylab = 'Relative Biomass', # axis labels
@@ -535,7 +536,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                heights = c(4, 2)) # Heights of the 2 rows
 
         area <- ifelse(a == 1, 'far from', 'near')
-        title <- sprintf('Final DR: ', fdr, ' - Relative yield: %s reserve', area)
+        title <- paste('Final DR: ', Final_DRs[fdr],
+                       sprintf(' - Relative yield: %s reserve', area), sep = '')
 
         # plot the relative yield
         par(mar = c(0.1, 4.5, 3.1, 0.1))
@@ -635,7 +637,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                heights = c(4, 2)) # Heights of the 2 rows
 
         area <- ifelse(a < 2, 'far from', ifelse(a == 3, 'in', 'near'))
-        title <- sprintf('Final DR ', fdr, ' - Relative SSB: %s reserve', area)
+        title <- paste('Final DR: ', Final_DRs[fdr],
+                       sprintf(' - Relative SSB: %s reserve', area), sep = '')
 
         # plot the relative SSB
         par(mar = c(0.1, 4.5, 3.1, 0.1))
