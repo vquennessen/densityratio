@@ -89,18 +89,6 @@ sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24,
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
 
   # relational values
-  if (dim(Count)[1] != dim(NuS)[1]) {
-    stop('Count or NuS has an incorrect number of areas.')}
-  if (dim(Count)[2] != dim(NuS)[2]) {
-    stop('Count or NuS has an incorrect number of time steps.')}
-  if (dim(Count)[3] != Transects) {
-    stop('Count has the wrong number of transects.')}
-  if (dim(Count)[5] != dim(NuS)[3]) {
-    stop('Count or NuS has an incorrect number of control rules.')}
-  if (dim(Count)[6] != dim(NuS)[4]) {
-    stop('Count or NuS has an incorrect number of natural mortality estimates.')}
-  if (dim(Count)[7] != dim(NuS)[5]) {
-    stop('Count or NuS has an incorrect number of final density ratios.')}
   if (dim(Abundance)[1] != A || dim(Count)[1] != A) {
     stop('Abundance or Count has an incorrect number of areas.')}
   if (t > dim(Abundance)[2] || t > dim(Count)[2]) {
