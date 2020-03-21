@@ -332,7 +332,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (Stochasticity == T) {
     NuS <- array(rnorm(A*TimeT*CR*NM*FDR, 0, Sigma_S), c(A, TimeT, CR, NM, FDR))
   } else if (Stochasticity == F) {
-    NuS <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM))
+    NuS <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
   }
 
   # Calculate delta - constant of proportionality
