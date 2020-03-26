@@ -726,14 +726,14 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   output <- list()
 
   # add output depending on arguments passed to base_model.R
-  if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), , , ENM, ] }
+  if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), Time1:TimeT, , ENM, ] }
   if (Output.N == TRUE) { output$N <- N[, 1:MPA, Time1:TimeT, , ENM, ] }
   if (Output.Abundance == TRUE) {
-    output$Abundance <- Abundance[1:MPA, , , ENM, , ] }
-  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, , , ENM, ] }
-  if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, , , ENM, ] }
-  if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, , , ENM, ] }
-  if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), , , ENM, ] }
+    output$Abundance <- Abundance[1:MPA, Time1:TimeT, , ENM, , ] }
+  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, Time1:TimeT, , ENM, ] }
+  if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, Time1:TimeT, , ENM, ] }
+  if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, Time1:TimeT, , ENM, ] }
+  if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), Time1:TimeT, , ENM, ] }
   if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
   if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
 
