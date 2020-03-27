@@ -7,7 +7,8 @@
 control_rule(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
   Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
   Outside = c(1, 2, 4, 5), Areas_sampled = "all",
-  Ind_sampled = "all", Years_sampled = 1, BM = FALSE)
+  Ind_sampled = "all", Years_sampled = 1, BM = FALSE,
+  Sampling_Error = TRUE, Density_Ratio)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -65,6 +66,12 @@ which to base the estimate of density ratio. Default value is 1.}
 
 \item{BM}{logical value, are the control rules from Babcock and MacCall 2011?
 Default value is FALSE.}
+
+\item{Sampling_Error}{logical value, is there any error in sampling? Default
+value is TRUE.}
+
+\item{Density_Ratio}{numeric array, the true density ratio at each time step
+under each control rule and for each final density ratio.}
 }
 \value{
 a numeric vector of fishing effort for the next timestep, under the
@@ -79,8 +86,10 @@ A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
 E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
    c(A, TimeT, Transects, 2, CR, NM, FDR))
+Density_Ratio <- array(rep(0.5, TimeT*CR*FDR), c(TimeT, CR, FDR))
 control_rule(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
    TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
-   Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1, BM = FALSE)
+   Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1, BM = FALSE,
+   Sampling_Error = TRUE, Density_Ratio)
 }
