@@ -78,8 +78,10 @@
 #' @param Surveys logical value, are surveys being conducted? Default value is
 #'    TRUE.
 #' @param Fishing logical value, is fishing occurring? Default value is TRUE.
-#' @param Error numeric value, the error between estimated and correct natural
+#' @param M_Error numeric value, the error between estimated and correct natural
 #'    mortality.
+#' @param Sampling_Error logical value, is there any error in sampling? Default
+#'    value is TRUE.
 #' @param Recruitment_mode character value, values can be:
 #'    'closed' - the recruits in each area originate from adults in that area.
 #'    'pool' - the recruits in each area come from a pool of larvae produced by
@@ -116,17 +118,17 @@
 #'    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
 #'    SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
 #'    Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
-#'    Fishing = TRUE, Error = 0.05, Recruitment_mode = 'pool', LDP = 0.1,
-#'    Ind_sampled = 'all')
+#'    Fishing = TRUE, M_Error = 0.05, Sampling_Error = TRUE,
+#'    Recruitment_mode = 'pool', LDP = 0.1, Ind_sampled = 'all')
 initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
                               P, X, SP, M, Control_rules, Phi,
                               Stochasticity = TRUE, D, Transects = 24, H,
-                              Surveys = TRUE, Fishing = TRUE, Error,
-                              Recruitment_mode = 'pool', LDP = 0.1,
-                              Ind_sampled = 'all') {
+                              Surveys = TRUE, Fishing = TRUE, M_Error,
+                              Sampling_Error = TRUE, Recruitment_mode = 'pool',
+                              LDP = 0.1, Ind_sampled = 'all') {
 
   ###### Error handling ########################################################
 
@@ -172,7 +174,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (!is.numeric(H)) {stop('H must be a numeric value.')}
   if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
   if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
-  if (!is.numeric(Error)) {stop('Error must be a numeric value.')}
+  if (!is.numeric(M_Error)) {stop('M_Error must be a numeric value.')}
+  if (!is.logical(Sampling_Error)) {
+    stop('Sampling_Error must be a logical value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
@@ -214,7 +218,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (D <= 0 || D > 1) {stop('D must be between 0 and 1.')}
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
-  if (Error < 0) {stop('Error must be greater than or equal to 0.')}
+  if (M_Error < 0) {stop('M_Error must be greater than or equal to 0.')}
   if (Recruitment_mode != 'pool' && Recruitment_mode != 'closed' &&
       Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
     stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
@@ -280,8 +284,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   CR <- length(Control_rules)
 
   # Range of natural mortalities (low, correct, and high) if error =/= 0
-  if (Error != 0) {
-    Nat_mortality <- c(M - Error, M, M + Error)
+  if (M_Error != 0) {
+    Nat_mortality <- c(M - M_Error, M, M + M_Error)
   } else { Nat_mortality <- M}
   NM <- length(Nat_mortality)
 
@@ -320,30 +324,34 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
-  Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
-                 c(A, TimeT, Transects, dimension, CR, NM, FDR))
+ Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
+                   c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
-  # Calculate standard deviation of normal variable for sampling
-  # Based on Babcock & MacCall (2011): Eq. (15)
-  Sigma_S <- sqrt(log(1 + (SP / X)^2))
+ if (Sampling_Error == TRUE) {
 
-  # Sampling normal variable
-  # Dimensions = area * timeT * CR * M * FDR values (3)
-  if (Stochasticity == T) {
-    NuS <- array(rnorm(A*TimeT*CR*NM*FDR*dimension, 0, Sigma_S),
-                 c(A, TimeT, CR, NM, FDR, dimension))
-  } else if (Stochasticity == F) {
-    NuS <- array(rep(0, A*TimeT*CR*NM*FDR*dimension),
-                 c(A, TimeT, CR, NM, FDR, dimension))
+    # Calculate standard deviation of normal variable for sampling
+    # Based on Babcock & MacCall (2011): Eq. (15)
+    Sigma_S <- sqrt(log(1 + (SP / X)^2))
+
+    # Sampling normal variable
+    # Dimensions = area * timeT * CR * M * FDR values (3)
+    if (Stochasticity == T) {
+      NuS <- array(rnorm(A*TimeT*CR*NM*FDR*dimension, 0, Sigma_S),
+                   c(A, TimeT, CR, NM, FDR, dimension))
+    } else if (Stochasticity == F) {
+      NuS <- array(rep(0, A*TimeT*CR*NM*FDR*dimension),
+                   c(A, TimeT, CR, NM, FDR, dimension))
+    }
+
+    # Calculate delta - constant of proportionality
+    # Based on Babcock & MacCall (2011): Eq. (13)
+    Delta <- P / D
+
+    # Calculate gamma
+    # Based on Babcock & MacCall (2011): Eq. (16)
+    Gamma <- X / D
+
   }
-
-  # Calculate delta - constant of proportionality
-  # Based on Babcock & MacCall (2011): Eq. (13)
-  Delta <- P / D
-
-  # Calculate gamma
-  # Based on Babcock & MacCall (2011): Eq. (16)
-  Gamma <- X / D
 
   # Initialize fishing mortality rate
   # Dimensions = age * area * time * CR * M * FDR values (3)
@@ -380,7 +388,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 
   # ENM value - the nm value that represents the 'true' population
-  ENM <- ifelse(Error == 0, 1, 2)
+  ENM <- ifelse(M_Error == 0, 1, 2)
 
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
@@ -403,10 +411,10 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
           if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
             Abundance[, t, cr, nm, fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),
                                                         , t, cr, nm, fdr])}
-          if (t > 1) {
+          if (t > 1 && Sampling_Error == TRUE) {
             Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
-                                                  Gamma, Abundance, Transects,
-                                                  X, Count, NuS, A, Ind_sampled)
+                                                    Gamma, Abundance, Transects,
+                                                    X, Count, NuS, A, Ind_sampled)
 
           }
 
@@ -418,10 +426,16 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     }
   }
 
-  output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
-                 Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S,
-                 NuS, Delta, Gamma, FM, E, Catch, Yield, Density_ratio, ENM,
-                 Abundance)
+  if (Sampling_Error == TRUE) {
+
+    output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
+                   Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM, E, Catch,
+                   Yield, Density_ratio, ENM, Abundance, Count, Sigma_S, NuS,
+                   Delta, Gamma)
+  } else { output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat,
+                          CR, Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM,
+                          E, Catch, Yield, Density_ratio, ENM, Abundance, Count)
+  }
 
   return(output)
 
