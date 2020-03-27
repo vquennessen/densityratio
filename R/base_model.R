@@ -25,8 +25,10 @@
 #'    'local_DD' - larvae experience local density dependence before settling
 #'       evely across all areas
 #'    Default value is 'pool'.
-#' @param Error numeric value, the error between estimated and correct natural
+#' @param M_Error numeric value, the error between estimated and correct natural
 #'    mortality.
+#' @param Sampling_Error logical value, is there any error in sampling? Default
+#'    value is TRUE.
 #' @param Stochasticity logical vector, does recruitment contain a stochastic
 #'    component? Default value is TRUE.
 #' @param Surveys logical value, are surveys being conducted? Default value is
@@ -95,8 +97,9 @@
 #'
 #' @examples
 #' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
-#'    Time2 = 10, Recruitment_mode = 'pool', Error = 0.05, Stochasticity = FALSE,
-#'    Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
+#'    Time2 = 10, Recruitment_mode = 'pool', M_Error = 0.05,
+#'    Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
+#'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Allocation = 'IFD', BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
@@ -104,9 +107,9 @@
 #'    Output.Biomass = TRUE, Output.SSB = TRUE, Output.Catch = FALSE,
 #'    Output.Yield = TRUE, Output.Effort = TRUE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-                       Time2 = 20, Recruitment_mode = 'pool', Error = 0.05,
-                       Stochasticity = TRUE, Surveys = TRUE,
-                       Fishery_management = TRUE, Fishing = TRUE,
+                       Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
+                       Sampling_Error = TRUE, Stochasticity = TRUE,
+                       Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Allocation = 'IFD', BM = FALSE,
@@ -128,7 +131,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
-  if (!is.numeric(Error)) {stop('Error must be a numeric value.')}
+  if (!is.numeric(M_Error)) {stop('M_Error must be a numeric value.')}
+  if (!is.logical(Sampling_Error)) {
+    stop('Sampling_Error must be a logical value.')}
   if (!is.logical(Stochasticity)) {
     stop('Stochasticity must be a logical value.')}
   if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
@@ -175,7 +180,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
       Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
     stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
          "local_DD".')}
-  if (Error < 0) {stop('Error must be greater than or equal to 0.')}
+  if (M_Error < 0) {stop('M_Error must be greater than or equal to 0.')}
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (sum(Final_DRs <= 0) > 0) {
     stop('All values in Final_DRs must be greater than 0.')}
@@ -242,8 +247,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                           A1, L1, A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
                           Cf, P, X, SP, M, Control_rules, Phi, Stochasticity, D,
-                          Transects, H, Surveys, Fishing, Error,
-                          Recruitment_mode, LDP, Ind_sampled)
+                          Transects, H, Surveys, Fishing, M_Error,
+                          Sampling_Error, Recruitment_mode, LDP, Ind_sampled)
 
   Inside           <- IA[[1]]     # Area(s) in the marine reserve
   Outside          <- IA[[2]]     # Areas not in the marine reserve
@@ -262,18 +267,21 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   Biomass          <- IA[[15]]    # Biomass, dim = area*time
   Eps              <- IA[[16]]    # Epsilon vector, dim = area*time*CR
   B0               <- IA[[17]]    # Unfished spawning stock biomass
-  Count            <- IA[[18]]    # Species count when sampling, dim = area*time
-  Sigma_S          <- IA[[19]]    # Sampling normal standard deviation
-  NuS              <- IA[[20]]    # Sampling normal variable, dim = area*time*CR
-  Delta            <- IA[[21]]    # Constant of proportionality
-  Gamma            <- IA[[22]]    # Gamma
-  FM               <- IA[[23]]    # Fishing mortality rate, dim = age*area*time
-  E                <- IA[[24]]    # nominal fishing effort in each area
-  Catch            <- IA[[25]]    # Catch at age
-  Yield            <- IA[[26]]    # Yield per area
-  Density_ratio    <- IA[[27]]    # Density ratios
-  ENM              <- IA[[28]]    # nm value that represents "true" M
-  Abundance        <- IA[[29]]    # Abundance of all and/or mature individuals
+  FM               <- IA[[18]]    # Fishing mortality rate, dim = age*area*time
+  E                <- IA[[19]]    # nominal fishing effort in each area
+  Catch            <- IA[[20]]    # Catch at age
+  Yield            <- IA[[21]]    # Yield per area
+  Density_ratio    <- IA[[22]]    # Density ratios
+  ENM              <- IA[[23]]    # nm value that represents "true" M
+  Abundance        <- IA[[24]]    # Abundance of all and/or mature individuals
+  Count            <- IA[[25]]    # Species count when sampling, dim = area*time
+
+  if (Sampling_Error == TRUE) {
+    Sigma_S          <- IA[[26]]    # Sampling normal standard deviation
+    NuS              <- IA[[27]]    # Sampling normal variable, dim = area*time*CR
+    Delta            <- IA[[28]]    # Constant of proportionality
+    Gamma            <- IA[[29]]    # Gamma
+  }
 
   ##### Population Dynamics - Time Varying #####################################
   for (fdr in 1:FDR) {
@@ -311,7 +319,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
           Abundance[, t, cr, nm, fdr, ]        <- PD[[5]]
 
           # sampling
-          if (Surveys == TRUE) {
+          if (Surveys == TRUE && Sampling_Error == TRUE) {
             Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
                                                     Gamma, Abundance, Transects,
                                                     X, Count, NuS, A,
@@ -328,18 +336,19 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
         }
 
+        # calculate true density ratio
+        Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
+                                             Outside, Density_ratio, ENM)
         # management
         if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
           E[, t, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
                                             TimeT, Transects, Nat_mortality,
                                             Final_DRs, Inside, Outside,
                                             Areas_sampled, Ind_sampled,
-                                            Years_sampled, BM)
+                                            Years_sampled, BM, Sampling_Error,
+                                            Density_ratio)
         }
 
-        # calculate true density ratio
-        Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio, ENM)
       }
     }
   }
@@ -403,7 +412,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     position <- 'left'
 
     # transient DR for population with correct M
-    ENM <- ifelse(Error == 0, 1, 2)
+    ENM <- ifelse(M_Error == 0, 1, 2)
 
     ##### Plot relative biomass over time after reserve implementation #########
 
