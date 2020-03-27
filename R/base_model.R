@@ -304,8 +304,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
           R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
                            Rec_age, Recruitment_mode, LDP)
 
-
-
           # biology
           PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
                              N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,

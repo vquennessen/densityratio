@@ -353,21 +353,12 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   }
 
-  # Initialize fishing mortality rate
-  # Dimensions = age * area * time * CR * M * FDR values (3)
-  FM <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
+  # ENM value - the nm value that represents the 'true' population
+  ENM <- ifelse(M_Error == 0, 1, 2)
 
   # Initialize fishing effort in each area
   # Dimensions = area * time * CR * M * FDR values (3)
   E <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-
-  # Initialize catch-at-age matrix
-  # Dimensions = age * area * time * CR * M * FDR values (3)
-  Catch <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
-
-  # Initialize yield matrix
-  # Dimensions = area * time * CR * M * FDR values (3)
-  Yield <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # set constant fishing effort for first 50 years
   if (Fishing == T) {
@@ -376,6 +367,20 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     E[, 1:Time1, , , ] <- rep(1/A, A*CR*Time1*NM*FDR)
 
   }
+
+  # Initialize fishing mortality rate
+  # Dimensions = age * area * time * CR * M * FDR values (3)
+  FM <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
+  # initialise FM values, dimensions num*A
+  fm <- f_mortality(t = 1, cr = 1, nm = ENM, fdr = 1, FM, A, Fb, E, S)
+
+  # Initialize catch-at-age matrix
+  # Dimensions = age * area * time * CR * M * FDR values (3)
+  Catch <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
+
+  # Initialize yield matrix
+  # Dimensions = area * time * CR * M * FDR values (3)
+  Yield <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # Stable age distribution, derived from equilibrium conditions with Fb = 0
   # Dimensions age
@@ -387,8 +392,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Dimensions = timeT * CR * FDR
   Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 
-  # ENM value - the nm value that represents the 'true' population
-  ENM <- ifelse(M_Error == 0, 1, 2)
+
 
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
@@ -397,8 +401,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
       for (fdr in 1:FDR) {
         for (nm in 1:NM) {
           N[, , t, cr, nm, fdr] <- array(rep(SAD, A), c(num, A))
-          FM[, , t, cr, nm, fdr] <- f_mortality(t, cr, nm, fdr, FM, A,
-                                                Fb, E, S)
+          FM[, , t, cr, nm, fdr] <- fm
           Biomass[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr] * W)
           SSB[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr]*W*Mat)
           E[, t, cr, nm, fdr] <- rep(0.2, A)
@@ -409,15 +412,12 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
           # Abundance
           if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-            Abundance[, t, cr, nm, fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),
-                                                        , t, cr, nm, fdr])}
+            Abundance[, t, cr, nm, fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),  , t, cr, nm, fdr])}
           if (t > 1 && Sampling_Error == TRUE) {
             Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
                                                     Gamma, Abundance, Transects,
                                                     X, Count, NuS, A, Ind_sampled)
-
           }
-
         }
 
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
@@ -427,7 +427,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   }
 
   if (Sampling_Error == TRUE) {
-
     output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                    Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM, E, Catch,
                    Yield, Density_ratio, ENM, Abundance, Count, Sigma_S, NuS,

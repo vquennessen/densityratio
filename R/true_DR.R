@@ -79,5 +79,5 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
   # True density ratio
   Density_ratio[t, cr, fdr] <- Outside_density / Inside_density
 
-  return(Density_ratio[t , cr, fdr])
+  return(Density_ratio[t, cr, fdr])
 }
