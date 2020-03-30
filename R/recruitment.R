@@ -98,17 +98,11 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
     stop('SSB or Eps has an incorrect number of natural mortality estimates.')}
   if(dim(SSB)[5] != dim(Eps)[5]) {
     stop('SSB or Eps has an incorrect number of final density ratios.')}
-  if (A > dim(SSB)[1]) {stop('The given "A" value is too high for SSB.')}
   if (t > dim(SSB)[2]) {stop('The given "t" value is too high for SSB.')}
   if (cr > dim(SSB)[3]) {stop('The given "cr" value is too high for SSB.')}
   if (nm > dim(SSB)[4]) {stop('The given "nm" value is too high for SSB.')}
   if (fdr > dim(SSB)[5]) {stop('The given "fdr" value is too high for SSB.')}
   ##############################################################################
-
-  # Recruitment
-  # Based on Babcock & MacCall (2011): Eq. (3)
-  # Dimensions = 1 * A
-  recruits <- array(rep(0, A), c(1, A))
 
   # adjust R0 and B0 per area
   adjR0 <- R0 / A
@@ -127,10 +121,10 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   } else if (Recruitment_mode == 'pool') {
 
     ssb <- SSB[, t - Rec_age, cr, nm, fdr]
-    num <- 0.8 * adjR0 * H * sum(ssb) / A
+    nume <- 0.8 * adjR0 * H * sum(ssb) / A
     denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
-    R1 <- num / denom
+    R1 <- nume / denom
 
     # regional / stock larval density dependence and recruits distributed evenly
     # across areas; OR larvae distributed evenly across areas then local density
@@ -138,20 +132,20 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   } else if (Recruitment_mode == 'regional_DD') {
 
     ssb <- sum(SSB[, t - Rec_age, cr, nm, fdr])
-    num <- 0.8 * R0 * H * ssb
+    nume <- 0.8 * R0 * H * ssb
     denom <- A * (0.2 * B0 * (1 - H) + (H - 0.2) * ssb)
 
-    R1 <- rep(num / denom, A)
+    R1 <- rep(nume / denom, A)
 
     # larval density dependence within areas and recruitment in equal amounts
     # in each area
   } else if (Recruitment_mode == 'local_DD') {
 
     ssb <- SSB[, t - Rec_age, cr, nm, fdr]
-    num <- 0.8 * adjR0 * H * ssb
+    nume <- 0.8 * adjR0 * H * ssb
     denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
-    R1 <- 1/A * sum(num / denom)
+    R1 <- 1/A * sum(nume / denom)
 
   }
 
@@ -159,7 +153,7 @@ recruitment = function(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
 
   # larval movement if there are multiple areas and LDP != 0
-    if (A > 1) {
+    if (A > 1 && dim(SSB)[1] > 1) {
 
       # First area to second area
       recruits[1] <- (1 - LDP)*recruits[1] + LDP*recruits[2]

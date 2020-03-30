@@ -38,7 +38,7 @@
 #'    Default value is 'pool'.
 #' @param LDP numeric value, the larval drift proportion, the proportion of
 #'    larvae that drift from one area to an adjacent area before settling.
-#'    Default value is 0.1.
+#'    Default value is 0.
 #'
 #' @return a numeric vector of numbers at age after enough years with no fishing
 #'    that proportions remain stable over time.
@@ -57,11 +57,11 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65,
 #'    B0 = 1e+5/1.1, Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150,
-#'    A50_mat = 8, Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool',
-#'    LDP = 0.1)
+#'    A50_mat = 8, Stochasticity = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
+#'    LDP = 0)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                      eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                     Recruitment_mode = 'pool', LDP = 0.1) {
+                     Recruitment_mode = 'pool', LDP = 0) {
 
   ###### Error handling ########################################################
 
@@ -142,10 +142,10 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   # Enter FM, N, abundance, and biomasses for time = 1 to Rec_age
   # Dimensions = age * area * time * CR * M values (3)
   start_age <- A50_mat - Rec_age + 1
-  for (t in 1:(Rec_age + 1)) {
+  for (t in 1:Rec_age) {
     N2[, 1, t, 1, 1, 1] <- rep(100, num)
     biomass2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
-    SSB2[1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
+    SSB2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
     abundance2[1, t, 1, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
   }
 
@@ -153,15 +153,15 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   for (t in (Rec_age + 1):(eq_time - 1)) {
 
     # recruitment
-    R <- recruitment(t, cr = 1, nm = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
-                     Sigma_R, Rec_age, Recruitment_mode, LDP)
+    R <- recruitment(t, cr = 1, nm = 1, fdr = 1, SSB = SSB2, A, R0, H, B0,
+                     Eps = Eps2, Sigma_R, Rec_age, Recruitment_mode, LDP = 0)
 
     # biology
     PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age, SSB = SSB2,
-                       N = N2, W, Mat, A = 1, Fb, E = E2, S, NM = 1, FM = FM2,
-                       A50_mat, Biomass = biomass2, Abundance = abundance2,
-                       Fishing = T, Nat_mortality = c(M), R,
-                       Ind_sampled = 'all')
+                       N = N2, W, Mat, A = 1, Fb = 0, E = E2, S, NM = 1,
+                       FM = FM2, A50_mat, Biomass = biomass2,
+                       Abundance = abundance2, Fishing = FALSE,
+                       Nat_mortality = c(M), R, Ind_sampled = 'all')
 
     FM2[, 1, t, 1, 1, 1]               <- PD[[1]]
     N2[, 1, t, 1, 1, 1]                <- PD[[2]]
@@ -171,14 +171,18 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
   }
 
-  # # plotting for troubleshooting
-  # plot(1:eq_time, N2[1, 1, 1:eq_time, 1, 1, 1], type = 'l', ylim = c(0, 2e4), col = 'green')
-  # for (x in 2:(num - 1)) {
-  #   lines(1:eq_time, N2[x, 1, 1:eq_time, 1, 1, 1], col = 'red')
-  # }
-  # lines(1:eq_time, N2[num, 1, 1:eq_time, 1, 1, 1], col = 'blue')
+  # plotting for troubleshooting
+  plot(1:(eq_time - 1), N2[1, 1, 1:(eq_time - 1), 1, 1, 1], type = 'l',
+       ylim = c(0, 5e3), col = 'green')
+  for (x in 2:(num - 1)) {
+    lines(1:(eq_time - 1), N2[x, 1, 1:(eq_time - 1), 1, 1, 1], col = 'red')
+  }
+  lines(1:(eq_time - 1), N2[num, 1, 1:(eq_time - 1), 1, 1, 1], col = 'blue')
 
   SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
+  # prop_SAD <- SAD / sum(SAD)
+  # wght <- (B0 / A) / sum(prop_SAD * W)
+  # adj_SAD <- wght * prop_SAD
 
   return(SAD)
 
