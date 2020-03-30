@@ -130,7 +130,7 @@ abundance2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1, 1))
 # calculate stable age distribution
 SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
                  eq_time = 150, A50_mat, Stochasticity, Rho_R, Recruitment_mode,
-                 LDP = 0.1)
+                 A = 1)
 
 # initial final biomass with no fishing
 FM0_biomass <- sum(W*SAD)

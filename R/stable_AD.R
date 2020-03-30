@@ -36,9 +36,8 @@
 #'    'local_DD' - larvae experience local density dependence before settling
 #'       evely across all areas
 #'    Default value is 'pool'.
-#' @param LDP numeric value, the larval drift proportion, the proportion of
-#'    larvae that drift from one area to an adjacent area before settling.
-#'    Default value is 0.
+#' @param A numeric value, the number of areas. Default value is 5.
+#'
 #'
 #' @return a numeric vector of numbers at age after enough years with no fishing
 #'    that proportions remain stable over time.
@@ -58,10 +57,10 @@
 #' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65,
 #'    B0 = 1e+5/1.1, Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150,
 #'    A50_mat = 8, Stochasticity = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
-#'    LDP = 0)
+#'    A = 5)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
                      eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-                     Recruitment_mode = 'pool', LDP = 0) {
+                     Recruitment_mode = 'pool', A = 5) {
 
   ###### Error handling ########################################################
 
@@ -84,7 +83,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
-  if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
+  if (A %% 1 != 0) {stop('A must be an integer value.')}
 
   # acceptable values
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
@@ -105,7 +104,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
       Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
     stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
          "local_DD".')}
-  if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
+  if (A < 0) {stop('A must be greater than or equal to 0.')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
@@ -171,13 +170,13 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
   }
 
-  # plotting for troubleshooting
-  plot(1:(eq_time - 1), N2[1, 1, 1:(eq_time - 1), 1, 1, 1], type = 'l',
-       ylim = c(0, 5e3), col = 'green')
-  for (x in 2:(num - 1)) {
-    lines(1:(eq_time - 1), N2[x, 1, 1:(eq_time - 1), 1, 1, 1], col = 'red')
-  }
-  lines(1:(eq_time - 1), N2[num, 1, 1:(eq_time - 1), 1, 1, 1], col = 'blue')
+  # # plotting for troubleshooting
+  # plot(1:(eq_time - 1), N2[1, 1, 1:(eq_time - 1), 1, 1, 1], type = 'l',
+  #      ylim = c(0, 5e3), col = 'green')
+  # for (x in 2:(num - 1)) {
+  #   lines(1:(eq_time - 1), N2[x, 1, 1:(eq_time - 1), 1, 1, 1], col = 'red')
+  # }
+  # lines(1:(eq_time - 1), N2[num, 1, 1:(eq_time - 1), 1, 1, 1], col = 'blue')
 
   SAD <- N2[, 1, eq_time - 1, 1, 1, 1]
   # prop_SAD <- SAD / sum(SAD)

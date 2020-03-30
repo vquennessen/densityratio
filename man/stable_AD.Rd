@@ -6,7 +6,7 @@
 \usage{
 stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
-  Recruitment_mode = "pool", LDP = 0.1)
+  Recruitment_mode = "pool", A = 5)
 }
 \arguments{
 \item{Rec_age}{numeric value, the age at recruitment, in years.}
@@ -57,9 +57,7 @@ component? Default value is FALSE.}
    evely across all areas
 Default value is 'pool'.}
 
-\item{LDP}{numeric value, the larval drift proportion, the proportion of
-larvae that drift from one area to an adjacent area before settling.
-Default value is 0.1.}
+\item{A}{numeric value, the number of areas. Default value is 5.}
 }
 \value{
 a numeric vector of numbers at age after enough years with no fishing
@@ -81,6 +79,6 @@ S <- selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65,
    B0 = 1e+5/1.1, Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150,
-   A50_mat = 8, Stochasticity = TRUE, Rho_R = 0, Recruitment_mode = 'pool',
-   LDP = 0.1)
+   A50_mat = 8, Stochasticity = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
+   A = 5)
 }
