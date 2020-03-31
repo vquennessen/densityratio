@@ -169,13 +169,11 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
   if (BM == FALSE) {
 
-    if (cr <= 3) { nm = cr } else if (cr <= 6) { nm = cr - 3 }
-
     # static control rules, with constant target density ratios
     if (cr <= 3) {
 
       if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
+        DR <- density_ratio(t, cr, nm = cr, fdr, A, Count, Years_sampled,
                           Areas_sampled, Ind_sampled, Transects, Inside,
                           Outside)
       } else { DR <- True_DR }
@@ -194,14 +192,14 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
       # calculate density ratio
       if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
+        DR <- density_ratio(t, cr, nm = cr - 3, fdr, A, Count, Years_sampled,
                             Areas_sampled, Ind_sampled, Transects, Inside,
                             Outside)
       } else { DR <- True_DR }
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
-                                          target_DR = target[t - Time1 + 1],
+                                          target_DR = target[t - Time1],
                                           floor_DR = Floor_DR,
                                           effort_inc_allowed = 0.1, Time1)
     }
