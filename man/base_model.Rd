@@ -10,7 +10,7 @@ base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
   Adult_movement = TRUE, Plotting = FALSE, Final_DRs,
   Years_sampled = 1, Areas_sampled = "all", Ind_sampled = "all",
-  Allocation = "IFD", BM = FALSE, LDP = 0.1,
+  Floor_DR = 0.2, Allocation = "IFD", BM = FALSE, LDP = 0.1,
   Control_rules = c(1:6), Output.FM = FALSE, Output.N = FALSE,
   Output.Abundance = FALSE, Output.Biomass = FALSE,
   Output.SSB = FALSE, Output.Catch = FALSE, Output.Yield = FALSE,
@@ -90,6 +90,9 @@ calculate density ratio. Values can be:
 'mature' - sample only mature individuals.
 Default value is 'all'.}
 
+\item{Floor_DR}{numeric value, the DR value under which effort will be
+reduced to 10\% of its starting value. Default value is 0.2.}
+
 \item{Allocation}{character value, how effort is to be allocated. Values can
 be:
 'IFD' - the ideal free distribution. Effort is allocated proportional to
@@ -149,8 +152,9 @@ base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
    Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-   Allocation = 'IFD', BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
-   Output.FM = FALSE, Output.N = TRUE, Output.Abundance = FALSE,
-   Output.Biomass = TRUE, Output.SSB = TRUE, Output.Catch = FALSE,
-   Output.Yield = TRUE, Output.Effort = TRUE, Output.Density.Ratio = TRUE)
+   Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
+   Control_rules = c(1:6), Output.FM = FALSE, Output.N = TRUE,
+   Output.Abundance = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
+   Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
+   Output.Density.Ratio = TRUE)
 }

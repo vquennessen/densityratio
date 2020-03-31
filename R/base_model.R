@@ -56,6 +56,8 @@
 #'    'all' - sample all individuals.
 #'    'mature' - sample only mature individuals.
 #'    Default value is 'all'.
+#' @param Floor_DR numeric value, the DR value under which effort will be
+#'    reduced to 10\% of its starting value. Default value is 0.2.
 #' @param Allocation character value, how effort is to be allocated. Values can
 #'    be:
 #'    'IFD' - the ideal free distribution. Effort is allocated proportional to
@@ -102,22 +104,24 @@
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-#'    Allocation = 'IFD', BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
-#'    Output.FM = FALSE, Output.N = TRUE, Output.Abundance = FALSE,
-#'    Output.Biomass = TRUE, Output.SSB = TRUE, Output.Catch = FALSE,
-#'    Output.Yield = TRUE, Output.Effort = TRUE, Output.Density.Ratio = TRUE)
+#'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
+#'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = TRUE,
+#'    Output.Abundance = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
+#'    Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
+#'    Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
                        Sampling_Error = TRUE, Stochasticity = TRUE,
                        Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
-                       Ind_sampled = 'all', Allocation = 'IFD', BM = FALSE,
-                       LDP = 0.1, Control_rules = c(1:6), Output.FM = FALSE,
-                       Output.N = FALSE, Output.Abundance = FALSE,
-                       Output.Biomass = FALSE, Output.SSB = FALSE,
-                       Output.Catch = FALSE, Output.Yield = FALSE,
-                       Output.Effort = FALSE, Output.Density.Ratio = TRUE) {
+                       Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD',
+                       BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
+                       Output.FM = FALSE, Output.N = FALSE,
+                       Output.Abundance = FALSE, Output.Biomass = FALSE,
+                       Output.SSB = FALSE, Output.Catch = FALSE,
+                       Output.Yield = FALSE, Output.Effort = FALSE,
+                       Output.Density.Ratio = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -151,6 +155,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     stop('Areas_sampled must be a character value or NULL.')}
   if (!is.character(Ind_sampled) && !is.null(Ind_sampled)) {
     stop('Ind_sampled must be a character value or NULL.')}
+  if (!is.numeric(Floor_DR)) {stop('Floor_DR must be a numeric vector.')}
   if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
@@ -194,6 +199,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (is.character(Ind_sampled) && Ind_sampled != 'mature' &&
       Ind_sampled != 'all') {
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
+  if (Floor_DR <= 0) {stop('Floor_DR must be greater than 0.')}
   if (LDP < 0 || LDP > 1) {stop('LDP must be between 0 and 1.')}
   if (sum(Control_rules <= 0) > 0) {
     stop('All values in Control_rules must be greater than 0.')}
@@ -206,6 +212,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
   # relationtional values
   if (MPA > A) {stop('MPA must be less than or equal to A.')}
+  if (Floor_DR > min(Final_DRs)) {
+    stop('Floor_DR must be less than or equal to the minimum final density
+         ratio.')}
 
   ##############################################################################
 
@@ -343,8 +352,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                             TimeT, Transects, Nat_mortality,
                                             Final_DRs, Inside, Outside,
                                             Years_sampled, Areas_sampled,
-                                            Ind_sampled, BM, Sampling_Error,
-                                            Density_ratio)
+                                            Ind_sampled, Floor_DR, BM,
+                                            Sampling_Error, Density_ratio)
         }
 
       }
