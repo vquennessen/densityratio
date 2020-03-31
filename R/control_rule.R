@@ -39,6 +39,8 @@
 #'    'all' - sample all individuals.
 #'    'mature' - sample only mature individuals.
 #'    Default value is 'all'.
+#' @param Floor_DR numeric value, the DR value under which effort will be
+#'    reduced to 10\% of its starting value. Default value is 0.2.
 #' @param BM logical value, are the control rules from Babcock and MacCall 2011?
 #'    Default value is FALSE.
 #' @param Sampling_Error logical value, is there any error in sampling? Default
@@ -58,13 +60,14 @@
 #' control_rule(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
 #'    TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
 #'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
-#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all', BM = FALSE,
-#'    Sampling_Error = TRUE, Density_Ratio)
+#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
+#'    Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio)
 control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
                          TimeT = 70, Transects = 24, Nat_mortality, Final_DRs,
                          Inside = 3, Outside = c(1, 2, 4, 5), Years_sampled = 1,
-                         Areas_sampled = 'all', Ind_sampled = 'all', BM = FALSE,
-                         Sampling_Error = TRUE, Density_Ratio) {
+                         Areas_sampled = 'all', Ind_sampled = 'all',
+                         Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE,
+                         Density_Ratio) {
 
   ###### Error handling ########################################################
 
@@ -91,6 +94,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
     stop('Areas_sampled must be a character value or NULL.')}
   if (!is.character(Ind_sampled) && !is.null(Ind_sampled)) {
     stop('Ind_sampled must be a character value or NULL.')}
+  if (!is.numeric(Floor_DR)) {stop('Floor_DR must be a numeric vector.')}
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (!is.logical(Sampling_Error)) {
     stop('Sampling_Error must be a logical value.')}
@@ -125,6 +129,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
   if (is.character(Ind_sampled) && Ind_sampled != 'mature' &&
       Ind_sampled != 'all') {
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
+  if (Floor_DR <= 0) {stop('Floor_DR must be greater than 0.')}
 
   # relational values
   if (sum(Inside > A) > 0) {
@@ -152,6 +157,9 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
     stop('Incorrect number of natural mortality estimates.')}
   if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
   if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
+  if (Floor_DR > min(Final_DRs)) {
+    stop('Floor_DR must be less than or equal to the minimum final density
+         ratio.')}
 
   ##############################################################################
 
@@ -176,7 +184,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
                                           target_DR = Final_DRs[fdr],
-                                          floor_DR = 0.5,
+                                          floor_DR = Floor_DR,
                                           effort_inc_allowed = 0.1, Time1)
 
       # transient control rules with shifting target density ratios
@@ -194,7 +202,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
                                           target_DR = target[t - Time1 + 1],
-                                          floor_DR = 0.5,
+                                          floor_DR = Floor_DR,
                                           effort_inc_allowed = 0.1, Time1)
     }
 
