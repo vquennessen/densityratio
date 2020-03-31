@@ -177,7 +177,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
                                           target_DR = Final_DRs[fdr],
-                                          floor_DR = 0.2,
+                                          floor_DR = 0.5,
                                           effort_inc_allowed = 0.1, Time1)
 
       # transient control rules with shifting target density ratios
@@ -195,7 +195,7 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
                                           target_DR = target[t - Time1 + 1],
-                                          floor_DR = 0.2,
+                                          floor_DR = 0.5,
                                           effort_inc_allowed = 0.1, Time1)
     }
 
