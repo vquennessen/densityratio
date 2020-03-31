@@ -27,6 +27,8 @@
 #'    is c(3).
 #' @param Outside numeric vector, the area(s) outside the marine reserve.
 #'    Default is c(1, 2, 4, 5).
+#' @param Years_sampled numeric value, the number of years of sampling upon
+#'    which to base the estimate of density ratio. Default value is 1.
 #' @param Areas_sampled character value, the areas to be sampled to calculate
 #'    density ratio. Values can be:
 #'    'all' - sample all areas.
@@ -37,8 +39,6 @@
 #'    'all' - sample all individuals.
 #'    'mature' - sample only mature individuals.
 #'    Default value is 'all'.
-#' @param Years_sampled numeric value, the number of years of sampling upon
-#'    which to base the estimate of density ratio. Default value is 1.
 #' @param BM logical value, are the control rules from Babcock and MacCall 2011?
 #'    Default value is FALSE.
 #' @param Sampling_Error logical value, is there any error in sampling? Default
@@ -58,14 +58,13 @@
 #' control_rule(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
 #'    TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
 #'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
-#'    Areas_sampled = 'all', Ind_sampled = 'all', Years_sampled = 1, BM = FALSE,
+#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all', BM = FALSE,
 #'    Sampling_Error = TRUE, Density_Ratio)
 control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
                          TimeT = 70, Transects = 24, Nat_mortality, Final_DRs,
-                         Inside = 3, Outside = c(1, 2, 4, 5),
-                         Areas_sampled = 'all', Ind_sampled = 'all',
-                         Years_sampled = 1, BM = FALSE, Sampling_Error = TRUE,
-                         Density_Ratio) {
+                         Inside = 3, Outside = c(1, 2, 4, 5), Years_sampled = 1,
+                         Areas_sampled = 'all', Ind_sampled = 'all', BM = FALSE,
+                         Sampling_Error = TRUE, Density_Ratio) {
 
   ###### Error handling ########################################################
 

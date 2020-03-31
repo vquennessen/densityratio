@@ -342,8 +342,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
           E[, t, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
                                             TimeT, Transects, Nat_mortality,
                                             Final_DRs, Inside, Outside,
-                                            Areas_sampled, Ind_sampled,
-                                            Years_sampled, BM, Sampling_Error,
+                                            Years_sampled, Areas_sampled,
+                                            Ind_sampled, BM, Sampling_Error,
                                             Density_ratio)
         }
 
