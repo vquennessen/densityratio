@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/vquennessen/densityratio.svg?branch=master)](https://travis-ci.org/vquennessen/densityratio)
 <!-- badges: end -->
 
 The goal of densityratio is to …
