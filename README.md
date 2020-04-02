@@ -9,7 +9,17 @@
 status](https://travis-ci.org/vquennessen/densityratio.svg?branch=master)](https://travis-ci.org/vquennessen/densityratio)
 <!-- badges: end -->
 
-The goal of densityratio is to …
+The goal of densityratio is to assess the performance of density ratio
+control rules (DRCR) in terms of biomass, yield, spawning stock
+abundance, age structure, or some other biological reference. Different
+DRCRs may sample different individuals (all vs. only mature
+individuals), different areas (all areas vs. only areas far from the
+reserve), different amounts of time (1 year or multiple), may have a
+different final target density ratio, and may use a static or a
+transient final target density ratio. Alternatively, it can be used to
+calculate simpler life history traits for a given species, such as
+length at age, weight at age, proportion mature at age, selectivity at
+age, the stable age distribution, and more.
 
 ## Installation
 
@@ -21,7 +31,7 @@ You can install the development version from
 devtools::install_github("vquennessen/densityratio")
 ```
 
-## Example
+## Example 1: Length at Age of Black Rockfish (2015)
 
 This is a basic example which shows you how to solve a common problem:
 
@@ -30,26 +40,14 @@ library(densityratio)
 ## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## Example 2: Relative yield after reserve implementation given static and transient control rules (Black Rockfish 2015)
+
+This is a basic example which shows you how to solve a common problem:
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+library(densityratio)
+## basic example code
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!
+Don’t forget to commit and push the resulting figure files, so they
+display on GitHub\!
