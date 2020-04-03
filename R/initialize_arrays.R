@@ -392,8 +392,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Dimensions = timeT * CR * FDR
   Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 
-
-
   # Enter N, abundance, biomasses, and E for time = 1 to rec_age
   # Dimensions = age * area * time * CR
   for (t in 1:Rec_age) {
