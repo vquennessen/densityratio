@@ -88,6 +88,8 @@
 #'    value is FALSE.
 #' @param Output.Density.Ratio logical value, should the output include density
 #'    ratios? Default value is TRUE.
+#' @param Condensed.Output logical value, should the output be condensed (TRUE)
+#'    or all area outputs be included (FALSE). Default value is TRUE.
 #'
 #' @return a list, containing numerical arrays of the relative biomass, yield,
 #'    and spawning stock biomass, as well as the true density ratios over time
@@ -108,7 +110,7 @@
 #'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = TRUE,
 #'    Output.Abundance = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
 #'    Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
-#'    Output.Density.Ratio = TRUE)
+#'    Output.Density.Ratio = TRUE, Condensed.Output = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
                        Sampling_Error = TRUE, Stochasticity = TRUE,
@@ -121,7 +123,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Output.Abundance = FALSE, Output.Biomass = FALSE,
                        Output.SSB = FALSE, Output.Catch = FALSE,
                        Output.Yield = FALSE, Output.Effort = FALSE,
-                       Output.Density.Ratio = TRUE) {
+                       Output.Density.Ratio = TRUE, Condensed.Output = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -174,6 +176,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     stop('Output.Effort must be a logical value.')}
   if (!is.logical(Output.Density.Ratio)) {
     stop('Output.Density.Ratio must be a logical value.')}
+  if (!is.logical(Condensed.Output)) {
+    stop('Condensed.Output must be a logical value.')}
 
   # acceptable values
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
@@ -741,6 +745,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   # initialize output list
   output <- list()
 
+  if (Condensed.Output == TRUE) {
+
   # add output depending on arguments passed to base_model.R
   if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), Time1:TimeT, , ENM, ] }
   if (Output.N == TRUE) { output$N <- N[, 1:MPA, Time1:TimeT, , ENM, ] }
@@ -752,6 +758,21 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), Time1:TimeT, , ENM, ] }
   if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
   if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
+
+  } else {
+
+    if (Output.FM == TRUE) { output$FM <- FM[, , Time1:TimeT, , ENM, ] }
+    if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ENM, ] }
+    if (Output.Abundance == TRUE) {
+      output$Abundance <- Abundance[, Time1:TimeT, , ENM, , ] }
+    if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
+    if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ENM, ] }
+    if (Output.Catch == TRUE) { output$Catch <- Catch[, , Time1:TimeT, , ENM, ] }
+    if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
+    if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
+    if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
+
+  }
 
   return(output)
 

@@ -14,7 +14,8 @@ base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Control_rules = c(1:6), Output.FM = FALSE, Output.N = FALSE,
   Output.Abundance = FALSE, Output.Biomass = FALSE,
   Output.SSB = FALSE, Output.Catch = FALSE, Output.Yield = FALSE,
-  Output.Effort = FALSE, Output.Density.Ratio = TRUE)
+  Output.Effort = FALSE, Output.Density.Ratio = TRUE,
+  Condensed.Output = TRUE)
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
@@ -135,6 +136,9 @@ value is FALSE.}
 
 \item{Output.Density.Ratio}{logical value, should the output include density
 ratios? Default value is TRUE.}
+
+\item{Condensed.Output}{logical value, should the output be condensed (TRUE)
+or all area outputs be included (FALSE). Default value is TRUE.}
 }
 \value{
 a list, containing numerical arrays of the relative biomass, yield,
@@ -156,5 +160,5 @@ base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
    Control_rules = c(1:6), Output.FM = FALSE, Output.N = TRUE,
    Output.Abundance = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
    Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
-   Output.Density.Ratio = TRUE)
+   Output.Density.Ratio = TRUE, Condensed.Output = TRUE)
 }
