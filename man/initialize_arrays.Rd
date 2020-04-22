@@ -10,7 +10,7 @@ initialize_arrays(A = 5, MPA = 3, Final_DRs, Time1 = 50,
   F_fin, Beta, Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE,
   D, Transects = 24, H, Surveys = TRUE, Fishing = TRUE, M_Error,
   Sampling_Error = TRUE, Recruitment_mode = "pool", LDP = 0.1,
-  Ind_sampled = "all")
+  Ind_sampled = "all", BM = FALSE)
 }
 \arguments{
 \item{A}{numeric value, the number of total areas in the model. Default value
@@ -139,6 +139,9 @@ calculate density ratio. Values can be:
 'all' - sample all individuals.
 'mature' - sample only mature individuals.
 Default value is 'all'.}
+
+\item{BM}{logical value, are the control rules from Babcock and MacCall 2011?
+Default value is FALSE.}
 }
 \value{
 initalizes arrays necessary for other functions in the base model,
@@ -174,5 +177,5 @@ initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
    SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
    Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
    Fishing = TRUE, M_Error = 0.05, Sampling_Error = TRUE,
-   Recruitment_mode = 'pool', LDP = 0.1, Ind_sampled = 'all')
+   Recruitment_mode = 'pool', LDP = 0.1, Ind_sampled = 'all', BM = FALSE)
 }
