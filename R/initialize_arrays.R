@@ -99,6 +99,8 @@
 #'    'all' - sample all individuals.
 #'    'mature' - sample only mature individuals.
 #'    Default value is 'all'.
+#' @param BM logical value, are the control rules from Babcock and MacCall 2011?
+#'    Default value is FALSE.
 #'
 #' @return initalizes arrays necessary for other functions in the base model,
 #'    including Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
@@ -119,7 +121,7 @@
 #'    SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
 #'    Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
 #'    Fishing = TRUE, M_Error = 0.05, Sampling_Error = TRUE,
-#'    Recruitment_mode = 'pool', LDP = 0.1, Ind_sampled = 'all')
+#'    Recruitment_mode = 'pool', LDP = 0.1, Ind_sampled = 'all', BM = FALSE)
 initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
@@ -128,7 +130,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               Stochasticity = TRUE, D, Transects = 24, H,
                               Surveys = TRUE, Fishing = TRUE, M_Error,
                               Sampling_Error = TRUE, Recruitment_mode = 'pool',
-                              LDP = 0.1, Ind_sampled = 'all') {
+                              LDP = 0.1, Ind_sampled = 'all', BM = FALSE) {
 
   ###### Error handling ########################################################
 
@@ -180,6 +182,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
+  if (!is.character(Ind_sampled) && !is.null(Ind_sampled)) {
+    stop('Ind_sampled must be a character value or NULL.')}
+  if (!is.logical(BM)) {stop('BM must be a logical value.')}
 
   # acceptable values
   if (A <= 0) {stop('A must be greater than 0.')}
@@ -224,6 +229,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
          "local_DD".')}
   if (LDP < 0) {stop('LDP must be greater than or equal to 0.')}
+  if (is.character(Ind_sampled) && Ind_sampled != 'mature' &&
+      Ind_sampled != 'all') {
+    stop('Ind_sampled must be either "mature" or "all" or NULL.')}
 
   # relational values
   if (MPA > A) {stop('MPA must be less than or equal to A.')}
@@ -323,12 +331,15 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Unfished spawning stock biomass
   B0 <- R0 / Phi
 
+  # Adjust number of transects for BM control rules if there is no sampling error
+  Transects <- ifelse(BM == TRUE & Sampling_Error == TRUE, Transects, 1000)
+
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
   Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
                  c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
- if (Sampling_Error == TRUE) {
+ if (Sampling_Error == TRUE | BM == TRUE) {
 
     # Calculate standard deviation of normal variable for sampling
     # Based on Babcock & MacCall (2011): Eq. (15)
@@ -425,14 +436,15 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     }
   }
 
-  if (Sampling_Error == TRUE) {
+  if (BM == TRUE | Sampling_Error == TRUE) {
     output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                    Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM, E, Catch,
-                   Yield, Density_ratio, ENM, Abundance, Count, Sigma_S, NuS,
-                   Delta, Gamma)
+                   Yield, Density_ratio, ENM, Abundance, Transects, Count,
+                   Sigma_S, NuS, Delta, Gamma)
   } else { output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat,
                           CR, Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM,
-                          E, Catch, Yield, Density_ratio, ENM, Abundance, Count)
+                          E, Catch, Yield, Density_ratio, ENM, Abundance,
+                          Transects, Count)
   }
 
   return(output)
