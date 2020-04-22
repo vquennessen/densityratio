@@ -8,7 +8,7 @@ control_rule(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
   Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
   Outside = c(1, 2, 4, 5), Years_sampled = 1, Areas_sampled = "all",
   Ind_sampled = "all", Floor_DR = 0.2, BM = FALSE,
-  Sampling_Error = TRUE, Density_Ratio)
+  Sampling_Error = TRUE, Density_ratio)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -73,7 +73,7 @@ Default value is FALSE.}
 \item{Sampling_Error}{logical value, is there any error in sampling? Default
 value is TRUE.}
 
-\item{Density_Ratio}{numeric array, the true density ratio at each time step
+\item{Density_ratio}{numeric array, the true density ratio at each time step
 under each control rule and for each final density ratio.}
 }
 \value{
