@@ -101,15 +101,15 @@
 #'
 #' @examples
 #' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
-#'    Time2 = 10, Recruitment_mode = 'pool', M_Error = 0.05,
+#'    Time2 = 10, Recruitment_mode = 'closed', M_Error = 0.05,
 #'    Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-#'    Adult_movement = TRUE, Plotting = TRUE, Final_DRs = c(0.2, 0.4),
+#'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-#'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = TRUE,
-#'    Output.Abundance = FALSE, Output.Biomass = TRUE, Output.SSB = TRUE,
-#'    Output.Catch = FALSE, Output.Yield = TRUE, Output.Effort = TRUE,
+#'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = FALSE,
+#'    Output.Abundance = FALSE, Output.Biomass = FALSE, Output.SSB = FALSE,
+#'    Output.Catch = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
 #'    Output.Density.Ratio = TRUE, Condensed.Output = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
@@ -261,7 +261,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
                           Cf, P, X, SP, M, Control_rules, Phi, Stochasticity, D,
                           Transects, H, Surveys, Fishing, M_Error,
-                          Sampling_Error, Recruitment_mode, LDP, Ind_sampled)
+                          Sampling_Error, Recruitment_mode, LDP, Ind_sampled,
+                          BM)
 
   Inside           <- IA[[1]]     # Area(s) in the marine reserve
   Outside          <- IA[[2]]     # Areas not in the marine reserve
@@ -287,19 +288,19 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   Density_ratio    <- IA[[22]]    # Density ratios
   ENM              <- IA[[23]]    # nm value that represents "true" M
   Abundance        <- IA[[24]]    # Abundance of all and/or mature individuals
-  Count            <- IA[[25]]    # Species count when sampling, dim = area*time
+  Transects        <- IA[[25]]    # Species count when sampling, dim = area*time
+  Count            <- IA[[26]]    # Species count when sampling, dim = area*time
 
-  if (Sampling_Error == TRUE) {
-    Sigma_S          <- IA[[26]]    # Sampling normal standard deviation
-    NuS              <- IA[[27]]    # Sampling normal variable, dim = area*time*CR
-    Delta            <- IA[[28]]    # Constant of proportionality
-    Gamma            <- IA[[29]]    # Gamma
+  if (Sampling_Error == TRUE | BM == TRUE) {
+    Sigma_S          <- IA[[27]]  # Sampling normal standard deviation
+    NuS              <- IA[[28]]  # Sampling normal variable, dim = area*time*CR
+    Delta            <- IA[[29]]  # Constant of proportionality
+    Gamma            <- IA[[30]]  # Gamma
   }
 
   ##### Population Dynamics - Time Varying #####################################
   for (fdr in 1:FDR) {
 
-    # for (t in Time1:TimeT) {
     for (t in (Rec_age + 1):TimeT) {
 
       for (cr in 1:CR) {
@@ -338,7 +339,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
           }
 
           # sampling
-          if (Surveys == TRUE && Sampling_Error == TRUE) {
+          if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
             Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
                                                     Gamma, Abundance, Transects,
                                                     X, Count, NuS, A,
