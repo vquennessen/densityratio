@@ -19,6 +19,8 @@
 #' @param effort_inc_allowed numeric value, the percent increase allowed in
 #'    effort if the density ratio is below the target density ratio, on the
 #'    interval (0, 1). Default value is 0.10.
+#' @param Time1 numeric value, the number of years to run the model before a
+#'    marine reserve is implemented. Default value is 50.
 #'
 #' @return a numeric vector of fishing effort for the next timestep, under the
 #'    specific control rule, with a specific estimate of natural mortality.
@@ -28,10 +30,10 @@
 #' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
 #' E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' management(t = 51, cr = 1, fdr = 1, E, DR = 0.8, target_DR = 0.6,
-#'    floor_DR = 0.2, effort_inc_allowed = 0.10)
+#'    floor_DR = 0.2, effort_inc_allowed = 0.10, Time1 = 50)
 
 management <- function(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
-                       effort_inc_allowed = 0.10) {
+                       effort_inc_allowed = 0.10, Time1) {
 
   ###### Error handling ########################################################
 
