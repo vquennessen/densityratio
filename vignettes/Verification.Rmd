@@ -29,7 +29,7 @@ Species = 'BR_CA_2003'
 R0 = 1e+5
 A = 5; MPA = 3
 Time1 = 50; Time2 = 50
-M_Error = 0; Sampling_Error = FALSE; Stochasticity = FALSE
+M_Error = 0; Sampling_Error = TRUE; Stochasticity = FALSE
 Surveys = TRUE; Fishery_management = TRUE; Fishing = TRUE; Transects = 24
 Plotting = FALSE
 Final_DRs = c(1); Floor_DR = 0.2

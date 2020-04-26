@@ -332,7 +332,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   B0 <- R0 / Phi
 
   # Adjust number of transects for BM control rules if there is no sampling error
-  Transects <- ifelse(BM == TRUE & Sampling_Error == TRUE, Transects, 100)
+  Transects <- ifelse(BM == TRUE & Sampling_Error == TRUE, Transects, 1000)
 
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
