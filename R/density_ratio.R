@@ -111,12 +111,12 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   # sample all fish or just mature fish
   if (Ind_sampled == 'all') { ind <- 1 } else { ind <- 2 }
 
-  # calculate count inside marine reserve
-  count_in <- Count[Inside, t - 1, , ind, cr, nm, fdr]
-
-  # time sampled = 1 or 3 years
+  # time sampled = 1 or more years
   if (Years_sampled == 1) { years <- t - 1
   } else { years <- (t - Years_sampled):(t - 1) }
+
+  # calculate count inside marine reserve
+  count_in <- Count[Inside, years, , ind, cr, nm, fdr]
 
   # calculate counts outside marine reserve
   if (Areas_sampled == 'far') {
@@ -126,7 +126,7 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   }
 
   # calculate density ratio
-  DR <- (sum(count_out)/(nrow(count_out)))/(sum(count_in))
+  DR <- (sum(count_out)/(length(count_out)))/(sum(count_in)/length(count_in))
 
   return(DR)
 
