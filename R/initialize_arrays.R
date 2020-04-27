@@ -332,14 +332,14 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   B0 <- R0 / Phi
 
   # Adjust number of transects for BM control rules if there is no sampling error
-  Transects <- ifelse(BM == TRUE & Sampling_Error == TRUE, Transects, 1000)
+  Transects <- ifelse(BM == TRUE, 1000, Transects)
 
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
   Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
                  c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
- if (Sampling_Error == TRUE | BM == TRUE) {
+ if (Sampling_Error == TRUE) {
 
     # Calculate standard deviation of normal variable for sampling
     # Based on Babcock & MacCall (2011): Eq. (15)

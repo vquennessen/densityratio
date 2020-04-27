@@ -213,25 +213,14 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
     if (cr == 1) {
 
-      # if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
-                          Areas_sampled = 'all', Ind_sampled = 'all',
-                          Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
       # calculate effort at the next timestep
-      E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 10e-16, floor_DR = 0,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, , fdr] <- 1.1*E[, t, cr, , fdr]
 
     } else if (cr == 2) {
 
-      # if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 3,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -240,12 +229,9 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
     } else if (cr == 3) {
 
-      # if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -254,12 +240,9 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
     } else if (cr == 4) {
 
-      # if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'far', Ind_sampled = 'all',
                           Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -268,12 +251,9 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
     } else if (cr == 5) {
 
-      # if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'mature',
                           Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -282,12 +262,9 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
     } else if (cr == 6) {
 
-      # if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -296,26 +273,14 @@ control_rule <- function(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50,
 
     } else if (cr == 7) {
 
-      # if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
-                          Areas_sampled = 'all', Ind_sampled = 'all',
-                          Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
-
       # calculate effort at the next timestep
-      E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 100, floor_DR = 0,
-                                          effort_inc_allowed = 0, Time1)
+      E[, t + 1, cr, , fdr] <- E[, t, cr, , fdr]
 
     } else if (cr == 8) {
 
-      # if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr = 1, A, Count, Years_sampled = 1,
                           Areas_sampled = 'all', Ind_sampled = 'all',
                           Transects, Inside, Outside)
-      # } else { DR <- True_DR }
-
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr = 1, E, DR,

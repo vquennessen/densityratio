@@ -91,7 +91,8 @@ years <- seq(11, 51, by = 10)
 decades <- 1:length(years)
 
 # initialize data frame
-data <- data.frame(Control.Rule = rep(Control_rules, each = length(decades)), 
+data <- data.frame(Control.Rule = rep(Control_rules, each = length(decades)),
+                   Index = 1:(length(Control_rules)*length(decades)),
                    Decade = rep(decades, times = length(Control_rules)),
                    SSB = rep(0, length(Control_rules)*length(decades)), 
                    yield = rep(0, length(Control_rules)*length(decades)))
@@ -122,6 +123,8 @@ for (cr in 1:length(Control_rules)) {
 }
 
 # plot Figure 4a
-ggplot(data, aes(x = Control.Rule, y = SSB, fill = as.factor(Decade))) + 
-  geom_bar(stat = 'identity', position = 'dodge')
+ggplot(data, aes(x = Index, y = SSB, fill = as.factor(Decade))) + 
+  geom_bar(stat = 'identity', position = 'dodge') +
+  geom_point(aes(x = Index, y = yield)) +
+  labs(fill = 'Decade')
 ```
