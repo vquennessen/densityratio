@@ -771,7 +771,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     if (Output.Catch == TRUE) { output$Catch <- Catch[, , Time1:TimeT, , ENM, ] }
     if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
     if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
-    if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
+    if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
 
   }
 
