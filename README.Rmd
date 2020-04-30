@@ -32,7 +32,7 @@ devtools::install_github("vquennessen/densityratio")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example1}
 library(densityratio)
 ## basic example code
 ```
@@ -41,7 +41,7 @@ library(densityratio)
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example2}
 library(densityratio)
 ## basic example code
 ```

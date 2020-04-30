@@ -9,17 +9,8 @@
 status](https://travis-ci.org/vquennessen/densityratio.svg?branch=master)](https://travis-ci.org/vquennessen/densityratio)
 <!-- badges: end -->
 
-The goal of densityratio is to assess the performance of density ratio
-control rules (DRCR) in terms of biomass, yield, spawning stock
-abundance, age structure, or some other biological reference. Different
-DRCRs may sample different individuals (all vs. only mature
-individuals), different areas (all areas vs. only areas far from the
-reserve), different amounts of time (1 year or multiple), may have a
-different final target density ratio, and may use a static or a
-transient final target density ratio. Alternatively, it can be used to
-calculate simpler life history traits for a given species, such as
-length at age, weight at age, proportion mature at age, selectivity at
-age, the stable age distribution, and more.
+The goal of densityratio is to compare the performance of density ratio control rules (DRCR) using transient and static target density ratios in terms of biomass, yield, spawning stock abundance, age structure, or some other 
+biological reference. Different DRCRs may sample different individuals (all vs. only mature individuals), different areas (all areas vs. only areas far from the reserve), different amounts of time (1 year or multiple), may have a different final target density ratio, and may use a static or a transient final target density ratio. Alternatively, it can be used to calculate simpler life history traits for a given species, such as length at age, weight at age, proportion mature at age, selectivity at age, the stable age distribution, and more.
 
 ## Installation
 
