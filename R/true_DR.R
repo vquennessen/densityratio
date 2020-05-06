@@ -63,7 +63,7 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
    stop('Abundance has the wrong number of time steps.')}
   if (cr > dim(Abundance)[3]) {
     stop('Abundance has the wrong number of control rules.')}
-  if (fdr> dim(Abundance)[5]) {
+  if (fdr > dim(Abundance)[4]) {
     stop('Abundance has the wrong number of final density ratios.')}
 
   ##############################################################################
