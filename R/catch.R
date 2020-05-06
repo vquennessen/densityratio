@@ -19,14 +19,12 @@
 #'    value is 5.
 #' @param Fb numeric value, the historical fishing effort for the fished species.
 #' @param E numeric array, the relative fishing effort displayed in each area,
-#'    at each time step, under each control rule, and for each natural mortality
-#'    estimate.
+#'    at each time step, under each control rule.
 #' @param Catch numeric array, the number of individuals caught at each age, in
-#'    each area, at each timestep, under each control rule, for each estimate of
-#'    natural mortality.
+#'    each area, at each timestep, under each control rule.
 #'
 #' @return a numeric array with an updated vector of catch at ages given the
-#'    current area, timestep, control rule, and estimate of natural mortality.
+#'    current area, timestep, and control rule.
 #' @export
 #'
 #' @examples
@@ -35,7 +33,7 @@
 #' N <- array(rep(10, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
 #' E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 #' Catch <- array(rep(2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
-#' catch(t = 1, cr = 1, fdr = 1, FM, M, N, A = 5, Fb = 0.2, E, Catch)
+#' catch(t = 1, cr = 1, fdr = 1, FM, M = 0.17, N, A = 5, Fb = 0.2, E, Catch)
 
 catch <- function(t, cr, fdr, FM, M, N, A, Fb, E, Catch) {
 
@@ -59,8 +57,7 @@ catch <- function(t, cr, fdr, FM, M, N, A, Fb, E, Catch) {
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(FM < 0) > 0) {
     stop('All values in FM must be greater than or equal to 0.')}
-  if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
-    stop('All values in Nat_mortality must be between 0 and 1.')}
+  if (M <= 0 || M > 1) {stop('M must be between 0 and 1.')}
   if (sum(N < 0) > 0) {stop('All values in N must be greater than or equal to 0.')}
   if (A <= 0) {stop('A must be greater than 0.')}
   if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}

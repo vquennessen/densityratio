@@ -29,16 +29,14 @@ value is 5.}
 \item{Fb}{numeric value, the historical fishing effort for the fished species.}
 
 \item{E}{numeric array, the relative fishing effort displayed in each area,
-at each time step, under each control rule, and for each natural mortality
-estimate.}
+at each time step, under each control rule.}
 
 \item{Catch}{numeric array, the number of individuals caught at each age, in
-each area, at each timestep, under each control rule, for each estimate of
-natural mortality.}
+each area, at each timestep, under each control rule.}
 }
 \value{
 a numeric array with an updated vector of catch at ages given the
-   current area, timestep, control rule, and estimate of natural mortality.
+   current area, timestep, and control rule.
 }
 \description{
 \code{catch} returns the catch at age vector. It is based on the continuous
@@ -52,5 +50,5 @@ FM <- array(rep(0.2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR,  FDR))
 N <- array(rep(10, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
 E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 Catch <- array(rep(2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
-catch(t = 1, cr = 1, fdr = 1, FM, M, N, A = 5, Fb = 0.2, E, Catch)
+catch(t = 1, cr = 1, fdr = 1, FM, M = 0.17, N, A = 5, Fb = 0.2, E, Catch)
 }
