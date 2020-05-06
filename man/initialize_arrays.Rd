@@ -7,8 +7,8 @@
 initialize_arrays(A = 5, MPA = 3, Final_DRs, Time1 = 50,
   Time2 = 20, R0 = 1e+05, Rec_age, Max_age, A1, L1, A2, L2, K, WA, WB,
   K_mat, Fb, L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down,
-  F_fin, Beta, Cf, P, X, SP, M, Control_rules, Phi, Stochasticity = TRUE,
-  D, Transects = 24, H, Surveys = TRUE, Fishing = TRUE, M_Error,
+  F_fin, Beta, Cf, P, X, SP, M, Phi, Stochasticity = TRUE, D,
+  Transects = 24, H, Surveys = TRUE, Fishing = TRUE,
   Sampling_Error = TRUE, Recruitment_mode = "pool", LDP = 0.1,
   Ind_sampled = "all", BM = FALSE)
 }
@@ -94,8 +94,6 @@ positive transects.}
 
 \item{M}{numeric value, the natural mortality on the interval (0, 1).}
 
-\item{Control_rules}{numeric vector, the control rules to be compared.}
-
 \item{Phi}{numeric value, the unfished recruits per spawner.}
 
 \item{Stochasticity}{logical vector, does recruitment contain a stochastic
@@ -113,9 +111,6 @@ in each area to estimate density ratio. Default value is 24.}
 TRUE.}
 
 \item{Fishing}{logical value, is fishing occurring? Default value is TRUE.}
-
-\item{M_Error}{numeric value, the error between estimated and correct natural
-mortality.}
 
 \item{Sampling_Error}{logical value, is there any error in sampling? Default
 value is TRUE.}
@@ -146,8 +141,8 @@ Default value is FALSE.}
 \value{
 initalizes arrays necessary for other functions in the base model,
    including Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
-   Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
-   Gamma, FM, E, Catch, Yield, Density_ratio, ENM, Abundance
+   Nat_mortality, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
+   Gamma, FM, E, Catch, Yield, Density_ratio, Abundance
 }
 \description{
 \code{initialize_arrays} returns arrays necessary for other functions in the
@@ -155,14 +150,13 @@ initalizes arrays necessary for other functions in the base model,
    W (weight at age), S (selectivity at age), Mat (maturity at age), A50_mat
    (the first age at which 50\% or more of individuals are expected to be
    mature), CR (number of control rules to be compared), Nat_mortality
-   (values of estimated natural mortality), NM (number of estimates of
-   natural mortality), N (numbers at age array), SSB (spawning stock biomass
-   array), Abundance (abundance of all/mature individuals array),
-   Eps (recruitment error), B0 (unfished biomass), Count (estimated counts
-   based on sampling array), Sigma_S (sampling random variable standard
-   deviation), NuS (sampling random variable), Delta (constant of
-   proportionality), Gamma, FM (fishing mortality), E (effort), Catch, Yield,
-   Rel_Biomass (relative biomass after reserve implementation),
+   (values of estimated natural mortality), N (numbers at age array),
+   SSB (spawning stock biomass array), Abundance (abundance of all/mature
+   individuals array), Eps (recruitment error), B0 (unfished biomass),
+   Count (estimated counts based on sampling array), Sigma_S (sampling random
+   variable standard deviation), NuS (sampling random variable), Delta
+   (constant of proportionality), Gamma, FM (fishing mortality), E (effort),
+   Catch, Yield, Rel_Biomass (relative biomass after reserve implementation),
    Rel_yield (relative yield after reserve implementation), Rel_SSB (relative
    spawning stock biomass after reserve implementation), Density_ratio.
 }
@@ -174,8 +168,8 @@ initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
    Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
-   SP = 16.97, M = 0.14, Control_rules= c(1:6), Phi = 1.1,
-   Stochasticity = TRUE, D = 0.488, Transects = 24, H = 0.65, Surveys = TRUE,
-   Fishing = TRUE, M_Error = 0.05, Sampling_Error = TRUE,
-   Recruitment_mode = 'pool', LDP = 0.1, Ind_sampled = 'all', BM = FALSE)
+   SP = 16.97, M = 0.14, Phi = 1.1, Stochasticity = TRUE, D = 0.488,
+   Transects = 24, H = 0.65, Surveys = TRUE, Fishing = TRUE,
+   Sampling_Error = TRUE, ecruitment_mode = 'pool', LDP = 0.1,
+   Ind_sampled = 'all', BM = FALSE)
 }
