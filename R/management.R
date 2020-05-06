@@ -64,7 +64,7 @@ management <- function(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
   # relational values
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
+  if (fdr > dim(E)[4]) {stop('The given "fdr" value is too high for E.')}
 
   ##############################################################################
 
