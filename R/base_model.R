@@ -68,8 +68,6 @@
 #'    Default value is FALSE.
 #' @param LDP numeric value, the proportion of larvae that drift to adjacent
 #'    areas. Default value is 0.1.
-#' @param Control_rules numeric vector, the control rules to be compared.
-#'    Default value is c(1:6).
 #' @param Output.FM logical value, should the output include FM? Default value
 #'    is FALSE.
 #' @param Output.N logical value, should the output include N? Default value is
@@ -107,10 +105,10 @@
 #'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-#'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = FALSE,
-#'    Output.Abundance = FALSE, Output.Biomass = FALSE, Output.SSB = FALSE,
-#'    Output.Catch = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
-#'    Output.Density.Ratio = TRUE, Condensed.Output = TRUE)
+#'    Output.FM = FALSE, Output.N = FALSE, Output.Abundance = FALSE,
+#'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Catch = FALSE,
+#'    Output.Yield = FALSE, Output.Effort = FALSE, Output.Density.Ratio = TRUE,
+#'    Condensed.Output = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
                        Sampling_Error = TRUE, Stochasticity = TRUE,
@@ -118,12 +116,12 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD',
-                       BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
-                       Output.FM = FALSE, Output.N = FALSE,
-                       Output.Abundance = FALSE, Output.Biomass = FALSE,
-                       Output.SSB = FALSE, Output.Catch = FALSE,
-                       Output.Yield = FALSE, Output.Effort = FALSE,
-                       Output.Density.Ratio = TRUE, Condensed.Output = TRUE) {
+                       BM = FALSE, LDP = 0.1, Output.FM = FALSE,
+                       Output.N = FALSE, Output.Abundance = FALSE,
+                       Output.Biomass = FALSE, Output.SSB = FALSE,
+                       Output.Catch = FALSE, Output.Yield = FALSE,
+                       Output.Effort = FALSE, Output.Density.Ratio = TRUE,
+                       Condensed.Output = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -259,10 +257,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   IA <- initialize_arrays(A, MPA, Final_DRs, Time1, Time2, R0, Rec_age, Max_age,
                           A1, L1, A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
-                          Cf, P, X, SP, M, Control_rules, Phi, Stochasticity, D,
-                          Transects, H, Surveys, Fishing, M_Error,
-                          Sampling_Error, Recruitment_mode, LDP, Ind_sampled,
-                          BM)
+                          Cf, P, X, SP, M, Phi, Stochasticity, D, Transects, H,
+                          Surveys, Fishing, Sampling_Error, Recruitment_mode,
+                          LDP, Ind_sampled, BM)
 
   Inside           <- IA[[1]]     # Area(s) in the marine reserve
   Outside          <- IA[[2]]     # Areas not in the marine reserve
@@ -274,28 +271,25 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   Mat              <- IA[[8]]     # Fraction mature at age, dim = 1*age
   A50_mat          <- IA[[9]]     # Age at which fraction mature > 0.5
   CR               <- IA[[10]]    # Number of control rules
-  Nat_mortality    <- IA[[11]]    # Range of potential natural mortality values
-  NM               <- IA[[12]]    # Number of potential natural mortality values
-  N                <- IA[[13]]    # Population size, dim = age*area*time
-  SSB              <- IA[[14]]    # Spawning stock biomass, dim = area*time
-  Biomass          <- IA[[15]]    # Biomass, dim = area*time
-  Eps              <- IA[[16]]    # Epsilon vector, dim = area*time*CR
-  B0               <- IA[[17]]    # Unfished spawning stock biomass
-  FM               <- IA[[18]]    # Fishing mortality rate, dim = age*area*time
-  E                <- IA[[19]]    # nominal fishing effort in each area
-  Catch            <- IA[[20]]    # Catch at age
-  Yield            <- IA[[21]]    # Yield per area
-  Density_ratio    <- IA[[22]]    # Density ratios
-  ENM              <- IA[[23]]    # nm value that represents "true" M
-  Abundance        <- IA[[24]]    # Abundance of all and/or mature individuals
-  Transects        <- IA[[25]]    # Species count when sampling, dim = area*time
-  Count            <- IA[[26]]    # Species count when sampling, dim = area*time
+  N                <- IA[[11]]    # Population size, dim = age*area*time
+  SSB              <- IA[[12]]    # Spawning stock biomass, dim = area*time
+  Biomass          <- IA[[13]]    # Biomass, dim = area*time
+  Eps              <- IA[[14]]    # Epsilon vector, dim = area*time*CR
+  B0               <- IA[[15]]    # Unfished spawning stock biomass
+  FM               <- IA[[16]]    # Fishing mortality rate, dim = age*area*time
+  E                <- IA[[17]]    # nominal fishing effort in each area
+  Catch            <- IA[[18]]    # Catch at age
+  Yield            <- IA[[19]]    # Yield per area
+  Density_ratio    <- IA[[20]]    # Density ratios
+  Abundance        <- IA[[21]]    # Abundance of all and/or mature individuals
+  Transects        <- IA[[22]]    # Species count when sampling, dim = area*time
+  Count            <- IA[[23]]    # Species count when sampling, dim = area*time
 
   if (Sampling_Error == TRUE | BM == TRUE) {
-    Sigma_S          <- IA[[27]]  # Sampling normal standard deviation
-    NuS              <- IA[[28]]  # Sampling normal variable, dim = area*time*CR
-    Delta            <- IA[[29]]  # Constant of proportionality
-    Gamma            <- IA[[30]]  # Gamma
+    Sigma_S          <- IA[[24]]  # Sampling normal standard deviation
+    NuS              <- IA[[25]]  # Sampling normal variable, dim = area*time*CR
+    Delta            <- IA[[26]]  # Constant of proportionality
+    Gamma            <- IA[[27]]  # Gamma
   }
 
   ##### Population Dynamics - Time Varying #####################################
@@ -305,63 +299,55 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
       for (cr in 1:CR) {
 
-        for (nm in 1:NM) {
+        # effort allocation
+        E <- effort_allocation(t, cr, fdr, Allocation, E, Yield, Time1,
+                               Inside, Outside)
 
-          # effort allocation
-          E <- effort_allocation(t, cr, nm, fdr, Allocation, E, Yield, Time1,
-                                 Inside, Outside)
+        # If there is adult movement, add movement
+        if (Adult_movement == TRUE) {N <- movement(t, cr, fdr, N, A, AMP)}
 
-          # If there is adult movement, add movement
-          if (Adult_movement == TRUE) {N <- movement(t, cr, nm, fdr, N, A, AMP)}
+        # Recruitment / larval movement (if applicable)
+        R <- recruitment(t, cr, fdr, SSB, A, R0, H, B0, Eps, Sigma_R, Rec_age,
+                         Recruitment_mode, LDP)
 
-          # Recruitment / larval movement (if applicable)
-          R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
-                           Rec_age, Recruitment_mode, LDP)
+        # biology
+        PD <- pop_dynamics(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat, A, Fb,
+                           E, S, FM, A50_mat, Biomass, Abundance, Fishing, M, R,
+                           Ind_sampled)
 
-          # biology
-          PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
-                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
-                             Biomass, Abundance, Fishing, Nat_mortality, R,
-                             Ind_sampled)
+        FM[, , t, cr, fdr]               <- PD[[1]]
+        N[, , t, cr, fdr]                <- PD[[2]]
+        Biomass[, t, cr, fdr]            <- PD[[3]]
+        SSB[, t, cr, fdr]                <- PD[[4]]
+        Abundance[, t, cr, fdr, ]        <- PD[[5]]
 
-          FM[, , t, cr, nm, fdr]               <- PD[[1]]
-          N[, , t, cr, nm, fdr]                <- PD[[2]]
-          Biomass[, t, cr, nm, fdr]            <- PD[[3]]
-          SSB[, t, cr, nm, fdr]                <- PD[[4]]
-          Abundance[, t, cr, nm, fdr, ]        <- PD[[5]]
-
-          # fishing
-          if (Fishing == TRUE) {
-            Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
-                                               Nat_mortality, N, A, Fb, E,
-                                               Catch)
-            Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
-          }
-
-          # sampling
-          if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
-            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
-                                                    Gamma, Abundance, Transects,
-                                                    X, Count, NuS, A,
-                                                    Ind_sampled)
-          }
-
+        # fishing
+        if (Fishing == TRUE) {
+          Catch[, , t, cr, fdr] <- catch(t, cr, fdr, FM, M, N, A, Fb, E, Catch)
+          Yield[, t, cr, fdr] <- colSums(Catch[, , t, cr, fdr]*W)
         }
 
-        # calculate true density ratio
-        Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio, ENM)
-        # management
-        if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
-          E[, t, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
-                                            TimeT, Transects, Nat_mortality,
-                                            Final_DRs, Inside, Outside,
-                                            Years_sampled, Areas_sampled,
-                                            Ind_sampled, Floor_DR, BM,
-                                            Sampling_Error, Density_ratio)
+        # sampling
+        if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
+          Count[, t, , , cr, fdr] <- sampling(t, cr, fdr, Delta, Gamma,
+                                              Abundance, Transects, X, Count,
+                                              NuS, A, Ind_sampled)
         }
 
       }
+
+      # calculate true density ratio
+      Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
+                                           Outside, Density_ratio)
+      # management
+      if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
+        E[, t, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1, TimeT,
+                                        Transects, M, Final_DRs, Inside,
+                                        Outside, Years_sampled, Areas_sampled,
+                                        Ind_sampled, Floor_DR, BM,
+                                        Sampling_Error, Density_ratio)
+      }
+
     }
   }
 
@@ -383,7 +369,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     for (a in 1:A) {
       for (cr in 1:CR) {
         for (fdr in 1:FDR) {
-          Rel_biomass[a, , cr, fdr] <- Biomass[a, Time1:TimeT, cr, ENM, fdr]/Biomass[a, Time1, cr, ENM, fdr]
+          Rel_biomass[a, , cr, fdr] <- Biomass[a, Time1:TimeT, cr, fdr]/Biomass[a, Time1, cr, fdr]
         }
       }
     }
@@ -392,7 +378,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     for (a in 1:A) {
       for (cr in 1:CR) {
         for (fdr in 1:FDR) {
-          Rel_yield[a, , cr, fdr] <- Yield[a, Time1:TimeT, cr, ENM, fdr]/Yield[a, Time1, cr, ENM, fdr]
+          Rel_yield[a, , cr, fdr] <- Yield[a, Time1:TimeT, cr, fdr]/Yield[a, Time1, cr, fdr]
         }
       }
     }
@@ -401,7 +387,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     for (a in 1:A) {
       for (cr in 1:CR) {
         for (fdr in 1:FDR) {
-          Rel_SSB[a, , cr, fdr] <- SSB[a, Time1:TimeT, cr, ENM, fdr]/SSB[a, Time1, cr, ENM, fdr]
+          Rel_SSB[a, , cr, fdr] <- SSB[a, Time1:TimeT, cr, fdr]/SSB[a, Time1, cr, fdr]
         }
       }
     }
@@ -423,9 +409,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                      "\n Transient \n Correct M", "\n Transient \n High M")
     position <- 'left'
 
-    # transient DR for population with correct M
-    ENM <- ifelse(M_Error == 0, 1, 2)
-
     ##### Plot relative biomass over time after reserve implementation #########
 
     # y-axis limits
@@ -445,7 +428,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
     for (fdr in 1:FDR) {
 
-      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, M, fdr)
 
       for (a in 1:3) {
 
@@ -546,7 +529,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
     for (fdr in 1:FDR) {
 
-      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, M, fdr)
 
       for (a in 1:2) {
 
@@ -647,7 +630,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
     for (fdr in 1:FDR) {
 
-      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, M, fdr)
 
       for (a in 1:3) {
 
@@ -748,29 +731,29 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
   if (Condensed.Output == TRUE) {
 
-  # add output depending on arguments passed to base_model.R
-  if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), Time1:TimeT, , ENM, ] }
-  if (Output.N == TRUE) { output$N <- N[, 1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.Abundance == TRUE) {
-    output$Abundance <- Abundance[1:MPA, Time1:TimeT, , ENM, , ] }
-  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), Time1:TimeT, , ENM, ] }
-  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
-  if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
+    # add output depending on arguments passed to base_model.R
+    if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), Time1:TimeT, , ] }
+    if (Output.N == TRUE) { output$N <- N[, 1:MPA, Time1:TimeT, , ] }
+    if (Output.Abundance == TRUE) {
+      output$Abundance <- Abundance[1:MPA, Time1:TimeT, ,  , ] }
+    if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, Time1:TimeT, , ] }
+    if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, Time1:TimeT, , ] }
+    if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, Time1:TimeT, , ] }
+    if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), Time1:TimeT, , ] }
+    if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
+    if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
 
   } else {
 
-    if (Output.FM == TRUE) { output$FM <- FM[, , Time1:TimeT, , ENM, ] }
-    if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ENM, ] }
+    if (Output.FM == TRUE) { output$FM <- FM[, , Time1:TimeT, , ] }
+    if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ] }
     if (Output.Abundance == TRUE) {
-      output$Abundance <- Abundance[, Time1:TimeT, , ENM, , ] }
-    if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
-    if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ENM, ] }
-    if (Output.Catch == TRUE) { output$Catch <- Catch[, , Time1:TimeT, , ENM, ] }
-    if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
-    if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
+      output$Abundance <- Abundance[, Time1:TimeT, , , ] }
+    if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ] }
+    if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ] }
+    if (Output.Catch == TRUE) { output$Catch <- Catch[, , Time1:TimeT, , ] }
+    if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ] }
+    if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
     if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
 
   }
