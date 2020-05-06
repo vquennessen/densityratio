@@ -24,9 +24,8 @@ The goal of densityratio is to assess the performance of density ratio control r
 
 You can install the development version from [GitHub](https://github.com/) with:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("vquennessen/densityratio")
+``` {r}
+remotes::install_github("vquennessen/densityratio")
 ```
 ## Example 1: Length at Age of Black Rockfish (2015)
 
