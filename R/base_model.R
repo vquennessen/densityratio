@@ -25,8 +25,6 @@
 #'    'local_DD' - larvae experience local density dependence before settling
 #'       evely across all areas
 #'    Default value is 'pool'.
-#' @param M_Error numeric value, the error between estimated and correct natural
-#'    mortality.
 #' @param Sampling_Error logical value, is there any error in sampling? Default
 #'    value is TRUE.
 #' @param Stochasticity logical vector, does recruitment contain a stochastic
@@ -99,18 +97,17 @@
 #'
 #' @examples
 #' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
-#'    Time2 = 10, Recruitment_mode = 'closed', M_Error = 0.05,
-#'    Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
-#'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-#'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
-#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-#'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-#'    Output.FM = FALSE, Output.N = FALSE, Output.Abundance = FALSE,
+#'    Time2 = 10, Recruitment_mode = 'closed', Sampling_Error = FALSE,
+#'    Stochasticity = FALSE, Surveys = TRUE, Fishery_management = TRUE,
+#'    Fishing = TRUE, Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
+#'    Final_DRs = c(0.6, 0.8), Years_sampled = 1, Areas_sampled = 'all',
+#'    Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE,
+#'    LDP = 0.1, Output.FM = FALSE, Output.N = FALSE, Output.Abundance = FALSE,
 #'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Catch = FALSE,
 #'    Output.Yield = FALSE, Output.Effort = FALSE, Output.Density.Ratio = TRUE,
 #'    Condensed.Output = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-                       Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
+                       Time2 = 20, Recruitment_mode = 'pool',
                        Sampling_Error = TRUE, Stochasticity = TRUE,
                        Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
@@ -135,7 +132,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (Time2 %% 1 != 0) {stop('Time2 must be an integer value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
-  if (!is.numeric(M_Error)) {stop('M_Error must be a numeric value.')}
   if (!is.logical(Sampling_Error)) {
     stop('Sampling_Error must be a logical value.')}
   if (!is.logical(Stochasticity)) {
@@ -185,7 +181,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
       Recruitment_mode != 'regional_DD' && Recruitment_mode != 'local_DD') {
     stop('Recruitment_mode must be either "pool", "closed", "regional_DD", or
          "local_DD".')}
-  if (M_Error < 0) {stop('M_Error must be greater than or equal to 0.')}
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (sum(Final_DRs <= 0) > 0) {
     stop('All values in Final_DRs must be greater than 0.')}
