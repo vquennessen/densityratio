@@ -120,7 +120,7 @@ dep <- rep(0, fn)
 
 # Initialize population size and catch arrays
 # Dimensions = age * 1 * time * 1
-N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
+N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1))
 
 # Initialize biomass, SSB, and recruitment error
 # Dimensions = 1 * time * 1
