@@ -158,7 +158,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
     # biology
     PD <- pop_dynamics(t, cr = 1, fdr = 1, Rec_age, Max_age, SSB = SSB2, N = N2,
                        W, Mat, A = 1, Fb = 0, E = E2, S, FM = FM2, A50_mat,
-                       Biomass = biomass2, bundance = abundance2,
+                       Biomass = biomass2, Abundance = abundance2,
                        Fishing = FALSE, M, R, Ind_sampled = 'all')
 
     FM2[, 1, t, 1, 1]               <- PD[[1]]
