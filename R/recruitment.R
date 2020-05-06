@@ -89,7 +89,7 @@ recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
     stop('SSB or Eps has an incorrect number of time steps.')}
   if(dim(SSB)[3] != dim(Eps)[3]) {
     stop('SSB or Eps has an incorrect number of control rules.')}
-  if(dim(SSB)[5] != dim(Eps)[4]) {
+  if(dim(SSB)[4] != dim(Eps)[4]) {
     stop('SSB or Eps has an incorrect number of final density ratios.')}
   if (t > dim(SSB)[2]) {stop('The given "t" value is too high for SSB.')}
   if (cr > dim(SSB)[3]) {stop('The given "cr" value is too high for SSB.')}
