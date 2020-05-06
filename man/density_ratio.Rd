@@ -4,7 +4,7 @@
 \alias{density_ratio}
 \title{Density ratio}
 \usage{
-density_ratio(t, cr, nm, fdr, A, Count, Years_sampled = 1,
+density_ratio(t, cr, fdr, A, Count, Years_sampled = 1,
   Areas_sampled = "all", Ind_sampled = "all", Transects = 24, Inside,
   Outside)
 }
@@ -12,8 +12,6 @@ density_ratio(t, cr, nm, fdr, A, Count, Years_sampled = 1,
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
-
-\item{nm}{temporary numeric value, the current natural mortality estimate.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -59,10 +57,10 @@ numeric value, the calculated density ratio for a specific timestep,
    specific control rule.
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
-Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
-   c(A, TimeT, Transects, 2, CR, NM, FDR))
-density_ratio(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, Count,
-   Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-   Transects = 24, Inside = 3, Outside = c(1, 2, 4, 5))
+A = 5; TimeT = 70; CR = 6; FDR = 4; Transects = 24
+Count <- array(rep(5, A*TimeT*Transects*2*CR*FDR),
+   c(A, TimeT, Transects, 2, CR, FDR))
+density_ratio(t = 51, cr = 1, fdr = 1, A = 5, Count, Years_sampled = 1,
+   Areas_sampled = 'all', Ind_sampled = 'all', Transects = 24, Inside = 3,
+   Outside = c(1, 2, 4, 5))
 }
