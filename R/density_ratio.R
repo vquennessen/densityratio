@@ -5,7 +5,6 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
-#' @param nm temporary numeric value, the current natural mortality estimate.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param A numeric value, the number of total areas in the model. Default
 #'    value is 5.
@@ -38,13 +37,13 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
-#' Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
-#'    c(A, TimeT, Transects, 2, CR, NM, FDR))
-#' density_ratio(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, Count,
-#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-#'    Transects = 24, Inside = 3, Outside = c(1, 2, 4, 5))
-density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
+#' A = 5; TimeT = 70; CR = 6; FDR = 4; Transects = 24
+#' Count <- array(rep(5, A*TimeT*Transects*2*CR*FDR),
+#'    c(A, TimeT, Transects, 2, CR, FDR))
+#' density_ratio(t = 51, cr = 1, fdr = 1, A = 5, Count, Years_sampled = 1,
+#'    Areas_sampled = 'all', Ind_sampled = 'all', Transects = 24, Inside = 3,
+#'    Outside = c(1, 2, 4, 5))
+density_ratio <- function (t, cr, fdr, A, Count, Years_sampled = 1,
                            Areas_sampled = 'all', Ind_sampled = 'all',
                            Transects = 24, Inside, Outside) {
 
@@ -53,7 +52,6 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
-  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (!is.numeric(Count)) {stop('Count must be a numeric array.')}
@@ -70,8 +68,6 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (nm <= 0 || nm > 3) {
-    stop('nm must be greater than 0 and less than or equal to 3.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (A <= 0) {stop('A must be greater than 0.')}
   if (sum(Count < 0) > 0) {
@@ -103,8 +99,7 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   if(dim(Count)[3] != Transects) {stop('Count has the wrong number of transects.')}
   if (t > dim(Count)[2]) {stop('The given "t" value is too high for Count.')}
   if (cr > dim(Count)[3]) {stop('The given "cr" value is too high for Count.')}
-  if (nm > dim(Count)[6]) {stop('The given "nm" value is too high for Count.')}
-  if (fdr > dim(Count)[5]) {stop('The given "fdr" value is too high for Count.')}
+  if (fdr > dim(Count)[4]) {stop('The given "fdr" value is too high for Count.')}
 
   ##############################################################################
 
@@ -116,13 +111,13 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   } else { years <- (t - Years_sampled):(t - 1) }
 
   # calculate count inside marine reserve
-  count_in <- Count[Inside, years, , ind, cr, nm, fdr]
+  count_in <- Count[Inside, years, , ind, cr, fdr]
 
   # calculate counts outside marine reserve
   if (Areas_sampled == 'far') {
-    count_out <- Count[c(1, A), years, , ind, cr, nm, fdr]
+    count_out <- Count[c(1, A), years, , ind, cr, fdr]
   } else if (Areas_sampled == 'all') {
-    count_out <- Count[Outside, years, , ind, cr, nm, fdr]
+    count_out <- Count[Outside, years, , ind, cr, fdr]
   }
 
   # calculate density ratio
