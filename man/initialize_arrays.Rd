@@ -170,6 +170,6 @@ initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
    SP = 16.97, M = 0.14, Phi = 1.1, Stochasticity = TRUE, D = 0.488,
    Transects = 24, H = 0.65, Surveys = TRUE, Fishing = TRUE,
-   Sampling_Error = TRUE, ecruitment_mode = 'pool', LDP = 0.1,
+   Sampling_Error = TRUE, Recruitment_mode = 'pool', LDP = 0.1,
    Ind_sampled = 'all', BM = FALSE)
 }
