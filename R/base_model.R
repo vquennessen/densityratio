@@ -159,8 +159,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
-  if (sum(Control_rules %% 1 != 0) != 0) {
-    stop('Control_rules must be a vector of integers.')}
   if (!is.logical(Output.FM)) {stop('Output.FM must be a logical value.')}
   if (!is.logical(Output.N)) {stop('Output.N must be a logical value.')}
   if (!is.logical(Output.Abundance)) {
@@ -203,8 +201,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
   if (Floor_DR <= 0) {stop('Floor_DR must be greater than 0.')}
   if (LDP < 0 || LDP > 1) {stop('LDP must be between 0 and 1.')}
-  if (sum(Control_rules <= 0) > 0) {
-    stop('All values in Control_rules must be greater than 0.')}
   if (is.null(Years_sampled) && BM == FALSE) {
     stop('BM must be TRUE for Years_sampled to be NULL.')}
   if (is.null(Areas_sampled) && BM == FALSE) {
