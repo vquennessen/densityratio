@@ -25,7 +25,7 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; FDR = 4
+#' n = 34; A = 5; TimeT = 70; CR = 6; FDR = 4
 #' FM <- array(rep(0, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
 #' E <- array(rep(0.2, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 #' L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
