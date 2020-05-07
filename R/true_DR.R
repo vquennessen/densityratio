@@ -59,8 +59,8 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     stop('Areas cannot both be inside and outside the marine reserve.')}
   if (dim(Abundance)[1] != length(Inside) + length(Outside)) {
     stop('Abundance has the wrong number of areas.')}
- if (t > dim(Abundance)[2]) {
-   stop('Abundance has the wrong number of time steps.')}
+  if (t > dim(Abundance)[2]) {
+    stop('Abundance has the wrong number of time steps.')}
   if (cr > dim(Abundance)[3]) {
     stop('Abundance has the wrong number of control rules.')}
   if (fdr > dim(Abundance)[4]) {
@@ -78,4 +78,5 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
   Density_ratio[t, cr, fdr] <- Outside_density / Inside_density
 
   return(Density_ratio[t, cr, fdr])
+
 }
