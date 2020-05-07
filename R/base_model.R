@@ -328,13 +328,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                               Density_ratio)
         }
 
-        P <- paste('t = ', t, ', cr = ', cr, ', fdr = ', fdr, sep = '')
-        print(P)
-        print(E[, t, cr, fdr])
-        print(Density_ratio[t, cr, fdr])
-        print(transient_DR(Time1, TimeT, Final_DRs, M, fdr)[t - Time1 + 1])
-        if(t < TimeT) {print(E[, t + 1, cr, fdr])}
-
       }
     }
   }
