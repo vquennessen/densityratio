@@ -279,8 +279,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
       for (cr in 1:CR) {
 
         # effort allocation
-        E <- effort_allocation(t, cr, fdr, Allocation, E, Yield, Time1,
-                               Inside, Outside)
+        E[, t, cr, fdr] <- effort_allocation(t, cr, fdr, Allocation, E, Yield,
+                                             Time1, Inside, Outside)
 
         # If there is adult movement, add movement
         if (Adult_movement == TRUE) {N <- movement(t, cr, fdr, N, A, AMP)}
@@ -319,13 +319,21 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
 
         # management
-        if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
-          E[, t + 1, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1, TimeT,
-                                              Transects, M, Final_DRs, Inside,
-                                              Outside, Years_sampled, Areas_sampled,
-                                              Ind_sampled, Floor_DR, BM,
-                                              Sampling_Error, Density_ratio)
+        if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
+          E[, t + 1, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
+                                              TimeT, Transects, M, Final_DRs,
+                                              Inside, Outside, Years_sampled,
+                                              Areas_sampled, Ind_sampled,
+                                              Floor_DR, BM, Sampling_Error,
+                                              Density_ratio)
         }
+
+        P <- paste('t = ', t, ', cr = ', cr, ', fdr = ', fdr, sep = '')
+        print(P)
+        print(E[, t, cr, fdr])
+        print(Density_ratio[t, cr, fdr])
+        print(transient_DR(Time1, TimeT, Final_DRs, M, fdr)[t - Time1 + 1])
+        if(t < TimeT) {print(E[, t + 1, cr, fdr])}
 
       }
     }
