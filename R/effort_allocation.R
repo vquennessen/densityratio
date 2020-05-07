@@ -93,14 +93,13 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
     if (t == Time1) {
 
-      E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr]) / length(Outside),
-                                 length(Outside))
+      E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr]) / outs, outs)
       E[Inside, t, cr, fdr] <- 0
 
     }  else {
 
       prop_yield <- Yield[ , t - 1, cr, fdr] / sum(Yield[ , t - 1, cr, fdr])
-      E[ , t, cr, fdr] <- sum(E[ , t - 1, cr, fdr])*prop_yield
+      E[ , t, cr, fdr] <- sum(E[ , t, cr, fdr])*prop_yield
 
     }
     #
@@ -131,6 +130,6 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
   }
 
-  return(E)
+  return(E[, t, cr, fdr])
 
 }
