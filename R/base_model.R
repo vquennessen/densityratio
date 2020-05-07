@@ -325,20 +325,21 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                               NuS, A, Ind_sampled)
         }
 
-      }
+        # calculate true density ratio
+        Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
+                                             Outside, Density_ratio)
 
-      # calculate true density ratio
-      Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                           Outside, Density_ratio)
-      # management
-      if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
-        E[, t, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1, TimeT,
-                                        Transects, M, Final_DRs, Inside,
-                                        Outside, Years_sampled, Areas_sampled,
-                                        Ind_sampled, Floor_DR, BM,
-                                        Sampling_Error, Density_ratio)
-      }
 
+        # management
+        if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
+          E[, t + 1, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1, TimeT,
+                                              Transects, M, Final_DRs, Inside,
+                                              Outside, Years_sampled, Areas_sampled,
+                                              Ind_sampled, Floor_DR, BM,
+                                              Sampling_Error, Density_ratio)
+        }
+
+      }
     }
   }
 
