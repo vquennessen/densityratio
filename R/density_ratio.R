@@ -99,7 +99,7 @@ density_ratio <- function (t, cr, fdr, A, Count, Years_sampled = 1,
   if(dim(Count)[3] != Transects) {stop('Count has the wrong number of transects.')}
   if (t > dim(Count)[2]) {stop('The given "t" value is too high for Count.')}
   if (cr > dim(Count)[3]) {stop('The given "cr" value is too high for Count.')}
-  if (fdr > dim(Count)[4]) {stop('The given "fdr" value is too high for Count.')}
+  if (fdr > dim(Count)[6]) {stop('The given "fdr" value is too high for Count.')}
 
   ##############################################################################
 
