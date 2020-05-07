@@ -66,8 +66,6 @@
 #'    Default value is FALSE.
 #' @param LDP numeric value, the proportion of larvae that drift to adjacent
 #'    areas. Default value is 0.1.
-#' @param Output.FM logical value, should the output include FM? Default value
-#'    is FALSE.
 #' @param Output.N logical value, should the output include N? Default value is
 #'    FALSE.
 #' @param Output.Abundance logical value, should the output include Abundance?
@@ -76,16 +74,12 @@
 #'    Default value is FALSE.
 #' @param Output.SSB logical value, should the output include spawning stock
 #'    biomass? Default value is FALSE.
-#' @param Output.Catch logical value, should the output include catch? Default
-#'    value is FALSE.
 #' @param Output.Yield logical value, should the output include yield? Default
 #'    value is FALSE.
 #' @param Output.Effort logical value, should the output include effort? Default
 #'    value is FALSE.
 #' @param Output.Density.Ratio logical value, should the output include density
 #'    ratios? Default value is TRUE.
-#' @param Condensed.Output logical value, should the output be condensed (TRUE)
-#'    or all area outputs be included (FALSE). Default value is TRUE.
 #'
 #' @return a list, containing numerical arrays of the relative biomass, yield,
 #'    and spawning stock biomass, as well as the true density ratios over time
@@ -102,10 +96,10 @@
 #'    Fishing = TRUE, Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
 #'    Final_DRs = c(0.6, 0.8), Years_sampled = 1, Areas_sampled = 'all',
 #'    Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE,
-#'    LDP = 0.1, Output.FM = FALSE, Output.N = FALSE, Output.Abundance = FALSE,
-#'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Catch = FALSE,
-#'    Output.Yield = FALSE, Output.Effort = FALSE, Output.Density.Ratio = TRUE,
-#'    Condensed.Output = TRUE)
+#'    LDP = 0.1, Output.N = FALSE, Output.Abundance = FALSE,
+#'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
+#'    Output.Effort = FALSE, Output.Density.Ratio = TRUE)
+
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool',
                        Sampling_Error = TRUE, Stochasticity = TRUE,
@@ -113,12 +107,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD',
-                       BM = FALSE, LDP = 0.1, Output.FM = FALSE,
-                       Output.N = FALSE, Output.Abundance = FALSE,
-                       Output.Biomass = FALSE, Output.SSB = FALSE,
-                       Output.Catch = FALSE, Output.Yield = FALSE,
-                       Output.Effort = FALSE, Output.Density.Ratio = TRUE,
-                       Condensed.Output = TRUE) {
+                       BM = FALSE, LDP = 0.1, Output.N = FALSE,
+                       Output.Abundance = FALSE, Output.Biomass = FALSE,
+                       Output.SSB = FALSE, Output.Yield = FALSE,
+                       Output.Effort = FALSE, Output.Density.Ratio = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -155,21 +147,17 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
-  if (!is.logical(Output.FM)) {stop('Output.FM must be a logical value.')}
   if (!is.logical(Output.N)) {stop('Output.N must be a logical value.')}
   if (!is.logical(Output.Abundance)) {
     stop('Output.Abundance must be a logical value.')}
   if (!is.logical(Output.Biomass)) {
     stop('Output.Biomass must be a logical value.')}
   if (!is.logical(Output.SSB)) {stop('Output.SSB must be a logical value.')}
-  if (!is.logical(Output.Catch)) {stop('Output.Catch must be a logical value.')}
   if (!is.logical(Output.Yield)) {stop('Output.Yield must be a logical value.')}
   if (!is.logical(Output.Effort)) {
     stop('Output.Effort must be a logical value.')}
   if (!is.logical(Output.Density.Ratio)) {
     stop('Output.Density.Ratio must be a logical value.')}
-  if (!is.logical(Condensed.Output)) {
-    stop('Condensed.Output must be a logical value.')}
 
   # acceptable values
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
@@ -721,34 +709,14 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   # initialize output list
   output <- list()
 
-  if (Condensed.Output == TRUE) {
-
-    # add output depending on arguments passed to base_model.R
-    if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), Time1:TimeT, , ] }
-    if (Output.N == TRUE) { output$N <- N[, 1:MPA, Time1:TimeT, , ] }
-    if (Output.Abundance == TRUE) {
-      output$Abundance <- Abundance[1:MPA, Time1:TimeT, ,  , ] }
-    if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, Time1:TimeT, , ] }
-    if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, Time1:TimeT, , ] }
-    if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, Time1:TimeT, , ] }
-    if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), Time1:TimeT, , ] }
-    if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
-    if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
-
-  } else {
-
-    if (Output.FM == TRUE) { output$FM <- FM[, , Time1:TimeT, , ] }
     if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ] }
     if (Output.Abundance == TRUE) {
       output$Abundance <- Abundance[, Time1:TimeT, , , ] }
     if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ] }
     if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ] }
-    if (Output.Catch == TRUE) { output$Catch <- Catch[, , Time1:TimeT, , ] }
     if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ] }
     if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
     if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
-
-  }
 
   return(output)
 
