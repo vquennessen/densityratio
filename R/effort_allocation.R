@@ -84,34 +84,33 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
   # number of areas not in a reserve
   outs <- length(Outside)
-  ins <- length(Inside)
-  all <- outs + ins
+  all <- length(Outside) + length(Inside)
 
   # If effort is allocated using the ideal free distribution, effort for one
   # year depends on the distribution of yield from the previous year
   if (Allocation == 'IFD') {
+
+    if (t < Time1) {
+
+      prop_yield <- Yield[ , t - 1, cr, fdr] / sum(Yield[ , t - 1, cr, fdr])
+      E[ , t, cr, fdr] <- sum(E[ , t, cr, fdr])*prop_yield
+
+    }
 
     if (t == Time1) {
 
       E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr]) / outs, outs)
       E[Inside, t, cr, fdr] <- 0
 
-    }  else {
+    }  else if (t > Time1) {
 
-      prop_yield <- Yield[ , t - 1, cr, fdr] / sum(Yield[ , t - 1, cr, fdr])
-      E[ , t, cr, fdr] <- sum(E[ , t, cr, fdr])*prop_yield
+      prop_yield_out <- Yield[Outside, t - 1, cr, fdr] /
+        sum(Yield[Outside, t - 1, cr, fdr])
+
+      E[Outside, t, cr, fdr] <- sum(E[Outside, t - 1, cr, fdr])*prop_yield_out
+      E[Inside, t, cr, fdr] <- 0
 
     }
-    #
-    # else if (t > Time1) {
-    #
-    #   prop_yield_out <- Yield[Outside, t - 1, cr, fdr] /
-    #     sum(Yield[Outside, t - 1, cr, fdr])
-    #
-    #   E[Outside, t, cr, fdr] <- sum(E[Outside, t - 1, cr, fdr])*prop_yield_out
-    #   E[Inside, t, cr, fdr] <- 0
-    #
-    # }
 
   # Otherwise, distribute effort equally between the four areas outside the
   # marine reserve, regardless of yield

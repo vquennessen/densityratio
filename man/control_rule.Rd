@@ -88,7 +88,7 @@ Count <- array(rep(5, A*TimeT*Transects*2*CR*FDR),
    c(A, TimeT, Transects, 2, CR, FDR))
 Density_Ratio <- array(rep(0.5, TimeT*CR*FDR), c(TimeT, CR, FDR))
 control_rule(t = 51, cr = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
-   TimeT = 70, Transects = 24, M = 0.14, Final_DRs = c(0.2, 0.4, 0.6, 0.8),
+   TimeT = 70, Transects = 24, M = 0.14, Final_DRs = c(0.6, 0.8),
    Inside = 3, Outside = c(1, 2, 4, 5), Years_sampled = 1,
    Areas_sampled = 'all', Ind_sampled = 'all', Floor_DR = 0.2, BM = FALSE,
    Sampling_Error = TRUE, Density_Ratio)
