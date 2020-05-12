@@ -27,7 +27,7 @@
 #'    Default value is 'pool'.
 #' @param Sampling_Error logical value, is there any error in sampling? Default
 #'    value is TRUE.
-#' @param Stochasticity logical vector, does recruitment contain a stochastic
+#' @param Rec_stochasticity logical vector, does recruitment contain a stochastic
 #'    component? Default value is TRUE.
 #' @param Surveys logical value, are surveys being conducted? Default value is
 #'    TRUE.
@@ -92,7 +92,7 @@
 #' @examples
 #' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
 #'    Time2 = 10, Recruitment_mode = 'closed', Sampling_Error = FALSE,
-#'    Stochasticity = FALSE, Surveys = TRUE, Fishery_management = TRUE,
+#'    Rec_stochasticity = FALSE, Surveys = TRUE, Fishery_management = TRUE,
 #'    Fishing = TRUE, Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
 #'    Final_DRs = c(0.6, 0.8), Years_sampled = 1, Areas_sampled = 'all',
 #'    Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE,
@@ -102,7 +102,7 @@
 
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool',
-                       Sampling_Error = TRUE, Stochasticity = TRUE,
+                       Sampling_Error = TRUE, Rec_stochasticity = TRUE,
                        Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
@@ -126,8 +126,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     stop('Recruitment mode must be a character value.')}
   if (!is.logical(Sampling_Error)) {
     stop('Sampling_Error must be a logical value.')}
-  if (!is.logical(Stochasticity)) {
-    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Rec_stochasticity)) {
+    stop('Rec_stochasticity must be a logical value.')}
   if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
   if (!is.logical(Fishery_management)) {
     stop('Fishery_management must be a logical value.')}
@@ -236,8 +236,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   IA <- initialize_arrays(A, MPA, Final_DRs, Time1, Time2, R0, Rec_age, Max_age,
                           A1, L1, A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
-                          Cf, P, X, SP, M, Phi, Stochasticity, D, Transects, H,
-                          Surveys, Fishing, Sampling_Error, Recruitment_mode,
+                          Cf, P, X, SP, M, Phi, Rec_stochasticity, D, Transects,
+                          H, Surveys, Fishing, Sampling_Error, Recruitment_mode,
                           LDP, Ind_sampled, BM)
 
   Inside           <- IA[[1]]     # Area(s) in the marine reserve
@@ -274,9 +274,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   ##### Population Dynamics - Time Varying #####################################
   for (fdr in 1:FDR) {
 
-    for (t in (Rec_age + 1):TimeT) {
+    for (cr in 1:CR) {
 
-      for (cr in 1:CR) {
+      for (t in (Rec_age + 1):TimeT) {
 
         # effort allocation
         E[, t, cr, fdr] <- effort_allocation(t, cr, fdr, Allocation, E, Yield,
@@ -315,7 +315,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
         # calculate true density ratio
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio)
+                                             Outside, Density_ratio,
+                                             Ind_sampled)
 
 
         # management
@@ -326,6 +327,19 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                               Areas_sampled, Ind_sampled,
                                               Floor_DR, BM, Sampling_Error,
                                               Density_ratio)
+        }
+
+        if (t >= (Time1 - 5) && t < (Time1 + 10)) {
+          print('***********************************************************')
+          print(paste('t = ', t, ', cr = ', cr, ', fdr = ', Final_DRs[fdr]))
+          print(E[, t, cr, fdr])
+          print(paste('True DR: ', Density_ratio[t, cr, fdr]))
+          if (cr == 2) {print(paste('Transient target DR: ',
+            transient_DR(Time1 = 50, TimeT = 70, Final_DRs, M, fdr)[t - Time1 + 1]))}
+          print(E[, t + 1, cr, fdr])
+          print(R)
+          # print(Yield[, t, cr, fdr])
+          # print(Abundance[, t, cr, fdr, 1])
         }
 
       }

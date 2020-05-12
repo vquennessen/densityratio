@@ -5,7 +5,7 @@
 \title{Historical fishing mortality to cause estimated depletion}
 \usage{
 historical_FM(Species, eq_time = 150, R0 = 1e+05, LDP = 0.1,
-  Stochasticity = FALSE, Recruitment_mode = "pool")
+  Rec_stochasticity = FALSE, Recruitment_mode = "pool")
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
@@ -21,7 +21,7 @@ value is 1e+5.}
 \item{LDP}{numeric value, the proportion of larvae that drift to adjacent
 areas. Default value is 0.1.}
 
-\item{Stochasticity}{logical vector, does recruitment contain a stochastic
+\item{Rec_stochasticity}{logical vector, does recruitment contain a stochastic
 component? Default value is FALSE.}
 
 \item{Recruitment_mode}{character value, values can be:
@@ -45,5 +45,5 @@ a numeric value, the historical value of fishing mortality that would
 }
 \examples{
 historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, LDP = 0.1,
-   Stochasticity = FALSE, Recruitment_mode = 'pool')
+   Rec_stochasticity = FALSE, Recruitment_mode = 'pool')
 }

@@ -6,12 +6,12 @@
 \usage{
 base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Time2 = 20, Recruitment_mode = "pool", Sampling_Error = TRUE,
-  Stochasticity = TRUE, Surveys = TRUE, Fishery_management = TRUE,
-  Fishing = TRUE, Transects = 24, Adult_movement = TRUE,
-  Plotting = FALSE, Final_DRs, Years_sampled = 1,
-  Areas_sampled = "all", Ind_sampled = "all", Floor_DR = 0.2,
-  Allocation = "IFD", BM = FALSE, LDP = 0.1, Output.N = FALSE,
-  Output.Abundance = FALSE, Output.Biomass = FALSE,
+  Rec_stochasticity = TRUE, Surveys = TRUE,
+  Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
+  Adult_movement = TRUE, Plotting = FALSE, Final_DRs,
+  Years_sampled = 1, Areas_sampled = "all", Ind_sampled = "all",
+  Floor_DR = 0.2, Allocation = "IFD", BM = FALSE, LDP = 0.1,
+  Output.N = FALSE, Output.Abundance = FALSE, Output.Biomass = FALSE,
   Output.SSB = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
   Output.Density.Ratio = TRUE)
 }
@@ -48,7 +48,7 @@ Default value is 'pool'.}
 \item{Sampling_Error}{logical value, is there any error in sampling? Default
 value is TRUE.}
 
-\item{Stochasticity}{logical vector, does recruitment contain a stochastic
+\item{Rec_stochasticity}{logical vector, does recruitment contain a stochastic
 component? Default value is TRUE.}
 
 \item{Surveys}{logical value, are surveys being conducted? Default value is
@@ -135,7 +135,7 @@ a list, containing numerical arrays of the relative biomass, yield,
 \examples{
 base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
    Time2 = 10, Recruitment_mode = 'closed', Sampling_Error = FALSE,
-   Stochasticity = FALSE, Surveys = TRUE, Fishery_management = TRUE,
+   Rec_stochasticity = FALSE, Surveys = TRUE, Fishery_management = TRUE,
    Fishing = TRUE, Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
    Final_DRs = c(0.6, 0.8), Years_sampled = 1, Areas_sampled = 'all',
    Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE,

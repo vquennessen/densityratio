@@ -66,7 +66,7 @@
 #'    positive transects.
 #' @param M numeric value, the natural mortality on the interval (0, 1).
 #' @param Phi numeric value, the unfished recruits per spawner.
-#' @param Stochasticity logical vector, does recruitment contain a stochastic
+#' @param Rec_stochasticity logical vector, does recruitment contain a stochastic
 #'    component? Default value is TRUE.
 #' @param D numeric value, the current depletion of the stock, on the interval
 #'    (0, 1).
@@ -114,7 +114,7 @@
 #'    Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
 #'    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
-#'    SP = 16.97, M = 0.14, Phi = 1.1, Stochasticity = TRUE, D = 0.488,
+#'    SP = 16.97, M = 0.14, Phi = 1.1, Rec_stochasticity = TRUE, D = 0.488,
 #'    Transects = 24, H = 0.65, Surveys = TRUE, Fishing = TRUE,
 #'    Sampling_Error = TRUE, Recruitment_mode = 'pool', LDP = 0.1,
 #'    Ind_sampled = 'all', BM = FALSE)
@@ -122,7 +122,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
-                              P, X, SP, M, Phi, Stochasticity = TRUE, D,
+                              P, X, SP, M, Phi, Rec_stochasticity = TRUE, D,
                               Transects = 24, H, Surveys = TRUE, Fishing = TRUE,
                               Sampling_Error = TRUE, Recruitment_mode = 'pool',
                               LDP = 0.1, Ind_sampled = 'all', BM = FALSE) {
@@ -162,8 +162,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (!is.numeric(SP)) {stop('SP must be a numeric value.')}
   if (!is.numeric(M)) {stop('M must be a numeric value.')}
   if (!is.numeric(Phi)) {stop('Phi must be a numeric value.')}
-  if (!is.logical(Stochasticity)) {
-    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Rec_stochasticity)) {
+    stop('Rec_stochasticity must be a logical value.')}
   if (!is.numeric(D)) {stop('D must be a numeric value.')}
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
   if (!is.numeric(H)) {stop('H must be a numeric value.')}
@@ -303,9 +303,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   # Recruitment normal variable
   # Dimensions = area * timeT * CR * M * FDR values (3)
-  if (Stochasticity == T) {
+  if (Rec_stochasticity == T) {
     NuR <- array(rnorm(A*TimeT*CR*FDR, 0, Sigma_R), c(A, TimeT, CR, FDR))
-  } else if (Stochasticity == F) {
+  } else if (Rec_stochasticity == F) {
     NuR <- array(rep(0, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
   }
 
@@ -332,10 +332,10 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
     # Sampling normal variable
     # Dimensions = area * timeT * CR * M * FDR values (3)
-    if (Stochasticity == T) {
+    if (Rec_stochasticity == T) {
       NuS <- array(rnorm(A*TimeT*CR*FDR*dimension, 0, Sigma_S),
                    c(A, TimeT, CR, FDR, dimension))
-    } else if (Stochasticity == F) {
+    } else if (Rec_stochasticity == F) {
       NuS <- array(rep(0, A*TimeT*CR*FDR*dimension),
                    c(A, TimeT, CR, FDR, dimension))
     }
@@ -379,7 +379,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Stable age distribution, derived from equilibrium conditions with Fb = 0
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+                   eq_time = 150, A50_mat, Rec_stochasticity = FALSE, Rho_R,
                    Recruitment_mode, A)
 
   # initialize density ratio matrix
@@ -402,7 +402,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
         # Abundance
         if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-          Abundance[, t, cr, fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),  , t, cr, fdr])}
+          Abundance[, t, cr, fdr, 2] <- colSums(N[A50_mat:num,  , t, cr, fdr])}
         if (t > 1 && Sampling_Error == TRUE) {
           Count[, t, , , cr, fdr] <- sampling(t, cr, fdr, Delta, Gamma,
                                               Abundance, Transects, X, Count,
@@ -410,7 +410,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
         }
 
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio)
+                                             Outside, Density_ratio, Ind_sampled)
 
       }
     }

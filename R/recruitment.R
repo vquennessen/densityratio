@@ -30,6 +30,8 @@
 #' @param LDP numeric value, the larval drift proportion, the proportion of
 #'    larvae that drift from one area to an adjacent area before settling.
 #'    Default value is 0.1.
+#' @param Rec_stochasticity logical vector, does recruitment contain a stochastic
+#'    component? Default value is TRUE.
 #'
 #' @return a numeric value representing the number of new recruits coming into
 #'    the population in area a, at timestep t, under control rule cr.
@@ -42,9 +44,10 @@
 #' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, FDR = 4, NuR, Rho_R = 0)
 #' recruitment(t = 3, cr = 1, fdr = 1, SSB, A = 5, R0 = 1e+5, H = 0.65,
 #'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
-#'    LDP = 0.1)
+#'    LDP = 0.1, Rec_stochasticity = TRUE)
 recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
-                       Sigma_R, Rec_age, Recruitment_mode, LDP = 0.1) {
+                       Sigma_R, Rec_age, Recruitment_mode, LDP = 0.1,
+                       Rec_stochasticity = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -63,6 +66,8 @@ recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
+  if (!is.logical(Rec_stochasticity)) {
+    stop('Rec_stochasticity must be a logical value.')}
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
@@ -113,10 +118,10 @@ recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   } else if (Recruitment_mode == 'pool') {
 
     ssb <- SSB[, t - Rec_age, cr, fdr]
-    nume <- 0.8 * adjR0 * H * sum(ssb) / A
+    nume <- 0.8 * adjR0 * H
     denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
-    R1 <- nume / denom
+    R1 <- (nume / denom) * (sum(ssb) / A)
 
     # regional / stock larval density dependence and recruits distributed evenly
     # across areas; OR larvae distributed evenly across areas then local density
@@ -141,11 +146,12 @@ recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
   }
 
-  recruits <- R1 * (exp(Eps[, t, cr, fdr] - Sigma_R^2 / 2))
-
+  if (Rec_stochasticity == FALSE) {
+    recruits <- R1
+  } else { recruits <- R1 * (exp(Eps[, t, cr, fdr] - Sigma_R^2 / 2)) }
 
   # larval movement if there are multiple areas and LDP != 0
-    if (A > 1 && dim(SSB)[1] > 1) {
+    if (A > 1 && dim(SSB)[1] > 1 && LDP != 0) {
 
       # First area to second area
       recruits[1] <- (1 - LDP)*recruits[1] + LDP*recruits[2]

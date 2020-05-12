@@ -192,7 +192,7 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
     # Abundance of all / mature individuals
     Abundance[, t, cr, fdr, 1] <- colSums(N[, , t, cr, fdr])
     if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-      Abundance[, t, cr, fdr, 2] <- colSums(N[, , t, cr, fdr])
+      Abundance[, t, cr, fdr, 2] <- colSums(N[A50_mat:num, , t, cr, fdr])
     }
 
   } else if (A == 1) {
@@ -206,14 +206,16 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5,
     # Abundance of all / mature individuals
     Abundance[1, t, cr, fdr, 1] <- sum(N[, 1, t, cr, fdr])
     if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-      Abundance[1, t, cr, fdr, 2] <- sum(N[ages, 1, t, cr, fdr])
+      Abundance[1, t, cr, fdr, 2] <- sum(N[A50_mat:num, 1, t, cr, fdr])
     }
 
   }
 
-  output <- list(FM[, , t, cr, fdr], N[, , t, cr, fdr],
-                   Biomass[, t, cr, fdr], SSB[, t, cr, fdr],
-                   Abundance[, t, cr, fdr, ])
+  output <- list(FM[, , t, cr, fdr],
+                 N[, , t, cr, fdr],
+                 Biomass[, t, cr, fdr],
+                 SSB[, t, cr, fdr],
+                 Abundance[, t, cr, fdr, ])
 
   return(output)
 

@@ -15,6 +15,11 @@
 #'    Default value is c(1, 2, 4, 5).
 #' @param Density_ratio numeric array, the true density ratios at each timestep,
 #'    under each control rule, and for each estimate of natural mortality.
+#' @param Ind_sampled character value, the individuals to be sampled to
+#'    calculate density ratio. Values can be:
+#'    'all' - sample all individuals.
+#'    'mature' - sample only mature individuals.
+#'    Default value is 'all'.
 #'
 #' @return a numeric array that updates the true density ratios for the most
 #'    current timestep and control rule.
@@ -25,9 +30,9 @@
 #' Abundance <- array(rep(3400, A*TimeT*CR*FDR*1), c(A, TimeT, CR, FDR, 1))
 #' Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 #' true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
-#'    Outside = c(1, 2, 4, 5), Density_ratio)
+#'    Outside = c(1, 2, 4, 5), Density_ratio, Ind_sampled = 'all')
 true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
-                    Density_ratio) {
+                    Density_ratio, Ind_sampled) {
 
   ###### Error handling ########################################################
 
@@ -40,6 +45,8 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
   if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
   if (!is.numeric(Density_ratio)) {
     stop('Density_ratio must be a numeric array.')}
+  if (!is.character(Ind_sampled) && !is.null(Ind_sampled)) {
+    stop('Ind_sampled must be a character value or NULL.')}
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
@@ -68,11 +75,13 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
 
   ##############################################################################
 
+  i <- ifelse(Ind_sampled == 'all', 1, 2)
+
   # Density of fish outside marine reserve(s)
-  Outside_density <- sum(Abundance[Outside, t, cr, fdr, 1]) / length(Outside)
+  Outside_density <- sum(Abundance[Outside, t, cr, fdr, i]) / length(Outside)
 
   # Density of fish inside marine reserve(s)
-  Inside_density <- sum(Abundance[Inside, t, cr, fdr, 1]) / length(Inside)
+  Inside_density <- sum(Abundance[Inside, t, cr, fdr, i]) / length(Inside)
 
   # True density ratio
   Density_ratio[t, cr, fdr] <- Outside_density / Inside_density

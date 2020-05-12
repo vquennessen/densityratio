@@ -107,7 +107,7 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
       prop_yield_out <- Yield[Outside, t - 1, cr, fdr] /
         sum(Yield[Outside, t - 1, cr, fdr])
 
-      E[Outside, t, cr, fdr] <- sum(E[Outside, t - 1, cr, fdr])*prop_yield_out
+      E[Outside, t, cr, fdr] <- sum(E[Outside, t, cr, fdr])*prop_yield_out
       E[Inside, t, cr, fdr] <- 0
 
     }

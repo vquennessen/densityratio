@@ -5,7 +5,7 @@
 \title{True density ratio}
 \usage{
 true_DR(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
-  Density_ratio)
+  Density_ratio, Ind_sampled)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -26,6 +26,12 @@ Default value is c(1, 2, 4, 5).}
 
 \item{Density_ratio}{numeric array, the true density ratios at each timestep,
 under each control rule, and for each estimate of natural mortality.}
+
+\item{Ind_sampled}{character value, the individuals to be sampled to
+calculate density ratio. Values can be:
+'all' - sample all individuals.
+'mature' - sample only mature individuals.
+Default value is 'all'.}
 }
 \value{
 a numeric array that updates the true density ratios for the most
@@ -40,5 +46,5 @@ A = 5; TimeT = 70; CR = 6; FDR = 4; Time2= 20
 Abundance <- array(rep(3400, A*TimeT*CR*FDR*1), c(A, TimeT, CR, FDR, 1))
 Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
-   Outside = c(1, 2, 4, 5), Density_ratio)
+   Outside = c(1, 2, 4, 5), Density_ratio, Ind_sampled = 'all')
 }

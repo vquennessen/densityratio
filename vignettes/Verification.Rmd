@@ -29,17 +29,15 @@ Species = 'BR_CA_2003'
 R0 = 1e+5
 A = 5; MPA = 3
 Time1 = 50; Time2 = 50
-M_Error = 0; Sampling_Error = TRUE; Stochasticity = FALSE
+M_Error = 0; Sampling_Error = TRUE; Rec_stochasticity = FALSE
 Surveys = TRUE; Fishery_management = TRUE; Fishing = TRUE; Transects = 24
 Plotting = FALSE
 Final_DRs = c(1); Floor_DR = 0.2
 Years_sampled = NULL; Areas_sampled = NULL; Ind_sampled = NULL
 BM = TRUE; Control_rules = c(1:8)
-Output.FM = FALSE; Output.N = FALSE
-Output.Abundance = FALSE; Output.Biomass = FALSE; Output.SSB = TRUE
-Output.Catch = FALSE; Output.Yield = TRUE
-Output.Effort = TRUE; Output.Density.Ratio = FALSE
-Condensed.Output = FALSE
+Output.N = FALSE; Output.Abundance = FALSE; 
+Output.Biomass = FALSE; Output.SSB = TRUE
+Output.Yield = TRUE; Output.Effort = TRUE; Output.Density.Ratio = FALSE
 ```
 
 # Run the scenarios across all recruitment modes, adult movemement rates, and effort allocations. 
@@ -61,13 +59,13 @@ for (r in 1:length(Rmodes)) {
       
       output <- base_model(Species, R0, A, MPA, Time1, Time2, 
                            Recruitment_mode, M_Error, Sampling_Error, 
-                           Stochasticity, Surveys, Fishery_management, Fishing, 
-                           Transects, Adult_movement, Plotting, Final_DRs, 
-                           Years_sampled, Areas_sampled, Ind_sampled, Floor_DR, 
-                           Allocation, BM, LDP, Control_rules, Output.FM, 
+                           Rec_stochasticity, Surveys, Fishery_management, 
+                           Fishing, Transects, Adult_movement, Plotting, 
+                           Final_DRs, Years_sampled, Areas_sampled, Ind_sampled, 
+                           Floor_DR, Allocation, BM, LDP, Control_rules, 
                            Output.N, Output.Abundance, Output.Biomass, 
-                           Output.SSB, Output.Catch, Output.Yield,
-                           Output.Effort, Output.Density.Ratio, Condensed.Output)
+                           Output.SSB, Output.Yield, Output.Effort, 
+                           Output.Density.Ratio)
       
     # save the relative SSB and yield as a sum across all areas, 
     # times after reserve implementation, control rules, and scenarios
