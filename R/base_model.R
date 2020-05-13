@@ -380,88 +380,88 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
     }
 
-    plot(1:TimeT, Abundance[1, , 1, 1, fdr, 1],
-         main = paste('Abundance, Outside, nm = 1, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 1e5))
-    lines(1:TimeT, Abundance[1, , 2, 1, fdr, 1], col = 'orange')
-    lines(1:TimeT, Abundance[1, , 3, 1, fdr, 1], col = 'green')
-    lines(1:TimeT, Abundance[1, , 4, 1, fdr, 1], col = 'blue')
-    lines(1:TimeT, Abundance[1, , 5, 1, fdr, 1], col = 'purple')
-    lines(1:TimeT, Abundance[1, , 6, 1, fdr, 1], col = 'black')
-
-    plot(1:TimeT, Abundance[1, , 1, 2, fdr, 1],
-         main = paste('Abundance, Outside, nm = 2, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 1e5))
-    lines(1:TimeT, Abundance[1, , 2, 2, fdr, 1], col = 'orange')
-    lines(1:TimeT, Abundance[1, , 3, 2, fdr, 1], col = 'green')
-    lines(1:TimeT, Abundance[1, , 4, 2, fdr, 1], col = 'blue')
-    lines(1:TimeT, Abundance[1, , 5, 2, fdr, 1], col = 'purple')
-    lines(1:TimeT, Abundance[1, , 6, 2, fdr, 1], col = 'black')
-
-    plot(1:TimeT, Abundance[1, , 1, 3, fdr, 1],
-         main = paste('Abundance, Outside, nm = 3, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 1e5))
-    lines(1:TimeT, Abundance[1, , 2, 3, fdr, 1], col = 'orange')
-    lines(1:TimeT, Abundance[1, , 3, 3, fdr, 1], col = 'green')
-    lines(1:TimeT, Abundance[1, , 4, 3, fdr, 1], col = 'blue')
-    lines(1:TimeT, Abundance[1, , 5, 3, fdr, 1], col = 'purple')
-    lines(1:TimeT, Abundance[1, , 6, 3, fdr, 1], col = 'black')
-
-    plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
-         main = paste('Abundance, Inside, nm = 1, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 1e5))
-    lines(1:TimeT, Abundance[3, , 2, 1, fdr, 1], col = 'orange')
-    lines(1:TimeT, Abundance[3, , 3, 1, fdr, 1], col = 'green')
-    lines(1:TimeT, Abundance[3, , 4, 1, fdr, 1], col = 'blue')
-    lines(1:TimeT, Abundance[3, , 5, 1, fdr, 1], col = 'purple')
-    lines(1:TimeT, Abundance[3, , 6, 1, fdr, 1], col = 'black')
-
-    plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
-         main = paste('Abundance, Inside, nm = 2, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 1e5))
-    lines(1:TimeT, Abundance[3, , 2, 2, fdr, 1], col = 'orange')
-    lines(1:TimeT, Abundance[3, , 3, 2, fdr, 1], col = 'green')
-    lines(1:TimeT, Abundance[3, , 4, 2, fdr, 1], col = 'blue')
-    lines(1:TimeT, Abundance[3, , 5, 2, fdr, 1], col = 'purple')
-    lines(1:TimeT, Abundance[3, , 6, 2, fdr, 1], col = 'black')
-
-    plot(1:TimeT, Abundance[3, , 1, 3, fdr, 1],
-         main = paste('Abundance, Inside, nm = 3, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 1e5))
-    lines(1:TimeT, Abundance[3, , 2, 3, fdr, 1], col = 'orange')
-    lines(1:TimeT, Abundance[3, , 3, 3, fdr, 1], col = 'green')
-    lines(1:TimeT, Abundance[3, , 4, 3, fdr, 1], col = 'blue')
-    lines(1:TimeT, Abundance[3, , 5, 3, fdr, 1], col = 'purple')
-    lines(1:TimeT, Abundance[3, , 6, 3, fdr, 1], col = 'black')
-
-    plot(1:TimeT, Yield[1, , 1, 1, fdr],
-         main = paste('Yield, Outside, nm = 1, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 4e4))
-    lines(1:TimeT, Yield[1, , 2, 1, fdr], col = 'orange')
-    lines(1:TimeT, Yield[1, , 3, 1, fdr], col = 'green')
-    lines(1:TimeT, Yield[1, , 4, 1, fdr], col = 'blue')
-    lines(1:TimeT, Yield[1, , 5, 1, fdr], col = 'purple')
-    lines(1:TimeT, Yield[1, , 6, 1, fdr], col = 'black')
-
-    plot(1:TimeT, Yield[1, , 1, 2, fdr],
-         main = paste('Yield, Outside, nm = 2, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 4e4))
-    lines(1:TimeT, Yield[1, , 2, 2, fdr], col = 'orange')
-    lines(1:TimeT, Yield[1, , 3, 2, fdr], col = 'green')
-    lines(1:TimeT, Yield[1, , 4, 2, fdr], col = 'blue')
-    lines(1:TimeT, Yield[1, , 5, 2, fdr], col = 'purple')
-    lines(1:TimeT, Yield[1, , 6, 2, fdr], col = 'black')
-
-    plot(1:TimeT, Yield[1, , 1, 3, fdr],
-         main = paste('Yield, Outside, nm = 3, FDR = ', Final_DRs[fdr]),
-         col = 'red', ylim = c(0, 4e4))
-    lines(1:TimeT, Yield[1, , 2, 3, fdr], col = 'orange')
-    lines(1:TimeT, Yield[1, , 3, 3, fdr], col = 'green')
-    lines(1:TimeT, Yield[1, , 4, 3, fdr], col = 'blue')
-    lines(1:TimeT, Yield[1, , 5, 3, fdr], col = 'purple')
-    lines(1:TimeT, Yield[1, , 6, 3, fdr], col = 'black')
-
-  }
+  #   plot(1:TimeT, Abundance[1, , 1, 1, fdr, 1],
+  #        main = paste('Abundance, Outside, nm = 1, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 1e5))
+  #   lines(1:TimeT, Abundance[1, , 2, 1, fdr, 1], col = 'orange')
+  #   lines(1:TimeT, Abundance[1, , 3, 1, fdr, 1], col = 'green')
+  #   lines(1:TimeT, Abundance[1, , 4, 1, fdr, 1], col = 'blue')
+  #   lines(1:TimeT, Abundance[1, , 5, 1, fdr, 1], col = 'purple')
+  #   lines(1:TimeT, Abundance[1, , 6, 1, fdr, 1], col = 'black')
+  #
+  #   plot(1:TimeT, Abundance[1, , 1, 2, fdr, 1],
+  #        main = paste('Abundance, Outside, nm = 2, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 1e5))
+  #   lines(1:TimeT, Abundance[1, , 2, 2, fdr, 1], col = 'orange')
+  #   lines(1:TimeT, Abundance[1, , 3, 2, fdr, 1], col = 'green')
+  #   lines(1:TimeT, Abundance[1, , 4, 2, fdr, 1], col = 'blue')
+  #   lines(1:TimeT, Abundance[1, , 5, 2, fdr, 1], col = 'purple')
+  #   lines(1:TimeT, Abundance[1, , 6, 2, fdr, 1], col = 'black')
+  #
+  #   plot(1:TimeT, Abundance[1, , 1, 3, fdr, 1],
+  #        main = paste('Abundance, Outside, nm = 3, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 1e5))
+  #   lines(1:TimeT, Abundance[1, , 2, 3, fdr, 1], col = 'orange')
+  #   lines(1:TimeT, Abundance[1, , 3, 3, fdr, 1], col = 'green')
+  #   lines(1:TimeT, Abundance[1, , 4, 3, fdr, 1], col = 'blue')
+  #   lines(1:TimeT, Abundance[1, , 5, 3, fdr, 1], col = 'purple')
+  #   lines(1:TimeT, Abundance[1, , 6, 3, fdr, 1], col = 'black')
+  #
+  #   plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
+  #        main = paste('Abundance, Inside, nm = 1, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 1e5))
+  #   lines(1:TimeT, Abundance[3, , 2, 1, fdr, 1], col = 'orange')
+  #   lines(1:TimeT, Abundance[3, , 3, 1, fdr, 1], col = 'green')
+  #   lines(1:TimeT, Abundance[3, , 4, 1, fdr, 1], col = 'blue')
+  #   lines(1:TimeT, Abundance[3, , 5, 1, fdr, 1], col = 'purple')
+  #   lines(1:TimeT, Abundance[3, , 6, 1, fdr, 1], col = 'black')
+  #
+  #   plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
+  #        main = paste('Abundance, Inside, nm = 2, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 1e5))
+  #   lines(1:TimeT, Abundance[3, , 2, 2, fdr, 1], col = 'orange')
+  #   lines(1:TimeT, Abundance[3, , 3, 2, fdr, 1], col = 'green')
+  #   lines(1:TimeT, Abundance[3, , 4, 2, fdr, 1], col = 'blue')
+  #   lines(1:TimeT, Abundance[3, , 5, 2, fdr, 1], col = 'purple')
+  #   lines(1:TimeT, Abundance[3, , 6, 2, fdr, 1], col = 'black')
+  #
+  #   plot(1:TimeT, Abundance[3, , 1, 3, fdr, 1],
+  #        main = paste('Abundance, Inside, nm = 3, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 1e5))
+  #   lines(1:TimeT, Abundance[3, , 2, 3, fdr, 1], col = 'orange')
+  #   lines(1:TimeT, Abundance[3, , 3, 3, fdr, 1], col = 'green')
+  #   lines(1:TimeT, Abundance[3, , 4, 3, fdr, 1], col = 'blue')
+  #   lines(1:TimeT, Abundance[3, , 5, 3, fdr, 1], col = 'purple')
+  #   lines(1:TimeT, Abundance[3, , 6, 3, fdr, 1], col = 'black')
+  #
+  #   plot(1:TimeT, Yield[1, , 1, 1, fdr],
+  #        main = paste('Yield, Outside, nm = 1, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 4e4))
+  #   lines(1:TimeT, Yield[1, , 2, 1, fdr], col = 'orange')
+  #   lines(1:TimeT, Yield[1, , 3, 1, fdr], col = 'green')
+  #   lines(1:TimeT, Yield[1, , 4, 1, fdr], col = 'blue')
+  #   lines(1:TimeT, Yield[1, , 5, 1, fdr], col = 'purple')
+  #   lines(1:TimeT, Yield[1, , 6, 1, fdr], col = 'black')
+  #
+  #   plot(1:TimeT, Yield[1, , 1, 2, fdr],
+  #        main = paste('Yield, Outside, nm = 2, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 4e4))
+  #   lines(1:TimeT, Yield[1, , 2, 2, fdr], col = 'orange')
+  #   lines(1:TimeT, Yield[1, , 3, 2, fdr], col = 'green')
+  #   lines(1:TimeT, Yield[1, , 4, 2, fdr], col = 'blue')
+  #   lines(1:TimeT, Yield[1, , 5, 2, fdr], col = 'purple')
+  #   lines(1:TimeT, Yield[1, , 6, 2, fdr], col = 'black')
+  #
+  #   plot(1:TimeT, Yield[1, , 1, 3, fdr],
+  #        main = paste('Yield, Outside, nm = 3, FDR = ', Final_DRs[fdr]),
+  #        col = 'red', ylim = c(0, 4e4))
+  #   lines(1:TimeT, Yield[1, , 2, 3, fdr], col = 'orange')
+  #   lines(1:TimeT, Yield[1, , 3, 3, fdr], col = 'green')
+  #   lines(1:TimeT, Yield[1, , 4, 3, fdr], col = 'blue')
+  #   lines(1:TimeT, Yield[1, , 5, 3, fdr], col = 'purple')
+  #   lines(1:TimeT, Yield[1, , 6, 3, fdr], col = 'black')
+  #
+  # }
 
   ##### Plotting ###############################################################
 
