@@ -77,7 +77,7 @@ management <- function(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
   # If the density ratio is lower than the target density ratio but
   # greater than the floor density ratio, allow effort in each area to decrease
   # by the allowed effort increase value (set to 10% here)
-  } else if (DR <= target_DR & DR > floor_DR) {
+  } else if (DR <= target_DR && DR > floor_DR) {
 
     E[, t + 1, cr, fdr] <- E[, t, cr, fdr]*(1 - effort_inc_allowed)
 
