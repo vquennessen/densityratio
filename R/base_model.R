@@ -329,15 +329,20 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                               Density_ratio)
         }
 
-        if (t >= (Time1 - 5) && t < (Time1 + 10)) {
+        if (t >= (Time1 - 5) && t < TimeT) {
           print('***********************************************************')
           print(paste('t = ', t, ', cr = ', cr, ', fdr = ', Final_DRs[fdr]))
           print(E[, t, cr, fdr])
+          print(FM[7, , t, cr, fdr])
           print(paste('True DR: ', Density_ratio[t, cr, fdr]))
-          if (cr == 2) {print(paste('Transient target DR: ',
+          if (cr == 2 & t >= Time1) {
+            print(paste('Transient target DR: ',
             transient_DR(Time1 = 50, TimeT = 70, Final_DRs, M, fdr)[t - Time1 + 1]))}
           print(E[, t + 1, cr, fdr])
+          print(SSB[, t, cr, fdr])
+          print(sum(SSB[, t, cr, fdr]))
           print(R)
+          print(sum(R))
           # print(Yield[, t, cr, fdr])
           # print(Abundance[, t, cr, fdr, 1])
         }
@@ -345,6 +350,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
       }
     }
   }
+
+  plot(1:TimeT, )
 
   ##### Plotting ###############################################################
 
