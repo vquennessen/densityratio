@@ -118,10 +118,10 @@ recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   } else if (Recruitment_mode == 'pool') {
 
     ssb <- SSB[, t - Rec_age, cr, fdr]
-    nume <- 0.8 * adjR0 * H
+    nume <- 0.8 * adjR0 * H * sum(ssb) / A
     denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
-    R1 <- (nume / denom) * (sum(ssb) / A)
+    R1 <- (nume / denom)
 
     # regional / stock larval density dependence and recruits distributed evenly
     # across areas; OR larvae distributed evenly across areas then local density
@@ -151,7 +151,7 @@ recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   } else { recruits <- R1 * (exp(Eps[, t, cr, fdr] - Sigma_R^2 / 2)) }
 
   # larval movement if there are multiple areas and LDP != 0
-    if (A > 1 && dim(SSB)[1] > 1 && LDP != 0) {
+    if (A > 1 & dim(SSB)[1] > 1) {
 
       # First area to second area
       recruits[1] <- (1 - LDP)*recruits[1] + LDP*recruits[2]
