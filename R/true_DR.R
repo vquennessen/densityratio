@@ -26,7 +26,7 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; FDR = 4; Time2= 20
+#' A = 5; TimeT = 70; CR = 2; FDR = 4; Time2 = 20
 #' Abundance <- array(rep(3400, A*TimeT*CR*FDR*1), c(A, TimeT, CR, FDR, 1))
 #' Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 #' true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
@@ -75,7 +75,7 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
 
   ##############################################################################
 
-  i <- ifelse(Ind_sampled == 'all', 1, 2)
+  i <- ifelse(is.null(Ind_sampled), 2, ifelse(Ind_sampled == 'all', 1, 2))
 
   # Density of fish outside marine reserve(s)
   Outside_density <- sum(Abundance[Outside, t, cr, fdr, i]) / length(Outside)
