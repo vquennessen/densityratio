@@ -279,30 +279,30 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                    A50_down, Alpha, F_fin, Beta, Cf)
 
-  # Cutoff for maturity
-  A50_mat <- ages[min(which(Mat > 0.5))]
+  # Cutoff for maturity (index)
+  A50_mat <- ages[min(which(Mat > 0.5))] - Rec_age + 1
 
   # Initialize age-structured population size matrix
-  # Dimensions = age * area * time * CR * M * FDR values (3)
+  # Dimensions = age * area * time * CR * FDR values (3)
   N <- array(rep(0, num*A*TimeT*CR*FDR), c(num, A, TimeT, CR, FDR))
 
   # Initialize spawning stock biomass array
-  # Dimensions = area * time * cr * M * FDR values (3)
+  # Dimensions = area * time * cr * FDR values (3)
   SSB <- array(rep(0, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 
   # Initialize abundance arrays
-  # Dimensions = area * time * CR * M * FDR values (3)
+  # Dimensions = area * time * CR * FDR values (3)
   dimension <- ifelse(is.null(Ind_sampled), 2,
                       ifelse(Ind_sampled == 'all', 1, 2))
   Abundance <- array(rep(0, A*TimeT*CR*FDR*dimension),
                      c(A, TimeT, CR, FDR, dimension))
 
   # Initialize biomass array
-  # Dimensions = area * time * CR * M * FDR values (3)
+  # Dimensions = area * time * CR * FDR values (3)
   Biomass <- array(rep(0, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 
   # Recruitment normal variable
-  # Dimensions = area * timeT * CR * M * FDR values (3)
+  # Dimensions = area * timeT * CR * FDR values (3)
   if (Rec_stochasticity == T) {
     NuR <- array(rnorm(A*TimeT*CR*FDR, 0, Sigma_R), c(A, TimeT, CR, FDR))
   } else if (Rec_stochasticity == F) {
@@ -331,14 +331,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     Sigma_S <- sqrt(log(1 + (SP / X)^2))
 
     # Sampling normal variable
-    # Dimensions = area * timeT * CR * M * FDR values (3)
-    if (Rec_stochasticity == T) {
-      NuS <- array(rnorm(A*TimeT*CR*FDR*dimension, 0, Sigma_S),
-                   c(A, TimeT, CR, FDR, dimension))
-    } else if (Rec_stochasticity == F) {
-      NuS <- array(rep(0, A*TimeT*CR*FDR*dimension),
-                   c(A, TimeT, CR, FDR, dimension))
-    }
+    # Dimensions = area * timeT * CR * FDR values (3)
+    NuS <- array(rnorm(A*TimeT*CR*FDR*dimension, 0, Sigma_S),
+                 c(A, TimeT, CR, FDR, dimension))
 
     # Calculate delta - constant of proportionality
     # Based on Babcock & MacCall (2011): Eq. (13)
@@ -395,7 +390,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
         FM[, , t, cr, fdr] <- fm
         Biomass[, t, cr, fdr] <- colSums(N[, , t, cr, fdr] * W)
         SSB[, t, cr, fdr] <- colSums(N[, , t, cr, fdr]*W*Mat)
-        E[, t, cr, fdr] <- rep(0.2, A)
         Catch[, , t, cr, fdr] <- catch(t, cr, fdr, FM, M, N, A, Fb, E, Catch)
         Yield[, t, cr, fdr] <- colSums(Catch[, , t, cr, fdr]*W)
         Abundance[, t, cr, fdr, 1] <- colSums(N[, , t, cr, fdr])
@@ -403,7 +397,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
         # Abundance
         if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
           Abundance[, t, cr, fdr, 2] <- colSums(N[A50_mat:num,  , t, cr, fdr])}
-        if (t > 1 && Sampling_Error == TRUE) {
+
+        # Count
+        if (t > 1 & Sampling_Error == TRUE) {
           Count[, t, , , cr, fdr] <- sampling(t, cr, fdr, Delta, Gamma,
                                               Abundance, Transects, X, Count,
                                               NuS, A, Ind_sampled)
