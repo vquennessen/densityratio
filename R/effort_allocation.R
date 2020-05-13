@@ -98,16 +98,15 @@ effort_allocation <- function(t, cr, nm, fdr, Allocation = 'IFD', E, Yield,
   # year depends on the distribution of yield from the previous year
   if (Allocation == 'IFD') {
 
-    if (t = Time1) {
+    if (t == Time1) {
 
-      E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t - 1, cr, nm, fdr]) / length(Outside),
-                                 length(Outside))
+      E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t - 1, cr, nm, fdr]) / outs, outs)
       E[Inside, t, cr, nm, fdr] <- 0
 
     }  else {
 
       prop_yield <- Yield[ , t - 1, cr, nm, fdr] / sum(Yield[ , t - 1, cr, nm, fdr])
-      E[ , t, cr, nm, fdr] <- sum(E[ , t - 1, cr, nm, fdr])*prop_yield
+      E[ , t, cr, nm, fdr] <- sum(E[ , t, cr, nm, fdr])*prop_yield
 
     }
     #

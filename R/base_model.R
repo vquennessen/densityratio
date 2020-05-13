@@ -352,8 +352,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
                                              Outside, Density_ratio, ENM)
         # management
-        if (Fishery_management == TRUE && t > Time1 && t < TimeT) {
-          E[, t, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
+        if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
+          E[, t + 1, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
                                             TimeT, Transects, Nat_mortality,
                                             Final_DRs, Inside, Outside,
                                             Years_sampled, Areas_sampled,
@@ -361,8 +361,52 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                             Sampling_Error, Density_ratio)
         }
 
-      }
+      # if (t > 54 & t < 61) {
+      #   print('*************************************************************')
+      #   print(paste('t = ', t, ', cr = ', cr, ', fdr = ', Final_DRs[fdr]))
+      #   print(E[, t, cr, 2, fdr])
+      #   print(Abundance[, t, cr, 2, fdr, 1])
+      #   print(Density_ratio[t, cr, fdr])
+      #   if (t > Time1 & cr > 3) {
+      #     target1 = transient_DR(50, 70, Final_DRs, Nat_mortality, nm = 1, fdr)[t - Time1 + 1]
+      #     target2 = transient_DR(50, 70, Final_DRs, Nat_mortality, nm = 2, fdr)[t - Time1 + 1]
+      #     target3 = transient_DR(50, 70, Final_DRs, Nat_mortality, nm = 3, fdr)[t - Time1 + 1]
+      #     print(c(target1, target2, target3))
+      #   }
+      #   print(E[, t + 1, cr, 2, fdr])
+      # }
+
     }
+
+    }
+
+    plot(1:TimeT, Abundance[1, , 1, 2, fdr, 1],
+         main = paste('Abundance, Outside, FDR = ', Final_DRs[fdr]),
+         col = 'red', ylim = c(0, 1e5))
+    lines(1:TimeT, Abundance[1, , 2, 2, fdr, 1], col = 'orange')
+    lines(1:TimeT, Abundance[1, , 3, 2, fdr, 1], col = 'green')
+    lines(1:TimeT, Abundance[1, , 4, 2, fdr, 1], col = 'blue')
+    lines(1:TimeT, Abundance[1, , 5, 2, fdr, 1], col = 'purple')
+    lines(1:TimeT, Abundance[1, , 6, 2, fdr, 1], col = 'black')
+
+    plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
+         main = paste('Abundance, Inside, FDR = ', Final_DRs[fdr]),
+         col = 'red', ylim = c(0, 1e5))
+    lines(1:TimeT, Abundance[3, , 2, 2, fdr, 1], col = 'orange')
+    lines(1:TimeT, Abundance[3, , 3, 2, fdr, 1], col = 'green')
+    lines(1:TimeT, Abundance[3, , 4, 2, fdr, 1], col = 'blue')
+    lines(1:TimeT, Abundance[3, , 5, 2, fdr, 1], col = 'purple')
+    lines(1:TimeT, Abundance[3, , 6, 2, fdr, 1], col = 'black')
+
+    plot(1:TimeT, Yield[1, , 1, 2, fdr],
+         main = paste('Yield, Outside, FDR = ', Final_DRs[fdr]),
+         col = 'red', ylim = c(0, 4e4))
+    lines(1:TimeT, Yield[1, , 2, 2, fdr], col = 'orange')
+    lines(1:TimeT, Yield[1, , 3, 2, fdr], col = 'green')
+    lines(1:TimeT, Yield[1, , 4, 2, fdr], col = 'blue')
+    lines(1:TimeT, Yield[1, , 5, 2, fdr], col = 'purple')
+    lines(1:TimeT, Yield[1, , 6, 2, fdr], col = 'black')
+
   }
 
   ##### Plotting ###############################################################

@@ -48,8 +48,8 @@ a numeric array updated with the fishing effort allocation for the
 }
 \examples{
 A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
-E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Yield <- array(rep(2458, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-effort_allocation(t = 2, cr = 1, nm = 1, fdr = 1, Allocation = 'IFD', E,
+effort_allocation(t = 51, cr = 1, nm = 1, fdr = 1, Allocation = 'IFD', E,
    Yield, Time1 = 50, Inside = 3, Outside = c(1, 2, 4, 5))
 }
