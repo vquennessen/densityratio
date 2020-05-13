@@ -70,8 +70,6 @@
 #'    areas. Default value is 0.1.
 #' @param Control_rules numeric vector, the control rules to be compared.
 #'    Default value is c(1:6).
-#' @param Output.FM logical value, should the output include FM? Default value
-#'    is FALSE.
 #' @param Output.N logical value, should the output include N? Default value is
 #'    FALSE.
 #' @param Output.Abundance logical value, should the output include Abundance?
@@ -80,16 +78,12 @@
 #'    Default value is FALSE.
 #' @param Output.SSB logical value, should the output include spawning stock
 #'    biomass? Default value is FALSE.
-#' @param Output.Catch logical value, should the output include catch? Default
-#'    value is FALSE.
 #' @param Output.Yield logical value, should the output include yield? Default
 #'    value is FALSE.
 #' @param Output.Effort logical value, should the output include effort? Default
 #'    value is FALSE.
 #' @param Output.Density.Ratio logical value, should the output include density
 #'    ratios? Default value is TRUE.
-#' @param Condensed.Output logical value, should the output be condensed (TRUE)
-#'    or all area outputs be included (FALSE). Default value is TRUE.
 #'
 #' @return a list, containing numerical arrays of the relative biomass, yield,
 #'    and spawning stock biomass, as well as the true density ratios over time
@@ -107,10 +101,9 @@
 #'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-#'    Control_rules = c(1:6), Output.FM = FALSE, Output.N = FALSE,
-#'    Output.Abundance = FALSE, Output.Biomass = FALSE, Output.SSB = FALSE,
-#'    Output.Catch = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
-#'    Output.Density.Ratio = TRUE, Condensed.Output = TRUE)
+#'    Control_rules = c(1:6), Output.N = FALSE, Output.Abundance = FALSE,
+#'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
+#'    Output.Effort = FALSE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
                        Sampling_Error = TRUE, Stochasticity = TRUE,
@@ -119,11 +112,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD',
                        BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
-                       Output.FM = FALSE, Output.N = FALSE,
-                       Output.Abundance = FALSE, Output.Biomass = FALSE,
-                       Output.SSB = FALSE, Output.Catch = FALSE,
+                       Output.N = FALSE, Output.Abundance = FALSE,
+                       Output.Biomass = FALSE, Output.SSB = FALSE,
                        Output.Yield = FALSE, Output.Effort = FALSE,
-                       Output.Density.Ratio = TRUE, Condensed.Output = TRUE) {
+                       Output.Density.Ratio = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -163,21 +155,17 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
   if (sum(Control_rules %% 1 != 0) != 0) {
     stop('Control_rules must be a vector of integers.')}
-  if (!is.logical(Output.FM)) {stop('Output.FM must be a logical value.')}
   if (!is.logical(Output.N)) {stop('Output.N must be a logical value.')}
   if (!is.logical(Output.Abundance)) {
     stop('Output.Abundance must be a logical value.')}
   if (!is.logical(Output.Biomass)) {
     stop('Output.Biomass must be a logical value.')}
   if (!is.logical(Output.SSB)) {stop('Output.SSB must be a logical value.')}
-  if (!is.logical(Output.Catch)) {stop('Output.Catch must be a logical value.')}
   if (!is.logical(Output.Yield)) {stop('Output.Yield must be a logical value.')}
   if (!is.logical(Output.Effort)) {
     stop('Output.Effort must be a logical value.')}
   if (!is.logical(Output.Density.Ratio)) {
     stop('Output.Density.Ratio must be a logical value.')}
-  if (!is.logical(Condensed.Output)) {
-    stop('Condensed.Output must be a logical value.')}
 
   # acceptable values
   if (R0 <= 0) {stop('R0 must be greater than 0.')}
@@ -354,114 +342,18 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
           E[, t + 1, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
-                                            TimeT, Transects, Nat_mortality,
-                                            Final_DRs, Inside, Outside,
-                                            Years_sampled, Areas_sampled,
-                                            Ind_sampled, Floor_DR, BM,
-                                            Sampling_Error, Density_ratio)
+                                                TimeT, Transects, Nat_mortality,
+                                                Final_DRs, Inside, Outside,
+                                                Years_sampled, Areas_sampled,
+                                                Ind_sampled, Floor_DR, BM,
+                                                Sampling_Error, Density_ratio)
         }
 
-      # if (t > 54 & t < 61) {
-      #   print('*************************************************************')
-      #   print(paste('t = ', t, ', cr = ', cr, ', fdr = ', Final_DRs[fdr]))
-      #   print(E[, t, cr, 2, fdr])
-      #   print(Abundance[, t, cr, 2, fdr, 1])
-      #   print(Density_ratio[t, cr, fdr])
-      #   if (t > Time1 & cr > 3) {
-      #     target1 = transient_DR(50, 70, Final_DRs, Nat_mortality, nm = 1, fdr)[t - Time1 + 1]
-      #     target2 = transient_DR(50, 70, Final_DRs, Nat_mortality, nm = 2, fdr)[t - Time1 + 1]
-      #     target3 = transient_DR(50, 70, Final_DRs, Nat_mortality, nm = 3, fdr)[t - Time1 + 1]
-      #     print(c(target1, target2, target3))
-      #   }
-      #   print(E[, t + 1, cr, 2, fdr])
-      # }
+      }
 
     }
 
-    }
-
-  #   plot(1:TimeT, Abundance[1, , 1, 1, fdr, 1],
-  #        main = paste('Abundance, Outside, nm = 1, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 1e5))
-  #   lines(1:TimeT, Abundance[1, , 2, 1, fdr, 1], col = 'orange')
-  #   lines(1:TimeT, Abundance[1, , 3, 1, fdr, 1], col = 'green')
-  #   lines(1:TimeT, Abundance[1, , 4, 1, fdr, 1], col = 'blue')
-  #   lines(1:TimeT, Abundance[1, , 5, 1, fdr, 1], col = 'purple')
-  #   lines(1:TimeT, Abundance[1, , 6, 1, fdr, 1], col = 'black')
-  #
-  #   plot(1:TimeT, Abundance[1, , 1, 2, fdr, 1],
-  #        main = paste('Abundance, Outside, nm = 2, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 1e5))
-  #   lines(1:TimeT, Abundance[1, , 2, 2, fdr, 1], col = 'orange')
-  #   lines(1:TimeT, Abundance[1, , 3, 2, fdr, 1], col = 'green')
-  #   lines(1:TimeT, Abundance[1, , 4, 2, fdr, 1], col = 'blue')
-  #   lines(1:TimeT, Abundance[1, , 5, 2, fdr, 1], col = 'purple')
-  #   lines(1:TimeT, Abundance[1, , 6, 2, fdr, 1], col = 'black')
-  #
-  #   plot(1:TimeT, Abundance[1, , 1, 3, fdr, 1],
-  #        main = paste('Abundance, Outside, nm = 3, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 1e5))
-  #   lines(1:TimeT, Abundance[1, , 2, 3, fdr, 1], col = 'orange')
-  #   lines(1:TimeT, Abundance[1, , 3, 3, fdr, 1], col = 'green')
-  #   lines(1:TimeT, Abundance[1, , 4, 3, fdr, 1], col = 'blue')
-  #   lines(1:TimeT, Abundance[1, , 5, 3, fdr, 1], col = 'purple')
-  #   lines(1:TimeT, Abundance[1, , 6, 3, fdr, 1], col = 'black')
-  #
-  #   plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
-  #        main = paste('Abundance, Inside, nm = 1, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 1e5))
-  #   lines(1:TimeT, Abundance[3, , 2, 1, fdr, 1], col = 'orange')
-  #   lines(1:TimeT, Abundance[3, , 3, 1, fdr, 1], col = 'green')
-  #   lines(1:TimeT, Abundance[3, , 4, 1, fdr, 1], col = 'blue')
-  #   lines(1:TimeT, Abundance[3, , 5, 1, fdr, 1], col = 'purple')
-  #   lines(1:TimeT, Abundance[3, , 6, 1, fdr, 1], col = 'black')
-  #
-  #   plot(1:TimeT, Abundance[3, , 1, 2, fdr, 1],
-  #        main = paste('Abundance, Inside, nm = 2, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 1e5))
-  #   lines(1:TimeT, Abundance[3, , 2, 2, fdr, 1], col = 'orange')
-  #   lines(1:TimeT, Abundance[3, , 3, 2, fdr, 1], col = 'green')
-  #   lines(1:TimeT, Abundance[3, , 4, 2, fdr, 1], col = 'blue')
-  #   lines(1:TimeT, Abundance[3, , 5, 2, fdr, 1], col = 'purple')
-  #   lines(1:TimeT, Abundance[3, , 6, 2, fdr, 1], col = 'black')
-  #
-  #   plot(1:TimeT, Abundance[3, , 1, 3, fdr, 1],
-  #        main = paste('Abundance, Inside, nm = 3, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 1e5))
-  #   lines(1:TimeT, Abundance[3, , 2, 3, fdr, 1], col = 'orange')
-  #   lines(1:TimeT, Abundance[3, , 3, 3, fdr, 1], col = 'green')
-  #   lines(1:TimeT, Abundance[3, , 4, 3, fdr, 1], col = 'blue')
-  #   lines(1:TimeT, Abundance[3, , 5, 3, fdr, 1], col = 'purple')
-  #   lines(1:TimeT, Abundance[3, , 6, 3, fdr, 1], col = 'black')
-  #
-  #   plot(1:TimeT, Yield[1, , 1, 1, fdr],
-  #        main = paste('Yield, Outside, nm = 1, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 4e4))
-  #   lines(1:TimeT, Yield[1, , 2, 1, fdr], col = 'orange')
-  #   lines(1:TimeT, Yield[1, , 3, 1, fdr], col = 'green')
-  #   lines(1:TimeT, Yield[1, , 4, 1, fdr], col = 'blue')
-  #   lines(1:TimeT, Yield[1, , 5, 1, fdr], col = 'purple')
-  #   lines(1:TimeT, Yield[1, , 6, 1, fdr], col = 'black')
-  #
-  #   plot(1:TimeT, Yield[1, , 1, 2, fdr],
-  #        main = paste('Yield, Outside, nm = 2, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 4e4))
-  #   lines(1:TimeT, Yield[1, , 2, 2, fdr], col = 'orange')
-  #   lines(1:TimeT, Yield[1, , 3, 2, fdr], col = 'green')
-  #   lines(1:TimeT, Yield[1, , 4, 2, fdr], col = 'blue')
-  #   lines(1:TimeT, Yield[1, , 5, 2, fdr], col = 'purple')
-  #   lines(1:TimeT, Yield[1, , 6, 2, fdr], col = 'black')
-  #
-  #   plot(1:TimeT, Yield[1, , 1, 3, fdr],
-  #        main = paste('Yield, Outside, nm = 3, FDR = ', Final_DRs[fdr]),
-  #        col = 'red', ylim = c(0, 4e4))
-  #   lines(1:TimeT, Yield[1, , 2, 3, fdr], col = 'orange')
-  #   lines(1:TimeT, Yield[1, , 3, 3, fdr], col = 'green')
-  #   lines(1:TimeT, Yield[1, , 4, 3, fdr], col = 'blue')
-  #   lines(1:TimeT, Yield[1, , 5, 3, fdr], col = 'purple')
-  #   lines(1:TimeT, Yield[1, , 6, 3, fdr], col = 'black')
-  #
-  # }
+  }
 
   ##### Plotting ###############################################################
 
@@ -841,37 +733,17 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
   #####
 
-  # initialize output list
+  ######## initialize output list ##############################################
   output <- list()
 
-  if (Condensed.Output == TRUE) {
-
-  # add output depending on arguments passed to base_model.R
-  if (Output.FM == TRUE) { output$FM <- FM[, 1:(MPA - 1), Time1:TimeT, , ENM, ] }
-  if (Output.N == TRUE) { output$N <- N[, 1:MPA, Time1:TimeT, , ENM, ] }
+  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ENM, ] }
   if (Output.Abundance == TRUE) {
-    output$Abundance <- Abundance[1:MPA, Time1:TimeT, , ENM, , ] }
-  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.SSB == TRUE) { output$SSB <- SSB[1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.Catch == TRUE) { output$Catch <- Catch[, 1:MPA, Time1:TimeT, , ENM, ] }
-  if (Output.Yield == TRUE) { output$Yield <- Yield[1:(MPA - 1), Time1:TimeT, , ENM, ] }
+    output$Abundance <- Abundance[, Time1:TimeT, , ENM, , ] }
+  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
+  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ENM, ] }
+  if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
   if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
-  if (Output.Density.Ratio == TRUE) {output$Density_ratio <- Density_ratio }
-
-  } else {
-
-    if (Output.FM == TRUE) { output$FM <- FM[, , Time1:TimeT, , ENM, ] }
-    if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ENM, ] }
-    if (Output.Abundance == TRUE) {
-      output$Abundance <- Abundance[, Time1:TimeT, , ENM, , ] }
-    if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
-    if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ENM, ] }
-    if (Output.Catch == TRUE) { output$Catch <- Catch[, , Time1:TimeT, , ENM, ] }
-    if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
-    if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
-    if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
-
-  }
+  if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
 
   return(output)
 
