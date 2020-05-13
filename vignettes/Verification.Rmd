@@ -35,15 +35,13 @@ Plotting = FALSE
 Final_DRs = c(1); Floor_DR = 0.2
 Years_sampled = NULL; Areas_sampled = NULL; Ind_sampled = NULL
 BM = TRUE; Control_rules = c(1:8)
-Output.FM = FALSE; Output.N = FALSE
-Output.Abundance = FALSE; Output.Biomass = FALSE; Output.SSB = TRUE
-Output.Catch = FALSE; Output.Yield = TRUE
-Output.Effort = TRUE; Output.Density.Ratio = FALSE
-Condensed.Output = FALSE
+Output.N = FALSE; Output.Abundance = FALSE; Output.Biomass = FALSE; 
+Output.SSB = TRUE; Output.Yield = TRUE; Output.Effort = TRUE; 
+Output.Density.Ratio = FALSE
 ```
 
 # Run the scenarios across all recruitment modes, adult movemement rates, and effort allocations. 
-```{r, eval=FALSE}
+```{r, eval=FALSE, cache = TRUE}
 Rmodes <- c('closed', 'regional_DD', 'local_DD', 'pool', 'closed')
 LDPs <- c(0, 0, 0, 0, 0.10)
 Adult_M <- c(TRUE, FALSE)
@@ -64,10 +62,9 @@ for (r in 1:length(Rmodes)) {
                            Stochasticity, Surveys, Fishery_management, Fishing, 
                            Transects, Adult_movement, Plotting, Final_DRs, 
                            Years_sampled, Areas_sampled, Ind_sampled, Floor_DR, 
-                           Allocation, BM, LDP, Control_rules, Output.FM, 
-                           Output.N, Output.Abundance, Output.Biomass, 
-                           Output.SSB, Output.Catch, Output.Yield,
-                           Output.Effort, Output.Density.Ratio, Condensed.Output)
+                           Allocation, BM, LDP, Control_rules,Output.N, 
+                           Output.Abundance, Output.Biomass, Output.SSB, 
+                           Output.Yield, Output.Effort, Output.Density.Ratio)
       
     # save the relative SSB and yield as a sum across all areas, 
     # times after reserve implementation, control rules, and scenarios
