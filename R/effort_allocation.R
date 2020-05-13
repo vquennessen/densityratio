@@ -34,7 +34,7 @@
 #' effort_allocation(t = 51, cr = 1, fdr = 1, Allocation = 'IFD', E,
 #'    Yield, Time1 = 50, Inside = 3, Outside = c(1, 2, 4, 5))
 effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
-                              Time1 = 50, Inside = c(3),
+                              Time1 = 50, Inside = 3,
                               Outside = c(1, 2, 4, 5)) {
 
   ###### Error handling ########################################################
@@ -120,11 +120,15 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
       E[, t, cr, fdr] <- rep(sum(E[, t, cr, fdr])/all, all)
 
-    } else if (t >= Time1) {
+    } else if (t == Time1) {
 
-    E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr])/outs, outs)
+    E[Outside, t, cr, fdr] <- rep(sum(E[Outside, t - 1, cr, fdr])/outs, outs)
     E[Inside, t, cr, fdr] <- 0
 
+    } else if (t > Time1) {
+
+      E[Outside, t, cr, fdr] <- rep(sum(E[Outside, t, cr, fdr])/outs, outs)
+      E[Inside, t, cr, fdr] <- 0
     }
 
   }
