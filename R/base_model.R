@@ -289,21 +289,20 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   ##### Population Dynamics - Time Varying #####################################
   for (fdr in 1:FDR) {
 
-    for (t in (Rec_age + 1):TimeT) {
-
       for (cr in 1:CR) {
 
-        for (nm in 1:NM) {
+        for (t in (Rec_age + 1):TimeT) {
 
           # effort allocation
-          E <- effort_allocation(t, cr, nm, fdr, Allocation, E, Yield, Time1,
+          E <- effort_allocation(t, cr, fdr, Allocation, E, Yield, Time1,
                                  Inside, Outside)
 
           # If there is adult movement, add movement
-          if (Adult_movement == TRUE) {N <- movement(t, cr, nm, fdr, N, A, AMP)}
+          if (Adult_movement == TRUE) {
+            N[, a, t, cr, fdr, ] <- movement(t, cr, NM, fdr, N, A, AMP)}
 
           # Recruitment / larval movement (if applicable)
-          R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
+          R <- recruitment(t, cr, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
                            Rec_age, Recruitment_mode, LDP)
 
           # biology
@@ -333,8 +332,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                                     X, Count, NuS, A,
                                                     Ind_sampled)
           }
-
-        }
 
         # calculate true density ratio
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
