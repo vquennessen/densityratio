@@ -23,8 +23,8 @@
 #'
 #' @examples
 #' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Time2= 20
-#' Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
-#' c(A, TimeT, CR, NM, FDR, 1))
+#' Abundance <- array(rep(3400, A*TimeT*CR*FDR*1*NM),
+#' c(A, TimeT, CR, FDR, 1, NM))
 #' Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 #' true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
 #'    Outside = c(1, 2, 4, 5), Density_ratio, ENM = 2)
@@ -42,6 +42,7 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
   if (sum(Outside %% 1 != 0) != 0) {stop('Outside must be a vector of integers.')}
   if (!is.numeric(Density_ratio)) {
     stop('Density_ratio must be a numeric array.')}
+  if (ENM %% 1 != 0) {stop('ENM must be an integer value.')}
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
@@ -55,6 +56,8 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     stop('All values in Outside must be greater than or equal to 0.')}
   if (sum(Density_ratio < 0) > 0) {
     stop('All values in Density_ratio must be greater than or equal to 0.')}
+  if (ENM <= 0 || ENM > 3) {
+    stop('ENM must be greater than 0 and less than or equal to 3.')}
 
   # relational values
   if (sum(intersect(Inside, Outside)) > 0) {
@@ -65,16 +68,18 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
    stop('Abundance has the wrong number of time steps.')}
   if (cr > dim(Abundance)[3]) {
     stop('Abundance has the wrong number of control rules.')}
-  if (fdr> dim(Abundance)[5]) {
+  if (fdr > dim(Abundance)[4]) {
     stop('Abundance has the wrong number of final density ratios.')}
+  if (ENM > dim(Abundance)[6]) {
+    stop('Value of "ENM" is too high for Abundance array.')}
 
   ##############################################################################
 
   # Density of fish outside marine reserve(s)
-  Outside_density <- sum(Abundance[Outside, t, cr, ENM, fdr, 1]) / length(Outside)
+  Outside_density <- sum(Abundance[Outside, t, cr, fdr, 1, ENM])/length(Outside)
 
   # Density of fish inside marine reserve(s)
-  Inside_density <- sum(Abundance[Inside, t, cr, ENM, fdr, 1]) / length(Inside)
+  Inside_density <- sum(Abundance[Inside, t, cr, fdr, 1, ENM])/length(Inside)
 
   # True density ratio
   Density_ratio[t, cr, fdr] <- Outside_density / Inside_density
