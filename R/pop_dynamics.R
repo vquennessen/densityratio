@@ -7,7 +7,7 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
-#' @param NM  numeric value, total number of natural mortality estimates.
+#' @param NM  numeric value, the total number of natural mortality estimates.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param Rec_age numeric value, the age at recruitment, in years.
 #' @param Max_age numeric value, the maximum age or total lifespan, in years.
@@ -29,8 +29,6 @@
 #'    estimate.
 #' @param S numeric vector, the selectivities at age from age at recruitment to
 #'    maximum age, on the interval (0, 1).
-#' @param NM numeric value, the total number of estimated values of natural
-#'    mortality. Default value is 3.
 #' @param FM numeric array that corresponds to the fishing mortality at each
 #'    age in each area, at each timestep, under all control rules, with all
 #'    estimates of natural mortality.
@@ -52,15 +50,14 @@
 #'    'all' - sample all individuals.
 #'    'mature' - sample only mature individuals.
 #'    Default value is 'all'.
-#' @param ENM numeric value, the nm value that represents the 'true' population.
 #'
 #' @return numeric arrays, with updated values of fishing mortality (FM),
 #'    numbers at age (N), Abundance, Biomass, and spawning stock biomass (SSB).
 #' @export
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
-#' SSB <- array(rep(548, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4
+#' SSB <- array(rep(548, A*TimeT*CR*FDR*NM), c(A, TimeT, CR, FDR, NM))
 #' Biomass <- array(rep(568, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 #' Abundance <- array(rep(3400, A*TimeT*CR*FDR*1*NM), c(A, TimeT, CR, FDR, 1, NM))
 #' N <- array(rep(10, n*A*TimeT*CR*FDR*NM), c(n, A, TimeT, CR, FDR, NM))
@@ -76,17 +73,17 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' NuR <- array(rnorm(A*TimeT*CR*FDR, 0, 0.5), c(A, TimeT, CR, FDR))
 #' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, FDR = 4, NuR, Rho_R = 0)
-#' R <- recruitment(t = 3, cr = 1, fdr = 1, SSB, A = 5, R0 = 1e+5,
+#' R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A = 5, R0 = 1e+5,
 #'    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
 #'    Recruitment_mode = 'pool', LDP = 0.1)
-#' pop_dynamics(t = 3, cr = 1, NM, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
-#'    N, W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Biomass,
-#'    Abundance, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19), R,
-#'    Ind_sampled = 'all', ENM = 2)
+#' pop_dynamics(t = 3, cr = 1, NM = 1, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
+#'    N, W, Mat, A = 5, Fb = 0.2, E, S, FM, A50_mat = 8, Biomass,
+#'    Abundance, Fishing = TRUE, Nat_mortality = c(0.14, 0.09, 0.19), R,
+#'    Ind_sampled = 'all')
 pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
-                         A = 5, Fb, E, S, NM = 3, FM, A50_mat, Biomass,
+                         A = 5, Fb, E, S, FM, A50_mat, Biomass,
                          Abundance, Fishing = T, Nat_mortality, R,
-                         Ind_sampled = 'all', ENM) {
+                         Ind_sampled = 'all') {
 
   ###### Error handling ########################################################
 
@@ -105,14 +102,12 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   if (!is.numeric(Fb)) {stop('Fb must be a numeric value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
   if (!is.numeric(S)) {stop('S must be a numeric vector.')}
-  if (NM %% 1 != 0) {stop('NM must be an integer value.')}
   if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
   if (A50_mat %% 1 != 0) {stop('A50_mat must be an integer value.')}
   if (!is.numeric(Abundance)) {stop('Abundance must be a numeric array.')}
   if (!is.numeric(Biomass)) {stop('Biomass must be a numeric array.')}
   if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
   if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
-  if (ENM %% 1 != 0) {stop('ENM must be an integer value.')}
 
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
@@ -130,7 +125,6 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   if (Fb < 0) {stop('Fb must be greater than or equal to 0.')}
   if (sum(E < 0) > 0) {stop('All values in E must be greater than or equal to 0.')}
   if (sum(S < 0) > 0) {stop('All values in S must be greater than or equal to 0.')}
-  if (NM != 1 && NM != 3) {stop('NM must be equal to 1 or 3.')}
   if (sum(FM < 0) > 0) {
     stop('All values in FM must be greater than or equal to 0.')}
   if (A50_mat <= 0) {stop('A50_mat must be greater than 0.')}
@@ -141,8 +135,6 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
     stop('All values in Nat_mortality must be between 0 and 1.')}
   if (sum(R < 0) > 0) {stop('All values in R must be greater than or equal to 0.')}
-  if (ENM <= 0 || ENM > 3) {
-    stop('ENM must be greater than 0 and less than or equal to 3.')}
 
   # relational values
   if (Rec_age >= Max_age) {stop('Rec_age must be less than Max_age.')}
@@ -156,21 +148,14 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
     stop('N, SSB, FM, or E has an incorrect number of control rules.')}
   if(dim(N)[5] != dim(SSB)[4] || dim(N)[5] != dim(FM)[5]|| dim(N)[5] != dim(E)[4]) {
     stop('N, SSB, FM, or E has an incorrect number of final density ratios.')}
-  if (dim(N)[2] != A) {stop('N has the wrong number of areas.')}
-  if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
-  if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (dim(N)[6] != NM) {stop('N has the wrong number of natural mortality estimates.')}
-  if (fdr > dim(N)[6]) {stop('The given "fdr" value is too high for N.')}
-  if (dim(Abundance)[1] != A) {
-    stop('Abundance has an incorrect number of areas.')}
-  if (t > dim(Abundance)[2]) {
-    stop('Given "t" value is too high for Abundance.')}
-  if (cr > dim(Abundance)[3]) {
-    stop('Given "cr" value is too high for Abundance.')}
-  if (dim(Abundance)[5] != NM) {
-    stop('Abundance has an incorrect number of natural mortality estimates.')}
-  if (fdr > dim(Abundance)[5]) {
-    stop('Given "fdr" value is too high for Abundance.')}
+  if (dim(N)[2] != A | dim(Abundance)[1] != A) {
+    stop('N or Abundance has the wrong number of areas.')}
+  if (t > dim(N)[3] | t > dim(Abundance)[2]) {
+    stop('The given "t" value is too high for N or Abundance.')}
+  if (cr > dim(N)[4] | cr > dim(Abundance)[3]) {
+    stop('The given "cr" value is too high for N or Abundance.')}
+  if (fdr > dim(N)[5] | fdr > dim(Abundance)[4]) {
+    stop('The given "fdr" value is too high for N or Abundance.')}
   if (length(W) != length(S) || length(W) != length(Mat)) {
     stop('W, S, or Mat has the wrong number of age classes.')}
 
@@ -188,63 +173,58 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   ##### Step population foward in time
 
   # Calculate recruitment and add recruits to population
-  N[1, , t, cr, fdr, ] <- rep(R[1:A], NM)
+  N[1, , t, cr, fdr, ] <- R[1:A, 1:NM]
 
-  for (nm in 1:NM) {
+  # natural mortality arrays
+  m <- array(rep(c(Nat_mortality[1], Nat_mortality[ceiling(cr / 2)]),
+                 each = A), c(A, NM))
 
-    # Ages rec_age + 1 to max_age - 1
-    for (i in 2:(num - 1)) {
-      N[i, , t, cr, fdr, nm] <- N[i - 1, , t - 1, cr, fdr, nm] *
-        exp(-1 * (FM[i - 1, , t - 1, cr, fdr] + Nat_mortality[nm]))
-    }
-
-    # Final age bin
-    N[num, , t, cr, fdr, nm] <- N[num - 1, , t - 1, cr, fdr, nm] *
-      exp(-1 * (FM[num - 1, , t - 1, cr, fdr] + Nat_mortality[nm])) +
-      N[num, , t - 1, cr, fdr, nm] *
-      exp(-1 * (FM[num, , t - 1, cr, fdr] + Nat_mortality[nm]))
-
+  # Ages rec_age + 1 to max_age - 1
+  for (i in 2:(num - 1)) {
+    N[i, , t, cr, fdr, ] <- N[i - 1, , t - 1, cr, fdr, ] *
+      exp(-1 * (array(rep(FM[i - 1, , t - 1, cr, fdr], NM), c(A, NM)) + m))
   }
 
+  # Final age bin
+  N[num, , t, cr, fdr, ] <- N[num - 1, , t - 1, cr, fdr, ] *
+    exp(-1 * (array(rep(FM[num - 1, , t - 1, cr, fdr], NM), c(A, NM)) + m)) +
+    N[num, , t - 1, cr, fdr, ] *
+    exp(-1 * (array(rep(FM[num, , t - 1, cr, fdr], NM), c(A, NM)) + m))
+
+  # Calculate biomass of all fish
   if (A > 1) {
 
     # Calculate biomass of all fish
-    Biomass[, t, cr, fdr] <- colSums(N[, , t, cr, fdr, ENM] * W)
-
+    Biomass[, t, cr, fdr] <- colSums(N[, , t, cr, fdr, 1] * W)
     # Calculate spawning stock biomass
-    SSB[, t, cr, fdr] <- colSums(N[, , t, cr, fdr, ENM]*W*Mat)
+    SSB[, t, cr, fdr, ] <- colSums(N[, , t, cr, fdr, ]*W*Mat)
 
-    for (nm in 1:NM) {
-      # Abundance of all / mature individuals
-      Abundance[, t, cr, fdr, 1, nm] <- colSums(N[, , t, cr, fdr, nm])
-      if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-        Abundance[, t, cr, fdr, 2, nm] <- colSums(N[, , t, cr, fdr, nm])
-      }
-
+    # Abundance of all / mature individuals
+    Abundance[, t, cr, fdr, 1, ] <- colSums(N[, , t, cr, fdr, ])
+    if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
+      Abundance[, t, cr, fdr, 2, ] <- colSums(N[A50_mat:num, , t, cr, fdr, ])
     }
 
   } else if (A == 1) {
 
     # Calculate biomass of all fish
-    Biomass[1, t, cr, fdr] <- sum(N[, 1, t, cr, fdr, ENM] * W)
+    Biomass[1, t, cr, fdr] <- sum(N[, 1, t, cr, fdr, 1] * W)
 
     # Calculate spawning stock biomass
-    SSB[1, t, cr, fdr] <- sum(N[, 1, t, cr, fdr, ENM]*W*Mat)
+    SSB[1, t, cr, fdr, ] <- sum(N[, 1, t, cr, fdr, ]*W*Mat)
 
-    for (nm in 1:NM) {
-
-      # Abundance of all / mature individuals
-      Abundance[1, t, cr, fdr, 1, nm] <- sum(N[, 1, t, cr, fdr, nm])
-      if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-        Abundance[1, t, cr, fdr, 2, nm] <- sum(N[ages, 1, t, cr, fdr, nm])
-      }
-
+    # Abundance of all / mature individuals
+    Abundance[, t, cr, fdr, 1, ] <- sum(N[, 1, t, cr, fdr, ])
+    if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
+      Abundance[, t, cr, fdr, 2, ] <- sum(N[A50_mat:num, 1, t, cr, fdr, ])
     }
 
   }
 
-  output <- list(FM[, , t, cr, fdr], N[, , t, cr, fdr, ],
-                 Biomass[, t, cr, fdr], SSB[, t, cr, fdr],
+  output <- list(FM[, , t, cr, fdr],
+                 N[, , t, cr, fdr, ],
+                 Biomass[, t, cr, fdr],
+                 SSB[, t, cr, fdr, ],
                  Abundance[, t, cr, fdr, , ])
 
   return(output)
