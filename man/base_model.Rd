@@ -11,9 +11,9 @@ base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Adult_movement = TRUE, Plotting = FALSE, Final_DRs,
   Years_sampled = 1, Areas_sampled = "all", Ind_sampled = "all",
   Floor_DR = 0.2, Allocation = "IFD", BM = FALSE, LDP = 0.1,
-  Control_rules = c(1:6), Output.N = FALSE, Output.Abundance = FALSE,
-  Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
-  Output.Effort = FALSE, Output.Density.Ratio = TRUE)
+  Output.N = FALSE, Output.Abundance = FALSE, Output.Biomass = FALSE,
+  Output.SSB = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
+  Output.Density.Ratio = TRUE)
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in
@@ -105,9 +105,6 @@ Default value is FALSE.}
 \item{LDP}{numeric value, the proportion of larvae that drift to adjacent
 areas. Default value is 0.1.}
 
-\item{Control_rules}{numeric vector, the control rules to be compared.
-Default value is c(1:6).}
-
 \item{Output.N}{logical value, should the output include N? Default value is
 FALSE.}
 
@@ -146,7 +143,7 @@ base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-   Control_rules = c(1:6), Output.N = FALSE, Output.Abundance = FALSE,
+   Output.N = FALSE, Output.Abundance = FALSE,
    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
    Output.Effort = FALSE, Output.Density.Ratio = TRUE)
 }
