@@ -130,6 +130,6 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
   }
 
-  return(E)
+  return(E[, t, cr, fdr])
 
 }

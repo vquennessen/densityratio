@@ -308,8 +308,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         Abundance[, t, cr, fdr, , ]      <- PD[[5]]
 
         # effort allocation based on yield
-        E <- effort_allocation(t, cr, fdr, Allocation, E, Yield, Time1,
-                               Inside, Outside)
+        E[, t, cr, fdr] <- effort_allocation(t, cr, fdr, Allocation, E, Yield,
+                                             Time1, Inside, Outside)
 
         # If there is adult movement, add movement
         if (Adult_movement == TRUE) {
@@ -350,13 +350,13 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   ######## initialize output list ##############################################
   output <- list()
 
-  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , 1, ] }
+  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , , 1] }
   if (Output.Abundance == TRUE) {
-    output$Abundance <- Abundance[, Time1:TimeT, , 1, , ] }
-  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , 1, ] }
-  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , 1, ] }
-  if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , 1, ] }
-  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , 1, ]) }
+    output$Abundance <- Abundance[, Time1:TimeT, , , , 1] }
+  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ] }
+  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , , 1] }
+  if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ] }
+  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
   if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
 
   return(output)
