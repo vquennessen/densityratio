@@ -20,7 +20,7 @@
 #' @export
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4
 #' N <- array(rep(10, n*A*TimeT*CR*FDR*NM), c(n, A, TimeT, CR, FDR, NM))
 #' movement(t = 1, cr = 1, NM, fdr = 1, N, A = 5, AMP = 0.1)
 movement <- function(t, cr, NM, fdr, N, A, AMP = 0.1) {
@@ -56,43 +56,20 @@ movement <- function(t, cr, NM, fdr, N, A, AMP = 0.1) {
 
   ##############################################################################
 
-  if (NM == 1) {
+  # First area to second area
+  N[, 1, t, cr, fdr, ] <- (1 - AMP)*N[, 1, t, cr, fdr, ] +
+    AMP*N[, 2, t, cr, fdr, ]
 
-    N[, 1, t, cr, fdr, 1] <- (1 - AMP)*N[, 1, t, cr, fdr, 1] +
-      AMP*N[, 2, t, cr, fdr, 1]
-
-    # Intermediate areas to adjacent areas
-    for (a in 2:(A-1)) {
-      N[, a, t, cr, fdr, 1] <- (1 - 2*AMP)*N[, a, t, cr, fdr, 1] +
-        AMP*(N[, a - 1, t, cr, fdr, 1] + N[, a + 1, t, cr, fdr, 1])
-    }
-
-    # Last area to next to last area
-    N[, A, t, cr, fdr, 1] <- (1 - AMP)*N[, A, t, cr, fdr, 1] +
-      AMP*N[, A - 1, t, cr, fdr, 1]
-
-  } else if (NM == 3) {
-
-    for (nm in 2:NM) {
-
-      # First area to second area
-      N[, 1, t, cr, fdr, nm] <- (1 - AMP)*N[, 1, t, cr, fdr, nm] +
-        AMP*N[, 2, t, cr, fdr, nm]
-
-      # Intermediate areas to adjacent areas
-      for (a in 2:(A-1)) {
-        N[, a, t, cr, fdr, nm] <- (1 - 2*AMP)*N[, a, t, cr, fdr, nm] +
-          AMP*(N[, a - 1, t, cr, fdr, nm] + N[, a + 1, t, cr, fdr, nm])
-      }
-
-      # Last area to next to last area
-      N[, A, t, cr, fdr, nm] <- (1 - AMP)*N[, A, t, cr, fdr, nm] +
-        AMP*N[, A - 1, t, cr, fdr, nm]
-
-    }
-
+  # Intermediate areas to adjacent areas
+  for (a in 2:(A-1)) {
+    N[, a, t, cr, fdr, ] <- (1 - 2*AMP)*N[, a, t, cr, fdr, ] +
+      AMP*(N[, a - 1, t, cr, fdr, ] + N[, a + 1, t, cr, fdr, ])
   }
 
-  return(N[, a, t, cr, fdr, ])
+  # Last area to next to last area
+  N[, A, t, cr, fdr, ] <- (1 - AMP)*N[, A, t, cr, fdr, ] +
+    AMP*N[, A - 1, t, cr, fdr, ]
+
+  return(N[, , t, cr, fdr, ])
 
 }
