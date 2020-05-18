@@ -7,7 +7,6 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
-#' @param ENM numeric value, the nm value that represents the 'true' population.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param FM numeric array that corresponds to the fishing mortality at each
 #'    age in each area, at each timestep, under all control rules, with all
@@ -31,22 +30,21 @@
 #' @export
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; FDR = 4; NM = 3
+#' n = 34; A = 5; TimeT = 70; CR = 6; FDR = 4; NM = 1
 #' FM <- array(rep(0.2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
 #' N <- array(rep(10, n*A*TimeT*CR*FDR*NM), c(n, A, TimeT, CR, FDR, NM))
 #' E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 #' Catch <- array(rep(2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
-#' catch(t = 1, cr = 1, ENM = 2, fdr = 1, FM, M = 0.14, N, A = 5, Fb = 0.2,
+#' catch(t = 1, cr = 1, fdr = 1, FM, M = 0.14, N, A = 5, Fb = 0.2,
 #'    E, Catch)
 
-catch <- function(t, cr, ENM, fdr, FM, M, N, A, Fb, E, Catch) {
+catch <- function(t, cr, fdr, FM, M, N, A, Fb, E, Catch) {
 
   ###### Error handling ########################################################
 
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
-  if (ENM %% 1 != 0) {stop('ENM must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
   if (!is.numeric(M)) {stop('M must be a numeric value.')}
@@ -59,8 +57,6 @@ catch <- function(t, cr, ENM, fdr, FM, M, N, A, Fb, E, Catch) {
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (ENM <= 0 || ENM > 3) {
-    stop('ENM must be greater than 0 and less than or equal to 3.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(FM < 0) > 0) {
     stop('All values in FM must be greater than or equal to 0.')}
@@ -81,11 +77,10 @@ catch <- function(t, cr, ENM, fdr, FM, M, N, A, Fb, E, Catch) {
     stop('N, E, FM, or Catch has an incorrect number of time steps.')}
   if(dim(N)[4] != dim(E)[3] || dim(N)[4] != dim(Catch)[4] || dim(N)[4] != dim(FM)[4]) {
     stop('N, E, FM, or Catch has an incorrect number of control rules.')}
-  if(dim(N)[5] != dim(E)[4] || dim(N)[5] != dim(Catch)[4] || dim(N)[5] != dim(FM)[5]) {
+  if(dim(N)[5] != dim(E)[4] || dim(N)[5] != dim(Catch)[5] || dim(N)[5] != dim(FM)[5]) {
     stop('N, E, FM, or Catch has an incorrect number of final density ratios.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (ENM > dim(N)[5]) {stop('The given ENM value is too high for N.')}
 
   ##############################################################################
 
@@ -93,7 +88,7 @@ catch <- function(t, cr, ENM, fdr, FM, M, N, A, Fb, E, Catch) {
   coeff <- FM[ , , t, cr, fdr]/(M + FM[ , , t, cr, fdr])
 
   # calculate catch at age
-  Catch[ , , t, cr, fdr] <- coeff * N[ , , t, cr, fdr, ENM] * exp(-1*M - FM[ , , t, cr, fdr])
+  Catch[ , , t, cr, fdr] <- coeff * N[ , , t, cr, fdr, 1] * exp(-1*M - FM[ , , t, cr, fdr])
 
   return(Catch[, , t, cr, fdr])
 
