@@ -40,13 +40,13 @@
 #' @importFrom stats rbinom
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4; Transects = 24
 #' Abundance <- array(rep(340, A*TimeT*CR*FDR*1*NM),
 #'    c(A, TimeT, CR, FDR, 1, NM))
 #' Count <- array(rep(50, A*TimeT*Transects*2*CR*FDR*NM),
 #'    c(A, TimeT, Transects, 2, CR, FDR, NM))
 #' NuS <- array(rnorm(A*TimeT*CR*FDR*1, 0, 0.89), c(A, TimeT, CR, FDR, 1))
-#' sampling(t = 51, cr = 1, NM = 3, fdr = 1, Delta = 1.6, Gamma = 31.6,
+#' sampling(t = 51, cr = 1, NM, fdr = 1, Delta = 1.6, Gamma = 31.6,
 #'    Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
 sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
                      X, Count, NuS, A = 5, Ind_sampled = 'all') {
@@ -97,15 +97,15 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
     stop('The given "cr" value is too high for Abundance or Count.')}
   if (fdr > dim(Abundance)[4] || fdr > dim(Count)[6]) {
     stop('The given "fdr" value is too high for Abundance or Count.')}
-  if (NM > dim(Abundance)[5] || NM > dim(Count)[7]) {
+  if (NM > dim(Abundance)[6] || NM > dim(Count)[7]) {
     stop('The given "NM" value is too high for Abundance or Count.')}
   ##############################################################################
 
-  if (NM == 1) {
+  for (nm in 1:NM) {
 
     # Calculate probability of detection based on odds ratio
     # Based on Babcock & MacCall (2011): Eq. (12)
-    A_all <- Abundance[, t - 1, cr, fdr, 1, NM]
+    A_all <- Abundance[, t - 1, cr, fdr, 1, nm]
     total_all <- sum(A_all)
     odds_all <-  (Delta * A_all) / (total_all / A)
     p_all <- 1 / (1 + exp(odds_all))
@@ -118,13 +118,13 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
 
     # Calculate species count given transects with positive visuals
     nus <- NuS[, t - 1, cr, fdr, 1]
-    All <- Gamma*Abundance[, t - 1, cr, fdr, 1, NM]*exp(nus)
-    Count[, t, , 1, cr, fdr, NM] <- presence_all %*% All
+    All <- Gamma*Abundance[, t - 1, cr, fdr, 1, nm]*exp(nus)
+    Count[, t, , 1, cr, fdr, nm] <- presence_all %*% All
 
     if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
 
       # Calculate probability of detection based on odds ratio
-      A_mature <- Abundance[, t - 1, cr, fdr, 2, NM]
+      A_mature <- Abundance[, t - 1, cr, fdr, 2, nm]
       total_mature <- sum(A_mature)
       odds_mature <-  (Delta * A_mature) / (total_mature / A)
       p_mature <- 1 / (1 + exp(odds_mature))
@@ -138,54 +138,7 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
       # Calculate species count given transects with positive visuals
       nus <- NuS[, t - 1, cr, fdr, 2]
       Mature <- Gamma*A_mature*exp(nus)
-      Count[, t, , 2, cr, fdr, NM] <- presence_mature %*% Mature
-
-    }
-
-  }
-
-  else if (NM == 3) {
-
-    for (nm in 2:NM) {
-
-      # Calculate probability of detection based on odds ratio
-      # Based on Babcock & MacCall (2011): Eq. (12)
-      A_all <- Abundance[, t - 1, cr, fdr, 1, nm]
-      total_all <- sum(A_all)
-      odds_all <-  (Delta * A_all) / (total_all / A)
-      p_all <- 1 / (1 + exp(odds_all))
-
-      # Determine if species is detected at least once, and replace a random 0 with
-      #   a 1 if all zeros to prevent errors in calculating density ratio
-      # Dimensions = 1 * transects
-      presence_all <- array(rbinom(Transects, 1, p_all), c(Transects, 1))
-      if (sum(presence_all) == 0) {r <- sample(1:Transects, 1); presence_all[r] = 1}
-
-      # Calculate species count given transects with positive visuals
-      nus <- NuS[, t - 1, cr, fdr, 1]
-      All <- Gamma*Abundance[, t - 1, cr, fdr, 1, nm]*exp(nus)
-      Count[, t, , 1, cr, fdr, nm] <- presence_all %*% All
-
-      if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-
-        # Calculate probability of detection based on odds ratio
-        A_mature <- Abundance[, t - 1, cr, fdr, 2, nm]
-        total_mature <- sum(A_mature)
-        odds_mature <-  (Delta * A_mature) / (total_mature / A)
-        p_mature <- 1 / (1 + exp(odds_mature))
-
-        # Determine if species is detected at least once, and replace a random 0
-        #   with a 1 if all zeros to prevent errors in calculating density ratio
-        presence_mature <- array(rbinom(Transects, 1, p_mature), c(Transects, 1))
-        if (sum(presence_mature) == 0) {
-          r <- sample(1:Transects, 1); presence_mature[r] = 1}
-
-        # Calculate species count given transects with positive visuals
-        nus <- NuS[, t - 1, cr, fdr, 2, nm]
-        Mature <- Gamma*A_mature*exp(nus)
-        Count[, t, , 2, cr, fdr, nm] <- presence_mature %*% Mature
-
-      }
+      Count[, t, , 2, cr, fdr, nm] <- presence_mature %*% Mature
 
     }
 
