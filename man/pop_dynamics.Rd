@@ -4,16 +4,16 @@
 \alias{pop_dynamics}
 \title{Population Dynamics}
 \usage{
-pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5, Fb,
-  E, S, NM = 3, FM, A50_mat, Biomass, Abundance, Fishing = T,
-  Nat_mortality, R, Ind_sampled = "all")
+pop_dynamics(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5, Fb,
+  E, S, FM, A50_mat, Biomass, Abundance, Fishing = T, Nat_mortality, R,
+  Ind_sampled = "all")
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
 
-\item{nm}{temporary numeric value, the current natural mortality estimate.}
+\item{NM}{numeric value, the total number of natural mortality estimates.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -46,9 +46,6 @@ estimate.}
 
 \item{S}{numeric vector, the selectivities at age from age at recruitment to
 maximum age, on the interval (0, 1).}
-
-\item{NM}{numeric value, the total number of estimated values of natural
-mortality. Default value is 3.}
 
 \item{FM}{numeric array that corresponds to the fishing mortality at each
 age in each area, at each timestep, under all control rules, with all
@@ -90,28 +87,28 @@ numeric arrays, with updated values of fishing mortality (FM),
    control rule, and with a specific estimate of natural mortality
 }
 \examples{
-n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
-SSB <- array(rep(548, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Biomass <- array(rep(568, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1), c(A, TimeT, CR, NM, FDR, 1))
-N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
+n = 34; A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4
+SSB <- array(rep(548, A*TimeT*CR*FDR*NM), c(A, TimeT, CR, FDR, NM))
+Biomass <- array(rep(568, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+Abundance <- array(rep(3400, A*TimeT*CR*FDR*1*NM), c(A, TimeT, CR, FDR, 1, NM))
+N <- array(rep(10, n*A*TimeT*CR*FDR*NM), c(n, A, TimeT, CR, FDR, NM))
+FM <- array(rep(0.2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
 L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    L2 = 47.95, K = 0.2022, All_ages = FALSE)
 W <- weight(L, WA = 1.68e-5, WB = 3)
 Mat <- maturity(Rec_age = 2, Max_age = 35, K_mat = -0.4103, L, L50 = 39.53)
-E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 S <- selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
-NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
-Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
-R <- recruitment(t = 3, cr = 1, nm = 2, fdr = 1, SSB, A = 5, R0 = 1e+5,
+NuR <- array(rnorm(A*TimeT*CR*FDR, 0, 0.5), c(A, TimeT, CR, FDR))
+Eps <- epsilon(A = 5, TimeT = 70, CR = 6, FDR = 4, NuR, Rho_R = 0)
+R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A = 5, R0 = 1e+5,
    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
    Recruitment_mode = 'pool', LDP = 0.1)
-pop_dynamics(t = 3, cr = 1, nm = 2, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
-   N, W, Mat, A = 5, Fb = 0.2, E, S, NM = 3, FM, A50_mat = 8, Biomass,
-   Abundance, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19), R,
+pop_dynamics(t = 3, cr = 1, NM = 1, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
+   N, W, Mat, A = 5, Fb = 0.2, E, S, FM, A50_mat = 8, Biomass,
+   Abundance, Fishing = TRUE, Nat_mortality = c(0.14, 0.09, 0.19), R,
    Ind_sampled = 'all')
 }

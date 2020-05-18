@@ -120,22 +120,22 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   # Initialize population size and fishing mortality arrays
   # Dimensions = age * 1 * time * 1 * 1 * 1
   N2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
-  FM2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
+  FM2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1))
 
   # Initialize effort, biomass, and SSB arrays
   # Dimensions = 1 * time * 1 * 1 * 1
-  E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1, 1))
-  biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1))
+  biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
   SSB2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
   abundance2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1, 1))
 
   # Recruitment normal variable
   # Dimensions = 1 * timeT * 1 * 1 * 1
-  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 
   # Recruitment error
   # Dimensions = area * timeT * CR * 1
-  Eps2 <- epsilon(A = 1, eq_time, CR = 1, NM = 1, FDR = 1, nuR2, Rho_R)
+  Eps2 <- epsilon(A = 1, eq_time, CR = 1, FDR = 1, nuR2, Rho_R)
 
   # Start each age class with 10 individuals
   # Enter FM, N, abundance, and biomasses for time = 1 to Rec_age
@@ -143,7 +143,7 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   start_age <- A50_mat - Rec_age + 1
   for (t in 1:Rec_age) {
     N2[, 1, t, 1, 1, 1] <- rep(100, num)
-    biomass2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
+    biomass2[1, t, 1, 1] <- sum(N2[, 1, t, 1, 1, 1] * W)
     SSB2[1, t, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1]*W*Mat)
     abundance2[1, t, 1, 1, 1, 1] <- sum(N2[, 1, t, 1, 1, 1])
   }
@@ -152,21 +152,21 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   for (t in (Rec_age + 1):(eq_time - 1)) {
 
     # recruitment
-    R <- recruitment(t, cr = 1, nm = 1, fdr = 1, SSB = SSB2, A, R0, H, B0,
+    R <- recruitment(t, cr = 1, NM = 1, fdr = 1, SSB = SSB2, A, R0, H, B0,
                      Eps = Eps2, Sigma_R, Rec_age, Recruitment_mode, LDP = 0)
 
     # biology
-    PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age, SSB = SSB2,
-                       N = N2, W, Mat, A = 1, Fb = 0, E = E2, S, NM = 1,
-                       FM = FM2, A50_mat, Biomass = biomass2,
-                       Abundance = abundance2, Fishing = FALSE,
-                       Nat_mortality = c(M), R, Ind_sampled = 'all')
+    PD <- pop_dynamics(t, cr = 1, NM = 1, fdr = 1, Rec_age, Max_age, SSB = SSB2,
+                       N = N2, W, Mat, A = 1, Fb = 0, E = E2, S, FM = FM2,
+                       A50_mat, Biomass = biomass2, Abundance = abundance2,
+                       Fishing = FALSE, Nat_mortality = M, R,
+                       Ind_sampled = 'all')
 
-    FM2[, 1, t, 1, 1, 1]               <- PD[[1]]
-    N2[, 1, t, 1, 1, 1]                <- PD[[2]]
-    biomass2[1, t, 1, 1, 1]            <- PD[[3]]
-    SSB2[1, t, 1, 1, 1]                <- PD[[4]]
-    abundance2[1, t, 1, 1, 1, 1]       <- PD[[5]]
+    FM2[, 1, t, 1, 1]               <- PD[[1]]
+    N2[, 1, t, 1, 1, 1]             <- PD[[2]]
+    biomass2[1, t, 1, 1]            <- PD[[3]]
+    SSB2[1, t, 1, 1, 1]             <- PD[[4]]
+    abundance2[1, t, 1, 1, 1, 1]    <- PD[[5]]
 
   }
 

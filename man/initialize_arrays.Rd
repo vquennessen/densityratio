@@ -147,7 +147,7 @@ Default value is FALSE.}
 initalizes arrays necessary for other functions in the base model,
    including Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
    Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
-   Gamma, FM, E, Catch, Yield, Density_ratio, ENM, Abundance
+   Gamma, FM, E, Catch, Yield, Density_ratio, Abundance
 }
 \description{
 \code{initialize_arrays} returns arrays necessary for other functions in the
