@@ -47,7 +47,7 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, FDR, NuR, Rho_R = 0) {
   if(dim(NuR)[1] != A) {stop('NuR has an incorrect number of areas.')}
   if(dim(NuR)[2] != TimeT) {stop('NuR has an incorrect number of time steps.')}
   if(dim(NuR)[3] != CR) {stop('NuR has an incorrect number of control rules.')}
-  if(dim(NuR)[5] != FDR) {
+  if(dim(NuR)[4] != FDR) {
     stop('NuR has an incorrect number of final density ratios.')}
 
   ##############################################################################
@@ -57,7 +57,7 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, FDR, NuR, Rho_R = 0) {
   Eps <- array(rep(0, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
 
   # eps[, 1, ]
-  Eps[, 1, , , ] <- NuR[, 1, , , ]*sqrt(1 + Rho_R^2)
+  Eps[, 1, , ] <- NuR[, 1, , ]*sqrt(1 + Rho_R^2)
 
   # fill in rest of epsilon vector
   for (a in 1:A) {
