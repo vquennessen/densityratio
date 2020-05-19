@@ -185,7 +185,8 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
     } else if (cr %% 2 == 0) {
 
       # calculate transient target density ratio
-      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm, fdr)
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality,
+                             nm = ceiling(cr / 2), fdr)
 
       # calculate effort at the next timestep
       E[, t + 1, cr, fdr] <- management(t, cr, fdr, E, DR,
