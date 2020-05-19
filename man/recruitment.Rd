@@ -62,8 +62,8 @@ a numeric value representing the number of new recruits coming into
 \examples{
 A = 5; TimeT = 70; CR = 6; FDR = 4; NM = 1
 SSB <- array(rep(10, A*TimeT*CR*FDR*NM), c(A, TimeT, CR, FDR, NM))
-NuR <- array(rnorm(A*TimeT*CR*FDR, 0, 0.5), c(A, TimeT, CR, FDR))
-Eps <- epsilon(A = 5, TimeT = 70, CR = 6, FDR = 4, NuR, Rho_R = 0)
+NuR <- array(rnorm(A*TimeT*CR*FDR*NM, 0, 0.5), c(A, TimeT, CR, FDR, NM))
+Eps <- epsilon(A, TimeT, CR, FDR, NM, NuR, Rho_R = 0)
 recruitment(t = 3, cr = 1, NM = 1, fdr = 1, SSB, A = 5, R0 = 1e+5, H = 0.65,
    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
    LDP = 0.1)
