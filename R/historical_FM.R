@@ -32,7 +32,7 @@
 #' @importFrom graphics plot abline
 #'
 #' @examples
-#' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, LDP = 0.1,
+#' historical_FM(Species = 'BR_CA_2003', eq_time = 50, R0 = 1e+5, LDP = 0.1,
 #'    Stochasticity = FALSE, Recruitment_mode = 'pool')
 historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
                           Stochasticity = FALSE, Recruitment_mode = 'pool') {
