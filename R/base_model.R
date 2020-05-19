@@ -289,9 +289,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   ##### Population Dynamics - Time Varying #####################################
   for (fdr in 1:FDR) {
 
-    for (cr in 1:CR) {
+    for (t in (Rec_age + 1):TimeT) {
 
-      for (t in (Rec_age + 1):TimeT) {
+      for (cr in 1:CR) {
 
         for (nm in 1:NM) {
 
