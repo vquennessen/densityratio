@@ -97,7 +97,7 @@
 #'    Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
-#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
+#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'mature',
 #'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
 #'    Output.N = FALSE, Output.Abundance = FALSE,
 #'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
