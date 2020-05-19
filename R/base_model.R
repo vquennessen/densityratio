@@ -348,7 +348,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ] }
   if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , , 1] }
   if (Output.Yield == TRUE) { output$Yield <- colSums(Yield[, Time1:TimeT, , ]) }
-  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
+  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, Time1:TimeT, , ]) }
   if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
 
   return(output)
