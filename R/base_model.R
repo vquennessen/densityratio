@@ -361,9 +361,11 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ENM, ] }
   if (Output.Abundance == TRUE) {
     output$Abundance <- Abundance[, Time1:TimeT, , ENM, , ] }
-  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
+  if (Output.Biomass == TRUE) {
+    output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
   if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ENM, ] }
-  if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
+  if (Output.Yield == TRUE) {
+    output$Yield <- colSums(Yield[, Time1:TimeT, , ENM, ]) }
   if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
   if (Output.Density.Ratio == TRUE) {
     output$Density_ratio <- Density_ratio[Time1:TimeT, , ] }
