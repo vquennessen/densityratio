@@ -104,7 +104,7 @@ S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                    A50_down, Alpha, F_fin, Beta, Cf)
 
 # Recruitment error = 0 without stochasticity
-Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
 ##### Initialize arrays #####
 

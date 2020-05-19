@@ -45,7 +45,7 @@
 #'    c(A, TimeT, CR, FDR, 1, NM))
 #' Count <- array(rep(50, A*TimeT*Transects*2*CR*FDR*NM),
 #'    c(A, TimeT, Transects, 2, CR, FDR, NM))
-#' NuS <- array(rnorm(A*TimeT*CR*FDR*1, 0, 0.89), c(A, TimeT, CR, FDR, 1))
+#' NuS <- array(rnorm(A*TimeT*CR*FDR*1*NM, 0, 0.89), c(A, TimeT, CR, FDR, 1, NM))
 #' sampling(t = 51, cr = 1, NM, fdr = 1, Delta = 1.6, Gamma = 31.6,
 #'    Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
 sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
@@ -117,7 +117,7 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
     if (sum(presence_all) == 0) {r <- sample(1:Transects, 1); presence_all[r] = 1}
 
     # Calculate species count given transects with positive visuals
-    nus <- NuS[, t - 1, cr, fdr, 1]
+    nus <- NuS[, t - 1, cr, fdr, 1, nm]
     All <- Gamma*Abundance[, t - 1, cr, fdr, 1, nm]*exp(nus)
     Count[, t, , 1, cr, fdr, nm] <- presence_all %*% All
 
@@ -136,7 +136,7 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
         r <- sample(1:Transects, 1); presence_mature[r] = 1}
 
       # Calculate species count given transects with positive visuals
-      nus <- NuS[, t - 1, cr, fdr, 2]
+      nus <- NuS[, t - 1, cr, fdr, 2, nm]
       Mature <- Gamma*A_mature*exp(nus)
       Count[, t, , 2, cr, fdr, nm] <- presence_mature %*% Mature
 

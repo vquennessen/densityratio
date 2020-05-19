@@ -319,14 +319,14 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Recruitment normal variable
   # Dimensions = area * timeT * CR * FDR values (3)
   if (Stochasticity == T) {
-    NuR <- array(rnorm(A*TimeT*CR*FDR, 0, Sigma_R), c(A, TimeT, CR, FDR))
+    NuR <- array(rnorm(A*TimeT*CR*FDR*NM, 0, Sigma_R), c(A, TimeT, CR, FDR, NM))
   } else if (Stochasticity == F) {
-    NuR <- array(rep(0, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+    NuR <- array(rep(0, A*TimeT*CR*FDR*NM), c(A, TimeT, CR, FDR, NM))
   }
 
   # Recruitment error
-  # Dimensions = area * timeT * CR * FDR values (3)
-  Eps <- epsilon(A, TimeT, CR, FDR, NuR, Rho_R)
+  # Dimensions = area * timeT * CR * FDR * NM values (3)
+  Eps <- epsilon(A, TimeT, CR, FDR, NM, NuR, Rho_R)
 
   # Unfished spawning stock biomass
   B0 <- R0 / Phi
@@ -347,8 +347,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
     # Sampling normal variable
     # Dimensions = area * timeT * CR * FDR values (3)
-    NuS <- array(rnorm(A*TimeT*CR*FDR*dimension, 0, Sigma_S),
-                 c(A, TimeT, CR, FDR, dimension))
+    NuS <- array(rnorm(A*TimeT*CR*FDR*dimension*NM, 0, Sigma_S),
+                 c(A, TimeT, CR, FDR, dimension, NM))
 
     # Calculate delta - constant of proportionality
     # Based on Babcock & MacCall (2011): Eq. (13)

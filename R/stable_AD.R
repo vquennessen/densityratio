@@ -131,11 +131,11 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
 
   # Recruitment normal variable
   # Dimensions = 1 * timeT * 1 * 1 * 1
-  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+  nuR2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
   # Recruitment error
   # Dimensions = area * timeT * CR * 1
-  Eps2 <- epsilon(A = 1, eq_time, CR = 1, FDR = 1, nuR2, Rho_R)
+  Eps2 <- epsilon(A = 1, eq_time, CR = 1, FDR = 1, NM = 1, nuR2, Rho_R)
 
   # Start each age class with 10 individuals
   # Enter FM, N, abundance, and biomasses for time = 1 to Rec_age
