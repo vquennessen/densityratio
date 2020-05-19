@@ -71,10 +71,10 @@
 #'    L2 = 47.95, K = 0.2022, Fleets = c('sport', 'hook', 'trawl'),
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
-#' NuR <- array(rnorm(A*TimeT*CR*FDR, 0, 0.5), c(A, TimeT, CR, FDR))
-#' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, FDR = 4, NuR, Rho_R = 0)
-#' R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A = 5, R0 = 1e+5,
-#'    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
+#' NuR <- array(rnorm(A*TimeT*CR*FDR*NM, 0, 0.5), c(A, TimeT, CR, FDR, NM))
+#' Eps <- epsilon(A, TimeT, CR, FDR, NM, NuR, Rho_R = 0)
+#' R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A, R0 = 1e+5, H = 0.65,
+#'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
 #'    Recruitment_mode = 'pool', LDP = 0.1)
 #' pop_dynamics(t = 3, cr = 1, NM, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
 #'    N, W, Mat, A = 5, Fb = 0.2, E, S, FM, A50_mat = 8, Biomass,
@@ -171,53 +171,54 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
 
   ##### Step population foward in time
 
-  # Calculate recruitment and add recruits to population
-  N[1, , t, cr, fdr, ] <- R[1:A, 1:NM]
+  for (nm in 1:NM) {
 
-  # natural mortality arrays
-  m <- array(rep(c(Nat_mortality[1], Nat_mortality[ceiling(cr / 2)]),
-                 each = A), c(A, NM))
+    # Calculate recruitment and add recruits to population
+    N[1, , t, cr, fdr, nm] <- R[1:A, nm]
 
-  # Ages rec_age + 1 to max_age - 1
-  for (i in 2:(num - 1)) {
-    N[i, , t, cr, fdr, ] <- N[i - 1, , t - 1, cr, fdr, ] *
-      exp(-1 * (array(rep(FM[i - 1, , t - 1, cr, fdr], NM), c(A, NM)) + m))
-  }
+    # natural mortality arrays
+    m <- ifelse(cr < 3, Nat_mortality[1], Nat_mortality[ceiling(cr / 2)])
 
-  # Final age bin
-  N[num, , t, cr, fdr, ] <- N[num - 1, , t - 1, cr, fdr, ] *
-    exp(-1 * (array(rep(FM[num - 1, , t - 1, cr, fdr], NM), c(A, NM)) + m)) +
-    N[num, , t - 1, cr, fdr, ] *
-    exp(-1 * (array(rep(FM[num, , t - 1, cr, fdr], NM), c(A, NM)) + m))
-
-  # Calculate biomass of all fish
-  if (A > 1 | NM > 1) {
-
-    # Calculate biomass of all fish
-    Biomass[, t, cr, fdr] <- colSums(N[, , t, cr, fdr, 1] * W)
-    # Calculate spawning stock biomass
-    SSB[, t, cr, fdr, ] <- colSums(N[, , t, cr, fdr, ]*W*Mat)
-
-    # Abundance of all / mature individuals
-    Abundance[, t, cr, fdr, 1, ] <- colSums(N[, , t, cr, fdr, ])
-    if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-      Abundance[, t, cr, fdr, 2, ] <- colSums(N[A50_mat:num, , t, cr, fdr, ])
+    # Ages rec_age + 1 to max_age - 1
+    for (i in 2:(num - 1)) {
+      N[i, , t, cr, fdr, ] <- N[i - 1, , t - 1, cr, fdr, ] *
+        exp(-1 * (FM[i - 1, , t - 1, cr, fdr] + m))
     }
 
-  } else if (A == 1 & NM == 1) {
+    # Final age bin
+    N[num, , t, cr, fdr, ] <- N[num - 1, , t - 1, cr, fdr, ] *
+      exp(-1 * (FM[num - 1, , t - 1, cr, fdr] + m)) +
+      N[num, , t - 1, cr, fdr, ] * exp(-1 * (FM[num, , t - 1, cr, fdr] + m))
 
     # Calculate biomass of all fish
-    Biomass[1, t, cr, fdr] <- sum(N[, 1, t, cr, fdr, 1] * W)
+    if (A > 1) {
 
-    # Calculate spawning stock biomass
-    SSB[1, t, cr, fdr, 1] <- sum(N[, 1, t, cr, fdr, 1]*W*Mat)
+      # Calculate biomass of all fish
+      Biomass[, t, cr, fdr] <- colSums(N[, , t, cr, fdr, 1] * W)
+      # Calculate spawning stock biomass
+      SSB[, t, cr, fdr, nm] <- colSums(N[, , t, cr, fdr, nm]*W*Mat)
 
-    # Abundance of all / mature individuals
-    Abundance[1, t, cr, fdr, 1, 1] <- sum(N[, 1, t, cr, fdr, 1])
-    if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-      Abundance[1, t, cr, fdr, 2, 1] <- sum(N[A50_mat:num, 1, t, cr, fdr, 1])
+      # Abundance of all / mature individuals
+      Abundance[, t, cr, fdr, 1, nm] <- colSums(N[, , t, cr, fdr, nm])
+      if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
+        Abundance[, t, cr, fdr, 2, nm] <- colSums(N[A50_mat:num, , t, cr, fdr, nm])
+      }
+
+    } else if (A == 1) {
+
+      # Calculate biomass of all fish
+      Biomass[1, t, cr, fdr] <- sum(N[, 1, t, cr, fdr, 1] * W)
+
+      # Calculate spawning stock biomass
+      SSB[1, t, cr, fdr, 1] <- sum(N[, 1, t, cr, fdr, 1]*W*Mat)
+
+      # Abundance of all / mature individuals
+      Abundance[1, t, cr, fdr, 1, 1] <- sum(N[, 1, t, cr, fdr, 1])
+      if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
+        Abundance[1, t, cr, fdr, 2, 1] <- sum(N[A50_mat:num, 1, t, cr, fdr, 1])
+      }
+
     }
-
   }
 
   output <- list(FM[, , t, cr, fdr],
