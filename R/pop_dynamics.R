@@ -191,7 +191,7 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
     exp(-1 * (array(rep(FM[num, , t - 1, cr, fdr], NM), c(A, NM)) + m))
 
   # Calculate biomass of all fish
-  if (A > 1) {
+  if (A > 1 | NM > 1) {
 
     # Calculate biomass of all fish
     Biomass[, t, cr, fdr] <- colSums(N[, , t, cr, fdr, 1] * W)
@@ -204,18 +204,18 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
       Abundance[, t, cr, fdr, 2, ] <- colSums(N[A50_mat:num, , t, cr, fdr, ])
     }
 
-  } else if (A == 1) {
+  } else if (A == 1 & NM == 1) {
 
     # Calculate biomass of all fish
     Biomass[1, t, cr, fdr] <- sum(N[, 1, t, cr, fdr, 1] * W)
 
     # Calculate spawning stock biomass
-    SSB[1, t, cr, fdr, ] <- sum(N[, 1, t, cr, fdr, ]*W*Mat)
+    SSB[1, t, cr, fdr, 1] <- sum(N[, 1, t, cr, fdr, 1]*W*Mat)
 
     # Abundance of all / mature individuals
-    Abundance[, t, cr, fdr, 1, ] <- sum(N[, 1, t, cr, fdr, ])
+    Abundance[1, t, cr, fdr, 1, 1] <- sum(N[, 1, t, cr, fdr, 1])
     if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-      Abundance[, t, cr, fdr, 2, ] <- sum(N[A50_mat:num, 1, t, cr, fdr, ])
+      Abundance[1, t, cr, fdr, 2, 1] <- sum(N[A50_mat:num, 1, t, cr, fdr, 1])
     }
 
   }
