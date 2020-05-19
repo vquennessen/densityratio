@@ -68,6 +68,8 @@
 #'    Default value is FALSE.
 #' @param LDP numeric value, the proportion of larvae that drift to adjacent
 #'    areas. Default value is 0.1.
+#' @param Control_rules numeric vector, the control rules to be compared.
+#'    Default value is c(1:6).
 #' @param Output.N logical value, should the output include N? Default value is
 #'    FALSE.
 #' @param Output.Abundance logical value, should the output include Abundance?
@@ -97,9 +99,9 @@
 #'    Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
-#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'mature',
+#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-#'    Output.N = FALSE, Output.Abundance = FALSE,
+#'    Control_rules = c(1:6), Output.N = FALSE, Output.Abundance = FALSE,
 #'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
 #'    Output.Effort = FALSE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
@@ -109,10 +111,11 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Transects = 24, Adult_movement = TRUE, Plotting = FALSE,
                        Final_DRs, Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD',
-                       BM = FALSE, LDP = 0.1, Output.N = FALSE,
-                       Output.Abundance = FALSE, Output.Biomass = FALSE,
-                       Output.SSB = FALSE, Output.Yield = FALSE,
-                       Output.Effort = FALSE, Output.Density.Ratio = TRUE) {
+                       BM = FALSE, LDP = 0.1, Control_rules = c(1:6),
+                       Output.N = FALSE, Output.Abundance = FALSE,
+                       Output.Biomass = FALSE, Output.SSB = FALSE,
+                       Output.Yield = FALSE, Output.Effort = FALSE,
+                       Output.Density.Ratio = TRUE) {
 
   ###### Error handling ########################################################
 
@@ -150,6 +153,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
+  if (sum(Control_rules %% 1 != 0) != 0) {
+    stop('Control_rules must be a vector of integers.')}
   if (!is.logical(Output.N)) {stop('Output.N must be a logical value.')}
   if (!is.logical(Output.Abundance)) {
     stop('Output.Abundance must be a logical value.')}
@@ -188,6 +193,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
     stop('Ind_sampled must be either "mature" or "all" or NULL.')}
   if (Floor_DR <= 0) {stop('Floor_DR must be greater than 0.')}
   if (LDP < 0 || LDP > 1) {stop('LDP must be between 0 and 1.')}
+  if (sum(Control_rules <= 0) > 0) {
+    stop('All values in Control_rules must be greater than 0.')}
   if (is.null(Years_sampled) && BM == FALSE) {
     stop('BM must be TRUE for Years_sampled to be NULL.')}
   if (is.null(Areas_sampled) && BM == FALSE) {
@@ -240,9 +247,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   IA <- initialize_arrays(A, MPA, Final_DRs, Time1, Time2, R0, Rec_age, Max_age,
                           A1, L1, A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
-                          Cf, P, X, SP, M, Phi, Stochasticity, D, Transects, H,
-                          Surveys, Fishing, M_Error, Sampling_Error,
-                          Recruitment_mode, LDP, Ind_sampled, BM)
+                          Cf, P, X, SP, M, Control_rules, Phi, Stochasticity, D,
+                          Transects, H, Surveys, Fishing, M_Error,
+                          Sampling_Error, Recruitment_mode, LDP, Ind_sampled,
+                          BM)
 
   Inside           <- IA[[1]]     # Area(s) in the marine reserve
   Outside          <- IA[[2]]     # Areas not in the marine reserve
@@ -266,71 +274,79 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   Catch            <- IA[[20]]    # Catch at age
   Yield            <- IA[[21]]    # Yield per area
   Density_ratio    <- IA[[22]]    # Density ratios
-  Abundance        <- IA[[23]]    # Abundance of all and/or mature individuals
-  Transects        <- IA[[24]]    # Species count when sampling, dim = area*time
-  Count            <- IA[[25]]    # Species count when sampling, dim = area*time
+  ENM              <- IA[[23]]    # nm value that represents "true" M
+  Abundance        <- IA[[24]]    # Abundance of all and/or mature individuals
+  Transects        <- IA[[25]]    # Species count when sampling, dim = area*time
+  Count            <- IA[[26]]    # Species count when sampling, dim = area*time
 
   if (Sampling_Error == TRUE | BM == TRUE) {
-    Sigma_S          <- IA[[26]]  # Sampling normal standard deviation
-    NuS              <- IA[[27]]  # Sampling normal variable, dim = area*time*CR
-    Delta            <- IA[[28]]  # Constant of proportionality
-    Gamma            <- IA[[29]]  # Gamma
+    Sigma_S          <- IA[[27]]  # Sampling normal standard deviation
+    NuS              <- IA[[28]]  # Sampling normal variable, dim = area*time*CR
+    Delta            <- IA[[29]]  # Constant of proportionality
+    Gamma            <- IA[[30]]  # Gamma
   }
 
   ##### Population Dynamics - Time Varying #####################################
   for (fdr in 1:FDR) {
 
-    for (cr in 1:CR) {
+    for (t in (Rec_age + 1):TimeT) {
 
-      for (t in (Rec_age + 1):TimeT) {
+      for (cr in 1:CR) {
 
-        # Recruitment / larval movement (if applicable)
-        R <- recruitment(t, cr, NM, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
-                         Rec_age, Recruitment_mode, LDP)
+        for (nm in 1:NM) {
 
-        # biology
-        PD <- pop_dynamics(t, cr, NM, fdr, Rec_age, Max_age, SSB,
-                           N, W, Mat, A, Fb, E, S, FM, A50_mat, Biomass,
-                           Abundance, Fishing, Nat_mortality, R, Ind_sampled)
+          # effort allocation
+          E <- effort_allocation(t, cr, nm, fdr, Allocation, E, Yield, Time1,
+                                 Inside, Outside)
 
-        FM[, , t, cr, fdr]               <- PD[[1]]
-        N[, , t, cr, fdr, ]              <- PD[[2]]
-        Biomass[, t, cr, fdr]            <- PD[[3]]
-        SSB[, t, cr, fdr, ]              <- PD[[4]]
-        Abundance[, t, cr, fdr, , ]      <- PD[[5]]
+          # If there is adult movement, add movement
+          if (Adult_movement == TRUE) {N <- movement(t, cr, nm, fdr, N, A, AMP)}
 
-        # effort allocation based on yield
-        E[, t, cr, fdr] <- effort_allocation(t, cr, fdr, Allocation, E, Yield,
-                                             Time1, Inside, Outside)
+          # Recruitment / larval movement (if applicable)
+          R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
+                           Rec_age, Recruitment_mode, LDP)
 
-        # If there is adult movement, add movement
-        if (Adult_movement == TRUE) {
-          N[, , t, cr, fdr, ] <- movement(t, cr, NM, fdr, N, A, AMP)}
+          # biology
+          PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
+                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
+                             Biomass, Abundance, Fishing, Nat_mortality, R,
+                             Ind_sampled)
 
-        # fishing
-        if (Fishing == TRUE) {
-          Catch[, , t, cr, fdr] <- catch(t, cr, fdr, FM, M, N, A, Fb, E, Catch)
-          Yield[, t, cr, fdr] <- colSums(Catch[, , t, cr, fdr]*W)
-        }
+          FM[, , t, cr, nm, fdr]               <- PD[[1]]
+          N[, , t, cr, nm, fdr]                <- PD[[2]]
+          Biomass[, t, cr, nm, fdr]            <- PD[[3]]
+          SSB[, t, cr, nm, fdr]                <- PD[[4]]
+          Abundance[, t, cr, nm, fdr, ]        <- PD[[5]]
 
-        # sampling
-        if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
-          Count[, t, , , cr, fdr, ] <- sampling(t, cr, NM, fdr, Delta, Gamma,
-                                                Abundance, Transects, X, Count,
-                                                NuS, A, Ind_sampled)
+          # fishing
+          if (Fishing == TRUE) {
+            Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
+                                               Nat_mortality, N, A, Fb, E,
+                                               Catch)
+            Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
+          }
+
+          # sampling
+          if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
+            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
+                                                    Gamma, Abundance, Transects,
+                                                    X, Count, NuS, A,
+                                                    Ind_sampled)
+          }
+
         }
 
         # calculate true density ratio
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio)
+                                             Outside, Density_ratio, ENM)
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
-          E[, t + 1, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
-                                              TimeT, Transects, Nat_mortality,
-                                              Final_DRs, Inside, Outside,
-                                              Years_sampled, Areas_sampled,
-                                              Ind_sampled, Floor_DR, BM,
-                                              Sampling_Error, Density_ratio)
+          E[, t + 1, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
+                                                TimeT, Transects, Nat_mortality,
+                                                Final_DRs, Inside, Outside,
+                                                Years_sampled, Areas_sampled,
+                                                Ind_sampled, Floor_DR, BM,
+                                                Sampling_Error, Density_ratio)
         }
 
       }
@@ -339,18 +355,395 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
   }
 
+  ##### Plotting ###############################################################
+
+  if (Plotting == T) {
+
+    ##### Calculate relative biomass, yield, and SSB #############################
+
+    # initialize relative biomass, yield, and ssb arrays
+    # Dimensions = area * time2 + 1 * CR * FDR
+    Rel_biomass <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
+    Rel_yield <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
+    Rel_SSB <- array(rep(0, A*(Time2 + 1)*CR*FDR), c(A, Time2 + 1, CR, FDR))
+
+    ##### Relative values #####
+
+    # calculate relative biomass since reserve implementation
+    for (a in 1:A) {
+      for (cr in 1:CR) {
+        for (fdr in 1:FDR) {
+          Rel_biomass[a, , cr, fdr] <- Biomass[a, Time1:TimeT, cr, ENM, fdr]/Biomass[a, Time1, cr, ENM, fdr]
+        }
+      }
+    }
+
+    # calculate relative biomass since reserve implementation
+    for (a in 1:A) {
+      for (cr in 1:CR) {
+        for (fdr in 1:FDR) {
+          Rel_yield[a, , cr, fdr] <- Yield[a, Time1:TimeT, cr, ENM, fdr]/Yield[a, Time1, cr, ENM, fdr]
+        }
+      }
+    }
+
+    # calculate relative biomass since reserve implementation
+    for (a in 1:A) {
+      for (cr in 1:CR) {
+        for (fdr in 1:FDR) {
+          Rel_SSB[a, , cr, fdr] <- SSB[a, Time1:TimeT, cr, ENM, fdr]/SSB[a, Time1, cr, ENM, fdr]
+        }
+      }
+    }
+
+    # use red-blue color palette
+    palette <- colorRampPalette(c('red', 'blue'))
+    color <- palette(CR)
+
+    # set line types - solid for correct M, dashed for high M, dotted for low M
+    line_type <- c(2, 1, 3, 2, 1, 3)
+
+    # set layout matrix for all plots
+    layout_m <- matrix(c(1, 3, 2, 3), nrow = 2, ncol = 2, byrow = T)
+
+    # set legend title and text and position
+    legend_title <- expression(bold('Control Rule'))
+    legend_text <- c("\n Static \n Low M", "\n Static \n Correct M",
+                     "\n Static \n High M", "\n Transient \n Low M",
+                     "\n Transient \n Correct M", "\n Transient \n High M")
+    position <- 'left'
+
+    # transient DR for population with correct M
+    ENM <- ifelse(M_Error == 0, 1, 2)
+
+    ##### Plot relative biomass over time after reserve implementation #########
+
+    # y-axis limits
+    y1 <- 0
+    y2 <- 4
+    y_by <- (y2 - y1)/2
+
+    # x-axis limits
+    x1 <- 0
+    x2 <- Time2
+    x_by <- x2/4
+
+    # DR y-axis limits
+    y1_dr <- 0
+    y2_dr <- 2
+    by_dr <- y2_dr/2
+
+    for (fdr in 1:FDR) {
+
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+
+      for (a in 1:3) {
+
+        # set plotting layout
+        layout(mat = layout_m,
+               widths = c(2, 0.4), # Widths of the 2 columns
+               heights = c(4, 2))  # Heights of the 2 rows
+
+        area <- ifelse(a < 2, 'far from', ifelse(a == 3, 'in', 'near'))
+        title <- paste('Final DR: ', Final_DRs[fdr],
+                       sprintf(' - Relative biomass: %s reserve', area), sep = '')
+
+        # plot the relative biomass
+        par(mar = c(0.1, 4.5, 4.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = title, # title of plot
+             ylab = 'Relative Biomass', # axis labels
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(x1, x2), # set x-axis limits
+             ylim = c(y1, y2),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        ytick <- seq(y1, y2, by = y_by) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Rel_biomass[a, , cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1) # set line type
+        }
+
+        # add a gray dotted line at y = 1
+        lines(0:Time2, rep(1, Time2 + 1), col = 'gray', lty = 3)
+
+        # plot the density ratios over time
+        par(mar = c(4.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = 'Density Ratios Over Time', # title of plot
+             ylab = 'Density Ratio', # axis labels
+             xlab = 'Years since marine reserve implementation',
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(0, Time2), # set x-axis limits
+             ylim = c(0, y2_dr),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        dr_ytick <- seq(y1_dr, y2_dr, by_dr) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = dr_ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        # set specific x-axis
+        xtick <- seq(x1, x2, by = x_by) # set x axis tick marks
+        axis(side = 1, # specify x axis
+             at = xtick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Density_ratio[x1:x2 + 1, cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1)} # set line type
+
+        # add a gray dotted line at target_DR over time
+        lines(0:Time2, y_DR, col = 'gray', lty = 3)
+
+        # add a legend
+        par(mar = c(0.1, 0.1, 0.1, 0.1))
+        plot(1, type = 'n', axes = F, xlab = '', ylab = '')
+        legend(x = position, inset = 0, horiz = F, # position
+               col = color, # apply color palette
+               lwd = 2, # apply line thicknesses
+               lty = line_type, # apply line patterns
+               title = legend_title, # add legend title
+               legend = legend_text, # add legend labels
+               seg.len = 3, # adjust length of lines
+               cex = 1.1, # adjust legend text size
+               bty = 'n')
+
+      }
+    }
+
+    ##### Plot relative yield over time after reserve implementation ###########
+
+    # y-axis limits
+    yy1 <- 0
+    yy2 <- 3
+    yy_by <- (yy2 - yy1)/2
+
+    for (fdr in 1:FDR) {
+
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+
+      for (a in 1:2) {
+
+        # set plotting layout
+        layout(mat = layout_m,
+               widths = c(2, 0.4), # Widths of the 2 columns
+               heights = c(4, 2)) # Heights of the 2 rows
+
+        area <- ifelse(a == 1, 'far from', 'near')
+        title <- paste('Final DR: ', Final_DRs[fdr],
+                       sprintf(' - Relative yield: %s reserve', area), sep = '')
+
+        # plot the relative yield
+        par(mar = c(0.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = title, # title of plot
+             ylab = 'Relative Yield', # axis labels
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(x1, x2), # set x-axis limits
+             ylim = c(yy1, yy2),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        yytick <- seq(yy1, yy2, by = yy_by) # set yaxis tick marks
+        axis(side = 2, # specify y axis
+             at = yytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Rel_yield[a, , cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1) # set line type
+        }
+
+        # add a gray dotted line at y = 1
+        lines(0:Time2, rep(1, Time2 + 1), col = 'gray', lty = 3)
+
+        # plot the density ratio over time
+        par(mar = c(4.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = 'Density Ratios Over Time', # title of plot
+             ylab = 'Density Ratio', # axis labels
+             xlab = 'Years since marine reserve implementation',
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(0, Time2), # set x-axis limits
+             ylim = c(0, y2_dr),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        dr_ytick <- seq(y1_dr, y2_dr, by_dr) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = dr_ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        # set specific x-axis
+        xtick <- seq(x1, x2, by = x_by) # set x axis tick marks
+        axis(side = 1, # specify x axis
+             at = xtick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Density_ratio[x1:x2 + 1, cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1)} # set line type
+
+        # add a gray dotted line at target_DR over time
+        lines(0:Time2, y_DR, col = 'gray', lty = 3)
+
+        # add a legend
+        par(mar = c(0.1, 0.1, 0.1, 0.1))
+        plot(1, type = 'n', axes = F, xlab = '', ylab = '')
+        legend(x = position, inset = 0, horiz = F, # position
+               col = color, # apply color palette
+               lwd = 2, # apply line thicknesses
+               lty = line_type, # apply line patterns
+               title = legend_title, # add legend title
+               legend = legend_text, # add legend labels
+               seg.len = 3, # adjust length of lines
+               cex = 1.1, # adjust legend text size
+               bty = 'n')
+
+      }
+    }
+
+    ###### Plot relative SSB over time after reserve implementation ##############
+
+    # y-axis limits
+    yyy1 <- 0
+    yyy2 <- 2
+    yyy_by <- (yyy2 - yyy1)/2
+
+    for (fdr in 1:FDR) {
+
+      y_DR <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = ENM, fdr)
+
+      for (a in 1:3) {
+
+        # set plotting layout
+        layout(mat = layout_m,
+               widths = c(2, 0.4), # Widths of the 2 columns
+               heights = c(4, 2)) # Heights of the 2 rows
+
+        area <- ifelse(a < 2, 'far from', ifelse(a == 3, 'in', 'near'))
+        title <- paste('Final DR: ', Final_DRs[fdr],
+                       sprintf(' - Relative SSB: %s reserve', area), sep = '')
+
+        # plot the relative SSB
+        par(mar = c(0.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = title, # title of plot
+             ylab = 'Relative SSB', # axis labels
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(x1, x2), # set x-axis limits
+             ylim = c(yyy1, yyy2),
+             cex.lab = 1.5, cex.main = 1.5)
+
+        # set specific y-axis
+        yyytick <- seq(yyy1, yyy2, by = yyy_by) # set yaxis tick marks
+        axis(side = 2, # specify y axis
+             at = yyytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Rel_SSB[a, , cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1) # set line type
+        }
+
+        # add a gray dotted line at y = 1
+        lines(0:Time2, rep(1, Time2 + 1), col = 'gray', lty = 3)
+
+        # plot the density ratio over time
+        par(mar = c(4.1, 4.5, 3.1, 0.1))
+        plot(1, type = 'l', # make an empty line graph
+             main = 'Density Ratios Over Time', # title of plot
+             ylab = 'Density Ratio', # axis labels
+             xlab = 'Years since marine reserve implementation',
+             xaxt = 'n',
+             yaxt = 'n', # get rid of y-axis
+             xlim = c(0, Time2), # set x-axis limits
+             ylim = c(0, y2_dr),
+             cex.lab = 1.5, cex.main = 1.5
+        )
+
+        # set specific y-axis
+        dr_ytick <- seq(y1_dr, y2_dr, by_dr) # set y axis tick marks
+        axis(side = 2, # specify y axis
+             at = dr_ytick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        # set specific x-axis
+        dr_xtick <- seq(0, Time2, by = Time2/4) # set x axis tick marks
+        axis(side = 1, # specify x axis
+             at = dr_xtick, # apply tick marks
+             labels = T, # apply appropriate labels
+             las = 1) # set text horizontal
+
+        for (cr in 1:CR) {
+          lines(x1:x2, Density_ratio[x1:x2 + 1, cr, fdr],
+                col = color[cr], # use pre-defined color palette
+                lwd = 2, # set line width
+                lty = (cr %% 3) + 1)} # set line type
+
+        # add a gray dotted line at target_DR over time
+        lines(0:Time2, y_DR, col = 'gray', lty = 3)
+
+        # add a legend
+        par(mar = c(0.1, 0.1, 0.1, 0.1))
+        plot(1, type = 'n', axes = F, xlab = '', ylab = '')
+        legend(x = position, inset = 0, horiz = F, # position
+               col = color, # apply color palette
+               lwd = 2, # apply line thicknesses
+               lty = line_type, # apply line patterns
+               title = legend_title, # add legend title
+               legend = legend_text, # add legend labels
+               seg.len = 3, # adjust length of lines
+               cex = 1.1, # adjust legend text size
+               bty = 'n')
+
+      }
+    }
+  }
+
+  #####
+
   ######## initialize output list ##############################################
   output <- list()
 
-  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , , 1] }
+  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ENM, ] }
   if (Output.Abundance == TRUE) {
-    output$Abundance <- Abundance[, Time1:TimeT, , , , 1] }
-  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ] }
-  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , , 1] }
-  if (Output.Yield == TRUE) { output$Yield <- colSums(Yield[, Time1:TimeT, , ]) }
-  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, Time1:TimeT, , ]) }
-  if (Output.Density.Ratio == TRUE) {
-    output$Density_ratio <- Density_ratio[Time1:TimeT, , ] }
+    output$Abundance <- Abundance[, Time1:TimeT, , ENM, , ] }
+  if (Output.Biomass == TRUE) { output$Biomass <- Biomass[, Time1:TimeT, , ENM, ] }
+  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ENM, ] }
+  if (Output.Yield == TRUE) { output$Yield <- Yield[, Time1:TimeT, , ENM, ] }
+  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ENM, ]) }
+  if (Output.Density.Ratio == TRUE) { output$Density_ratio <- Density_ratio }
 
   return(output)
 

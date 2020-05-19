@@ -38,9 +38,9 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4; Transects = 24
-#' Count <- array(rep(5, A*TimeT*Transects*2*CR*FDR*NM),
-#'    c(A, TimeT, Transects, 2, CR, FDR, NM))
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+#' Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
+#'    c(A, TimeT, Transects, 2, CR, NM, FDR))
 #' density_ratio(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, Count,
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Transects = 24, Inside = 3, Outside = c(1, 2, 4, 5))
@@ -116,13 +116,13 @@ density_ratio <- function (t, cr, nm, fdr, A, Count, Years_sampled = 1,
   } else { years <- (t - Years_sampled):(t - 1) }
 
   # calculate count inside marine reserve
-  count_in <- Count[Inside, years, , ind, cr, fdr, nm]
+  count_in <- Count[Inside, years, , ind, cr, nm, fdr]
 
   # calculate counts outside marine reserve
   if (Areas_sampled == 'far') {
-    count_out <- Count[c(1, A), years, , ind, cr, fdr, nm]
+    count_out <- Count[c(1, A), years, , ind, cr, nm, fdr]
   } else if (Areas_sampled == 'all') {
-    count_out <- Count[Outside, years, , ind, cr, fdr, nm]
+    count_out <- Count[Outside, years, , ind, cr, nm, fdr]
   }
 
   # calculate density ratio

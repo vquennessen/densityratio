@@ -15,20 +15,21 @@
 #'    Default value is c(1, 2, 4, 5).
 #' @param Density_ratio numeric array, the true density ratios at each timestep,
 #'    under each control rule, and for each estimate of natural mortality.
+#' @param ENM numeric value, the nm value that represents the 'true' population.
 #'
 #' @return a numeric array that updates the true density ratios for the most
 #'    current timestep and control rule.
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4; Time2= 20
-#' Abundance <- array(rep(3400, A*TimeT*CR*FDR*1*NM),
-#' c(A, TimeT, CR, FDR, 1, NM))
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Time2= 20
+#' Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
+#' c(A, TimeT, CR, NM, FDR, 1))
 #' Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 #' true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
-#'    Outside = c(1, 2, 4, 5), Density_ratio)
+#'    Outside = c(1, 2, 4, 5), Density_ratio, ENM = 2)
 true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
-                    Density_ratio) {
+                    Density_ratio, ENM) {
 
   ###### Error handling ########################################################
 
@@ -64,16 +65,16 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
    stop('Abundance has the wrong number of time steps.')}
   if (cr > dim(Abundance)[3]) {
     stop('Abundance has the wrong number of control rules.')}
-  if (fdr > dim(Abundance)[4]) {
+  if (fdr> dim(Abundance)[5]) {
     stop('Abundance has the wrong number of final density ratios.')}
 
   ##############################################################################
 
   # Density of fish outside marine reserve(s)
-  Outside_density <- sum(Abundance[Outside, t, cr, fdr, 1, 1])/length(Outside)
+  Outside_density <- sum(Abundance[Outside, t, cr, ENM, fdr, 1]) / length(Outside)
 
   # Density of fish inside marine reserve(s)
-  Inside_density <- sum(Abundance[Inside, t, cr, fdr, 1, 1])/length(Inside)
+  Inside_density <- sum(Abundance[Inside, t, cr, ENM, fdr, 1]) / length(Inside)
 
   # True density ratio
   Density_ratio[t, cr, fdr] <- Outside_density / Inside_density

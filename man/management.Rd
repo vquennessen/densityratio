@@ -44,8 +44,8 @@ a numeric vector of fishing effort for the next timestep, under the
    given the control rule and estimated density ratio.
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4
-E <- array(rep(0.2, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 management(t = 51, cr = 1, fdr = 1, E, DR = 0.8, target_DR = 0.6,
    floor_DR = 0.2, effort_inc_allowed = 0.10, Time1 = 50)
 }

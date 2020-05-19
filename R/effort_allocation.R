@@ -4,6 +4,7 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
+#' @param nm temporary numeric value, the current natural mortality estimate.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param Allocation character value, how effort is to be allocated. Values can
 #'    be:
@@ -28,12 +29,12 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; FDR = 4
-#' E <- array(rep(0.2, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
-#' Yield <- array(rep(2458, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
-#' effort_allocation(t = 51, cr = 1, fdr = 1, Allocation = 'IFD', E,
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+#' Yield <- array(rep(2458, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+#' effort_allocation(t = 51, cr = 1, nm = 1, fdr = 1, Allocation = 'IFD', E,
 #'    Yield, Time1 = 50, Inside = 3, Outside = c(1, 2, 4, 5))
-effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
+effort_allocation <- function(t, cr, nm, fdr, Allocation = 'IFD', E, Yield,
                               Time1 = 50, Inside = c(3),
                               Outside = c(1, 2, 4, 5)) {
 
@@ -42,6 +43,7 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
+  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.character(Allocation)) {stop('Allocation must be a character value.')}
   if (!is.numeric(E)) {stop('E must be a numeric array.')}
@@ -53,6 +55,8 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
+  if (nm <= 0 || nm > 3) {
+    stop('nm must be greater than 0 and less than or equal to 3.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (Allocation != 'IFD' && Allocation != 'equal') {
     stop('Allocation must be either "IFD" or "equal".')}
@@ -73,10 +77,13 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
   if(dim(E)[3] != dim(Yield)[3]) {
     stop('E or Yield has an incorrect number of control rules.')}
   if(dim(E)[4] != dim(Yield)[4]) {
+    stop('E or Yield has an incorrect number of natural mortality estimates.')}
+  if(dim(E)[5] != dim(Yield)[5]) {
     stop('E or Yield has an incorrect number of final target density ratios.')}
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (fdr > dim(E)[4]) {stop('The given "fdr" value is too high for E.')}
+  if (nm > dim(E)[4]) {stop('The given "nm" value is too high for E.')}
+  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
   if (sum(intersect(Inside, Outside)) > 0) {
     stop('Areas cannot both be inside and outside the marine reserve.')}
 
@@ -93,23 +100,23 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
     if (t == Time1) {
 
-      E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr]) / outs, outs)
-      E[Inside, t, cr, fdr] <- 0
+      E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t - 1, cr, nm, fdr]) / outs, outs)
+      E[Inside, t, cr, nm, fdr] <- 0
 
     }  else {
 
-      prop_yield <- Yield[ , t - 1, cr, fdr] / sum(Yield[ , t - 1, cr, fdr])
-      E[ , t, cr, fdr] <- sum(E[ , t, cr, fdr])*prop_yield
+      prop_yield <- Yield[ , t - 1, cr, nm, fdr] / sum(Yield[ , t - 1, cr, nm, fdr])
+      E[ , t, cr, nm, fdr] <- sum(E[ , t, cr, nm, fdr])*prop_yield
 
     }
     #
     # else if (t > Time1) {
     #
-    #   prop_yield_out <- Yield[Outside, t - 1, cr, fdr] /
-    #     sum(Yield[Outside, t - 1, cr, fdr])
+    #   prop_yield_out <- Yield[Outside, t - 1, cr, nm, fdr] /
+    #     sum(Yield[Outside, t - 1, cr, nm, fdr])
     #
-    #   E[Outside, t, cr, fdr] <- sum(E[Outside, t - 1, cr, fdr])*prop_yield_out
-    #   E[Inside, t, cr, fdr] <- 0
+    #   E[Outside, t, cr, nm, fdr] <- sum(E[Outside, t - 1, cr, nm, fdr])*prop_yield_out
+    #   E[Inside, t, cr, nm, fdr] <- 0
     #
     # }
 
@@ -119,17 +126,17 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
     if (t < Time1) {
 
-      E[, t, cr, fdr] <- rep(sum(E[, t, cr, fdr])/all, all)
+      E[, t, cr, nm, fdr] <- rep(sum(E[, t, cr, nm, fdr])/all, all)
 
     } else if (t >= Time1) {
 
-    E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr])/outs, outs)
-    E[Inside, t, cr, fdr] <- 0
+    E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t - 1, cr, nm, fdr])/outs, outs)
+    E[Inside, t, cr, nm, fdr] <- 0
 
     }
 
   }
 
-  return(E[, t, cr, fdr])
+  return(E)
 
 }

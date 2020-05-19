@@ -4,7 +4,7 @@
 \alias{control_rule}
 \title{Control rule}
 \usage{
-control_rule(t, cr, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
+control_rule(t, cr, nm, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
   Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
   Outside = c(1, 2, 4, 5), Years_sampled = 1, Areas_sampled = "all",
   Ind_sampled = "all", Floor_DR = 0.2, BM = FALSE,
@@ -14,6 +14,8 @@ control_rule(t, cr, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
+
+\item{nm}{temporary numeric value, the current natural mortality estimate.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -83,14 +85,14 @@ a numeric vector of fishing effort for the next timestep, under the
    the fishery (i.e. set fishing effort for the next timestep).
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 2; Transects = 24
-E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
-Count <- array(rep(5, A*TimeT*Transects*2*CR*FDR*NM),
-   c(A, TimeT, Transects, 2, CR, FDR, NM))
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
+Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
+   c(A, TimeT, Transects, 2, CR, NM, FDR))
 Density_Ratio <- array(rep(0.5, TimeT*CR*FDR), c(TimeT, CR, FDR))
-control_rule(t = 51, cr = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
-   TimeT = 70, Transects = 24, Nat_mortality = c(0.14, 0.09, 0.19),
-   Final_DRs = c(0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
+control_rule(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
+   TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
+   Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
    Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio)
 }

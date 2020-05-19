@@ -44,6 +44,6 @@ a numeric value, the historical value of fishing mortality that would
    fished stock.
 }
 \examples{
-historical_FM(Species = 'BR_CA_2003', eq_time = 50, R0 = 1e+5, LDP = 0.1,
+historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, LDP = 0.1,
    Stochasticity = FALSE, Recruitment_mode = 'pool')
 }

@@ -9,8 +9,9 @@
 #'    Default value is 70.
 #' @param CR numeric value, the number of control rules to be compared. Default
 #'    value is 6.
+#' @param NM numeric value, the total number of estimated values of natural
+#'    mortality. Default value is 3.
 #' @param FDR numeric value, the total number of final density ratios.
-#' @param NM numeric value, the total number of natural mortality estimates.
 #' @param NuR numeric vector, the recruitment random normal variable, pulled
 #'    from a normal distribution of mean 0 and standard deviation equal to
 #'    Sigma_R.
@@ -18,14 +19,14 @@
 #'    (-1, 1). Default value is 0.
 #'
 #' @return a numeric vector of recruitment error terms, of dimensions
-#'    A \* timeT \* CR \* FDR.
+#'    A \* timeT \* CR \* NM.
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; FDR = 4; NM = 1
-#' NuR <- array(stats::rnorm(A*TimeT*CR*FDR*NM, 0, 0.5), c(A, TimeT, CR, FDR, NM))
-#' epsilon(A, TimeT, CR, FDR, NM, NuR, Rho_R = 0)
-epsilon <- function (A = 5, TimeT = 70, CR = 6, FDR, NM, NuR, Rho_R = 0) {
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' NuR <- array(stats::rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
+#' epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
+epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0) {
 
   ###### Error handling ########################################################
 
@@ -33,8 +34,8 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, FDR, NM, NuR, Rho_R = 0) {
   if (A %% 1 != 0) {stop('A must be an integer value.')}
   if (TimeT %% 1 != 0) {stop('TimeT must be an integer value.')}
   if (CR %% 1 != 0) {stop('CR must be an integer value.')}
-  if (FDR %% 1 != 0) {stop('FDR must be an integer value.')}
   if (NM %% 1 != 0) {stop('NM must be an integer value.')}
+  if (FDR %% 1 != 0) {stop('FDR must be an integer value.')}
   if (!is.numeric(NuR)) {stop('NuR must be a numeric array.')}
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
 
@@ -42,24 +43,24 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, FDR, NM, NuR, Rho_R = 0) {
   if (A <= 0) {stop('A must be greater than 0.')}
   if (TimeT <= 0) {stop('TimeT must be greater than 0.')}
   if (CR < 1) {stop('CR must be greater than or equal to 1.')}
+  if (NM != 1 && NM != 3) {stop('NM must be equal to 1 or 3.')}
   if (FDR <= 0) {stop('FDR must be greater than 0.')}
-  if (NM <= 0 | NM > 3) {stop('NM must be greater than 0 and less than 3.')}
   if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
 
   # relational values
   if(dim(NuR)[1] != A) {stop('NuR has an incorrect number of areas.')}
   if(dim(NuR)[2] != TimeT) {stop('NuR has an incorrect number of time steps.')}
   if(dim(NuR)[3] != CR) {stop('NuR has an incorrect number of control rules.')}
-  if(dim(NuR)[4] != FDR) {
-    stop('NuR has an incorrect number of final density ratios.')}
-  if(dim(NuR)[5] != NM) {
+  if(dim(NuR)[4] != NM) {
     stop('NuR has an incorrect number of natural mortality estimates.')}
+  if(dim(NuR)[5] != FDR) {
+    stop('NuR has an incorrect number of final density ratios.')}
 
   ##############################################################################
 
   # initialize epsilon vector
-  # Dimensions = area * timeT * CR * values (3)
-  Eps <- array(rep(0, A*TimeT*CR*FDR*NM), c(A, TimeT, CR, FDR, NM))
+  # Dimensions = area * timeT * CR * M values (3)
+  Eps <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 
   # eps[, 1, ]
   Eps[, 1, , , ] <- NuR[, 1, , , ]*sqrt(1 + Rho_R^2)
@@ -68,10 +69,10 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, FDR, NM, NuR, Rho_R = 0) {
   for (a in 1:A) {
     for (t in 2:TimeT) {
       for (cr in 1:CR) {
-        for (fdr in 1:FDR) {
-          for (nm in 1:NM) {
-            Eps[a, t, cr, fdr, nm] <- Rho_R*Eps[a, t - 1, cr, fdr, nm] +
-            NuR[a, t, cr, fdr, nm]*sqrt(1 + Rho_R^2)
+        for (nm in 1:NM) {
+          for (fdr in 1:FDR) {
+            Eps[a, t, cr, nm, fdr] <- Rho_R*Eps[a, t-1, cr, nm, fdr] +
+              NuR[a, t, cr, nm, fdr]*sqrt(1 + Rho_R^2)
           }
         }
       }

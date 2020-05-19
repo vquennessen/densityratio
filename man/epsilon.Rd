@@ -4,7 +4,7 @@
 \alias{epsilon}
 \title{Epsilon}
 \usage{
-epsilon(A = 5, TimeT = 70, CR = 6, FDR, NM, NuR, Rho_R = 0)
+epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0)
 }
 \arguments{
 \item{A}{numeric value, the number of total areas in the model. Default value
@@ -16,9 +16,10 @@ Default value is 70.}
 \item{CR}{numeric value, the number of control rules to be compared. Default
 value is 6.}
 
-\item{FDR}{numeric value, the total number of final density ratios.}
+\item{NM}{numeric value, the total number of estimated values of natural
+mortality. Default value is 3.}
 
-\item{NM}{numeric value, the total number of natural mortality estimates.}
+\item{FDR}{numeric value, the total number of final density ratios.}
 
 \item{NuR}{numeric vector, the recruitment random normal variable, pulled
 from a normal distribution of mean 0 and standard deviation equal to
@@ -29,14 +30,14 @@ Sigma_R.}
 }
 \value{
 a numeric vector of recruitment error terms, of dimensions
-   A \* timeT \* CR \* FDR.
+   A \* timeT \* CR \* NM.
 }
 \description{
 \code{epsilon} returns a vector of error terms for recruitment, based on
 equation 4 in Babcock & MacCall (2011).
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; FDR = 4; NM = 1
-NuR <- array(stats::rnorm(A*TimeT*CR*FDR*NM, 0, 0.5), c(A, TimeT, CR, FDR, NM))
-epsilon(A, TimeT, CR, FDR, NM, NuR, Rho_R = 0)
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+NuR <- array(stats::rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
+epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
 }

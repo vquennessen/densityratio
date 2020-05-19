@@ -5,7 +5,7 @@
 \title{True density ratio}
 \usage{
 true_DR(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
-  Density_ratio)
+  Density_ratio, ENM)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -26,6 +26,8 @@ Default value is c(1, 2, 4, 5).}
 
 \item{Density_ratio}{numeric array, the true density ratios at each timestep,
 under each control rule, and for each estimate of natural mortality.}
+
+\item{ENM}{numeric value, the nm value that represents the 'true' population.}
 }
 \value{
 a numeric array that updates the true density ratios for the most
@@ -36,10 +38,10 @@ a numeric array that updates the true density ratios for the most
    updating the Density_ratio array.
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4; Time2= 20
-Abundance <- array(rep(3400, A*TimeT*CR*FDR*1*NM),
-c(A, TimeT, CR, FDR, 1, NM))
+A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Time2= 20
+Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
+c(A, TimeT, CR, NM, FDR, 1))
 Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
-   Outside = c(1, 2, 4, 5), Density_ratio)
+   Outside = c(1, 2, 4, 5), Density_ratio, ENM = 2)
 }
