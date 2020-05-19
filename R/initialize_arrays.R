@@ -292,10 +292,10 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Range of natural mortalities (low, correct, and high) if error =/= 0
   if (M_Error != 0) {
     Nat_mortality <- c(M, M - M_Error, M + M_Error)
-    NM <- 1
+    NM <- 2
   } else {
     Nat_mortality <- M
-    NM <- 2}
+    NM <- 1}
 
   # Initialize age-structured population size matrix
   # Dimensions = age * area * time * CR * FDR values (3)
