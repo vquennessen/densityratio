@@ -113,26 +113,14 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
     # marine reserve, regardless of yield
   } else if (t < Time1 & Allocation == 'equal') {
 
-    # for (nm in 1:NM) {
-
     E[, t, cr, , fdr] <- array(rep(colSums(E[, t, cr, , fdr])/all,
                                    each = all), c(all, NM))
 
-    # E[, t, cr, nm, fdr] <- rep(sum(E[, t, cr, nm, fdr])/all, all)
-    # }
-
   } else if (t > Time1 & Allocation == 'equal') {
-
-    # for (nm in 1:NM) {
-    #
-    #   E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t, cr, nm, fdr])/outs, outs)
-    #   E[Inside, t, cr, nm, fdr] <- 0
 
     E[Outside, t, cr, , fdr] <- array(rep(colSums(E[, t, cr, , fdr])/outs,
                                           each = outs), c(outs, NM))
     E[Inside, t, cr, , fdr] <- 0
-
-    # }
 
   }
 

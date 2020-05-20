@@ -297,10 +297,14 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         E[, t, cr, , fdr] <- effort_allocation(t, cr, NM, fdr, Allocation, E,
                                                Yield, Time1, Inside, Outside)
 
-        for (nm in 1:NM) {
+        if (t < 10) {print(N[, , t, cr, , fdr])}
 
-          # If there is adult movement, add movement
-          if (Adult_movement == TRUE) {N <- movement(t, cr, nm, fdr, N, A, AMP)}
+        # If there is adult movement, add movement
+        if (Adult_movement == TRUE) {N <- movement(t, cr, NM, fdr, N, A, AMP)}
+
+        if (t < 10) {print(N[, , t, cr, , fdr])}
+
+        for (nm in 1:NM) {
 
           # Recruitment / larval movement (if applicable)
           R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
