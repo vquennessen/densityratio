@@ -151,13 +151,13 @@ for (i in 2:fn) {
   for (t in (Rec_age + 1):eq_time) {
 
     # recruitment
-    R <- recruitment(t, cr = 1, nm = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
+    R <- recruitment(t, cr = 1, NM = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
                      Sigma_R, Rec_age, Recruitment_mode, LDP)
 
     PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age,
-                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, NM = 1, FM2,
-                       A50_mat, biomass2, abundance2, Fishing = T,
-                       Nat_mortality = c(M), R)
+                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, FM2, NM = 1, A50_mat,
+                       biomass2, abundance2, Fishing = T, Nat_mortality = c(M),
+                       R)
 
     FM2[, , t, 1, 1, 1]               <- rep(FM_values[i], num)
     N2[, , t, 1, 1, 1]                <- PD[[2]]

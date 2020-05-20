@@ -67,26 +67,16 @@ movement <- function(t, cr, NM, fdr, N, A, AMP = 0.1) {
     N[, 1, t, cr, , fdr] <- A2 * N[, 1, t, cr, , fdr] +
       A3 * N[, 2, t, cr, , fdr]
 
-    # N[, 1, t, cr, nm, fdr] <- (1 - AMP)*N[, 1, t, cr, nm, fdr] +
-    # AMP*N[, 2, t, cr, nm, fdr]
-
     # Intermediate areas to adjacent areas
     for (a in 2:(A-1)) {
       N[, a, t, cr, , fdr] <- A1 * N[, a, t, cr, , fdr] +
         A3 * N[, a - 1, t, cr, , fdr] + N[, a + 1, t, cr, , fdr]
-      # N[, a, t, cr, nm, fdr] <- (1 - 2*AMP)*N[, a, t, cr, nm, fdr] +
-      #   AMP*(N[, a - 1, t, cr, nm, fdr] + N[, a + 1, t, cr, nm, fdr])
     }
 
     # Last area to next to last area
     N[, A, t, cr, , fdr] <- A2 * N[, A, t, cr, , fdr] +
       A3 * N[, A - 1, t, cr, , fdr]
 
-    # N[, A, t, cr, nm, fdr] <- (1 - AMP)*N[, A, t, cr, nm, fdr] +
-    #   AMP*N[, A - 1, t, cr, nm, fdr]
-
-  # }
-
-  return(N)
+  return(N[, , t, cr, , fdr])
 
 }

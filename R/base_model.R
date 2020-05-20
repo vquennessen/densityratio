@@ -297,32 +297,34 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         E[, t, cr, , fdr] <- effort_allocation(t, cr, NM, fdr, Allocation, E,
                                                Yield, Time1, Inside, Outside)
 
-        if (t < 10) {print(N[, , t, cr, , fdr])}
-
         # If there is adult movement, add movement
-        if (Adult_movement == TRUE) {N <- movement(t, cr, NM, fdr, N, A, AMP)}
+        if (Adult_movement == TRUE) {
+          N[, , t, cr, , fdr] <- movement(t, cr, NM, fdr, N, A, AMP)
+        }
 
-        if (t < 10) {print(N[, , t, cr, , fdr])}
+        # Recruitment / larval movement (if applicable)
+        R <- recruitment(t, cr, NM, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
+                         Rec_age, Recruitment_mode, LDP)
+
+        if (t > 64) {
+          print(paste('t = ', t, '; nm = ', nm, sep = ''))
+          print(R)
+        }
 
         for (nm in 1:NM) {
 
-          # Recruitment / larval movement (if applicable)
-          R <- recruitment(t, cr, nm, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
-                           Rec_age, Recruitment_mode, LDP)
+        # biology
+        PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
+                           N, W, Mat, A, Fb, E, S, FM, NM, A50_mat, Biomass,
+                           Abundance, Fishing, Nat_mortality, R, Ind_sampled)
 
-          # biology
-          PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
-                             N, W, Mat, A, Fb, E, S, NM, FM, A50_mat,
-                             Biomass, Abundance, Fishing, Nat_mortality, R,
-                             Ind_sampled)
+        FM[, , t, cr, nm, fdr]               <- PD[[1]]
+        N[, , t, cr, nm, fdr]                <- PD[[2]]
+        Biomass[, t, cr, nm, fdr]            <- PD[[3]]
+        SSB[, t, cr, nm, fdr]                <- PD[[4]]
+        Abundance[, t, cr, nm, fdr, ]        <- PD[[5]]
 
-          FM[, , t, cr, nm, fdr]               <- PD[[1]]
-          N[, , t, cr, nm, fdr]                <- PD[[2]]
-          Biomass[, t, cr, nm, fdr]            <- PD[[3]]
-          SSB[, t, cr, nm, fdr]                <- PD[[4]]
-          Abundance[, t, cr, nm, fdr, ]        <- PD[[5]]
-
-          # fishing
+        # fishing
           if (Fishing == TRUE) {
             Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
                                                Nat_mortality, N, A, Fb, E,
