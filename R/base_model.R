@@ -98,7 +98,7 @@
 #'    Time2 = 10, Recruitment_mode = 'closed', M_Error = 0.05,
 #'    Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-#'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.8, 1),
+#'    Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.6, 0.8),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
 #'    Control_rules = c(1:6), Output.N = FALSE, Output.Abundance = FALSE,
@@ -294,13 +294,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
       for (t in (Rec_age + 1):TimeT) {
 
         # effort allocation
-          E[, t, cr, , fdr] <- effort_allocation(t, cr, NM, fdr, Allocation,
-                                                   E, Yield, Time1, Inside,
-                                                   Outside)
+        E[, t, cr, , fdr] <- effort_allocation(t, cr, NM, fdr, Allocation, E,
+                                               Yield, Time1, Inside, Outside)
 
         for (nm in 1:NM) {
-
-
 
           # If there is adult movement, add movement
           if (Adult_movement == TRUE) {N <- movement(t, cr, nm, fdr, N, A, AMP)}

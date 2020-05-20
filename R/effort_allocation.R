@@ -94,50 +94,45 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
   ins <- length(Inside)
   all <- outs + ins
 
-  for (nm in 1:NM) {
+  if (t == Time1) {
+
+    E[Outside, t, cr, , fdr] <- array(rep(rep(colSums(E[, t - 1, cr, , fdr]) / outs,
+                                              outs), NM), c(outs, NM))
+    E[Inside, t, cr, , fdr] <- 0
 
     # If effort is allocated using the ideal free distribution, effort for one
     # year depends on the distribution of yield from the previous year
-    if (Allocation == 'IFD') {
+  } else if (t != Time1 & Allocation == 'IFD') {
 
-      if (t == Time1) {
+    yield <- Yield[, t - 1, cr, , fdr]
+    prop_yield <- sweep(yield, MARGIN = 2, STATS = colSums(yield), FUN = '/')
+    colSums_E <- array(rep(colSums(E[, t, cr, , fdr]), each = all), c(all, NM))
+    E[, t, cr, , fdr] <- colSums_E * prop_yield
 
-        E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t - 1, cr, nm, fdr]) / outs, outs)
-        E[Inside, t, cr, nm, fdr] <- 0
+    # Otherwise, distribute effort equally between the four areas outside the
+    # marine reserve, regardless of yield
+  } else if (t < Time1 & Allocation == 'equal') {
 
-      }  else {
+    # for (nm in 1:NM) {
 
-        prop_yield <- Yield[ , t - 1, cr, nm, fdr] / sum(Yield[ , t - 1, cr, nm, fdr])
-        E[ , t, cr, nm, fdr] <- sum(E[ , t, cr, nm, fdr])*prop_yield
+    E[, t, cr, , fdr] <- array(rep(colSums(E[, t, cr, , fdr])/all,
+                                   each = all), c(all, NM))
 
-      }
-      #
-      # else if (t > Time1) {
-      #
-      #   prop_yield_out <- Yield[Outside, t - 1, cr, nm, fdr] /
-      #     sum(Yield[Outside, t - 1, cr, nm, fdr])
-      #
-      #   E[Outside, t, cr, nm, fdr] <- sum(E[Outside, t - 1, cr, nm, fdr])*prop_yield_out
-      #   E[Inside, t, cr, nm, fdr] <- 0
-      #
-      # }
+    # E[, t, cr, nm, fdr] <- rep(sum(E[, t, cr, nm, fdr])/all, all)
+    # }
 
-      # Otherwise, distribute effort equally between the four areas outside the
-      # marine reserve, regardless of yield
-    } else if (Allocation == 'equal') {
+  } else if (t > Time1 & Allocation == 'equal') {
 
-      if (t < Time1) {
+    # for (nm in 1:NM) {
+    #
+    #   E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t, cr, nm, fdr])/outs, outs)
+    #   E[Inside, t, cr, nm, fdr] <- 0
 
-        E[, t, cr, nm, fdr] <- rep(sum(E[, t, cr, nm, fdr])/all, all)
+    E[Outside, t, cr, , fdr] <- array(rep(colSums(E[, t, cr, , fdr])/outs,
+                                          each = outs), c(outs, NM))
+    E[Inside, t, cr, , fdr] <- 0
 
-      } else if (t >= Time1) {
-
-        E[Outside, t, cr, nm, fdr] <- rep(sum(E[, t - 1, cr, nm, fdr])/outs, outs)
-        E[Inside, t, cr, nm, fdr] <- 0
-
-      }
-
-    }
+    # }
 
   }
 
