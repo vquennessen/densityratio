@@ -29,7 +29,7 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 1; FDR = 4
+#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
 #' E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Yield <- array(rep(2458, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' effort_allocation(t = 51, cr = 1, NM, fdr = 1, Allocation = 'IFD', E,
@@ -89,6 +89,8 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
 
   ##############################################################################
 
+  if (NM > 1) {
+
   # number of areas not in a reserve
   outs <- length(Outside)
   ins <- length(Inside)
@@ -123,6 +125,40 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
     E[Inside, t, cr, , fdr] <- 0
 
   }
+
+  } else if (NM == 1) {
+
+    # number of areas not in a reserve
+    outs <- length(Outside)
+    ins <- length(Inside)
+    all <- outs + ins
+
+    if (t == Time1) {
+
+      E[Outside, t, cr, 1, fdr] <- rep(colSums(E[, t - 1, cr, 1, fdr]) / outs, outs)
+      E[Inside, t, cr, 1, fdr] <- 0
+
+      # If effort is allocated using the ideal free distribution, effort for one
+      # year depends on the distribution of yield from the previous year
+    } else if (t != Time1 & Allocation == 'IFD') {
+
+      prop_yield <- Yield[, t - 1, cr, 1, fdr] / sum(Yield[, t - 1, cr, 1, fdr])
+      E[, t, cr, 1, fdr] <- sum(E[, t, cr, 1, fdr]) * prop_yield
+
+      # Otherwise, distribute effort equally between the four areas outside the
+      # marine reserve, regardless of yield
+    } else if (t < Time1 & Allocation == 'equal') {
+
+      E[, t, cr, 1, fdr] <- rep(sum(E[, t, cr, 1, fdr])/all, each = all)
+
+    } else if (t > Time1 & Allocation == 'equal') {
+
+      E[Outside, t, cr, 1, fdr] <- rep(colSums(E[, t, cr, , fdr])/outs, each = outs)
+      E[Inside, t, cr, 1, fdr] <- 0
+
+    }
+
+}
 
   return(E[, t, cr, , fdr])
 
