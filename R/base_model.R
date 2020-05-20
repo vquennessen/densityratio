@@ -306,10 +306,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         R <- recruitment(t, cr, NM, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
                          Rec_age, Recruitment_mode, LDP)
 
-        if (t > 64) {
-          print(paste('t = ', t, '; nm = ', nm, sep = ''))
-          print(R)
-        }
+        # if (t > 64) {
+        #   print(paste('t = ', t, '; nm = ', nm, sep = ''))
+        #   print(R)
+        # }
 
         for (nm in 1:NM) {
 
