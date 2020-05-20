@@ -4,7 +4,7 @@
 \alias{recruitment}
 \title{Recruitment}
 \usage{
-recruitment(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+05, H, B0, Eps,
+recruitment(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+05, H, B0, Eps,
   Sigma_R, Rec_age, Recruitment_mode, LDP = 0.1)
 }
 \arguments{
@@ -12,7 +12,7 @@ recruitment(t, cr, nm, fdr, SSB, A = 5, R0 = 1e+05, H, B0, Eps,
 
 \item{cr}{temporary numeric value, the current control rule .}
 
-\item{nm}{temporary numeric value, the current natural mortality estimate.}
+\item{NM}{numeric value, the total number of natural mortality estimates.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -64,7 +64,7 @@ A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
 SSB <- array(rep(10, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
 Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
-recruitment(t = 3, cr = 1, nm = 2, fdr = 1, SSB, A = 5, R0 = 1e+5, H = 0.65,
+recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A = 5, R0 = 1e+5, H = 0.65,
    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
    LDP = 0.1)
 }
