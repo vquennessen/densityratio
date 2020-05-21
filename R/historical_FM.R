@@ -154,16 +154,16 @@ for (i in 2:fn) {
     R <- recruitment(t, cr = 1, NM = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
                      Sigma_R, Rec_age, Recruitment_mode, LDP)
 
-    PD <- pop_dynamics(t, cr = 1, nm = 1, fdr = 1, Rec_age, Max_age,
-                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, FM2, NM = 1, A50_mat,
+    PD <- pop_dynamics(t, cr = 1, NM = 1, fdr = 1, Rec_age, Max_age,
+                       SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, FM2, A50_mat,
                        biomass2, abundance2, Fishing = T, Nat_mortality = c(M),
                        R)
 
-    FM2[, , t, 1, 1, 1]               <- rep(FM_values[i], num)
-    N2[, , t, 1, 1, 1]                <- PD[[2]]
-    biomass2[, t, 1, 1, 1]            <- PD[[3]]
-    SSB2[, t, 1, 1, 1]                <- PD[[4]]
-    abundance2[, t, 1, 1, 1, 1]       <- PD[[5]]
+    FM2[, , t, 1, , 1]               <- rep(FM_values[i], num)
+    N2[, , t, 1, , 1]                <- PD[[2]]
+    biomass2[, t, 1, , 1]            <- PD[[3]]
+    SSB2[, t, 1, , 1]                <- PD[[4]]
+    abundance2[, t, 1, 1, , 1]       <- PD[[5]]
 
   }
 

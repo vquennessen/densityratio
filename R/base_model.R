@@ -306,23 +306,25 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         R <- recruitment(t, cr, NM, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
                          Rec_age, Recruitment_mode, LDP)
 
-        # if (t > 64) {
-        #   print(paste('t = ', t, '; nm = ', nm, sep = ''))
-        #   print(R)
-        # }
-
-        for (nm in 1:NM) {
-
         # biology
-        PD <- pop_dynamics(t, cr, nm, fdr, Rec_age, Max_age, SSB,
-                           N, W, Mat, A, Fb, E, S, FM, NM, A50_mat, Biomass,
+        PD <- pop_dynamics(t, cr, NM, fdr, Rec_age, Max_age, SSB,
+                           N, W, Mat, A, Fb, E, S, FM, A50_mat, Biomass,
                            Abundance, Fishing, Nat_mortality, R, Ind_sampled)
 
-        FM[, , t, cr, nm, fdr]               <- PD[[1]]
-        N[, , t, cr, nm, fdr]                <- PD[[2]]
-        Biomass[, t, cr, nm, fdr]            <- PD[[3]]
-        SSB[, t, cr, nm, fdr]                <- PD[[4]]
-        Abundance[, t, cr, nm, fdr, ]        <- PD[[5]]
+        FM[, , t, cr, , fdr]               <- PD[[1]]
+        N[, , t, cr, , fdr]                <- PD[[2]]
+        Biomass[, t, cr, , fdr]            <- PD[[3]]
+        SSB[, t, cr, , fdr]                <- PD[[4]]
+        Abundance[, t, cr, , fdr, ]        <- PD[[5]]
+
+        if (t > 64) {
+          print(paste('t = ', t, '; nm = ', nm, sep = ''))
+          print(Biomass[, t, cr, , fdr])
+          print(SSB[, t, cr, , fdr])
+          print(Abundance[, t, cr, , fdr, ])
+        }
+
+        for (nm in 1:NM) {
 
         # fishing
           if (Fishing == TRUE) {
