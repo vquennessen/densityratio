@@ -324,11 +324,11 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
             Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
           }
 
-        if (t > 64) {
-          print(paste('t = ', t, '; nm = ', nm, sep = ''))
-          print(Catch[, , t, cr, , fdr])
-          print(Yield[, t, cr, , fdr])
-        }
+        # if (t > 64) {
+        #   print(paste('t = ', t, '; nm = ', nm, sep = ''))
+        #   print(Catch[, , t, cr, , fdr])
+        #   print(Yield[, t, cr, , fdr])
+        # }
 
         for (nm in 1:NM) {
 
