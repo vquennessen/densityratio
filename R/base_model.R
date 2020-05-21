@@ -317,12 +317,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         SSB[, t, cr, , fdr]                <- PD[[4]]
         Abundance[, t, cr, , fdr, ]        <- PD[[5]]
 
-        # if (t > 64) {
-        #   print(paste('t = ', t, '; nm = ', nm, sep = ''))
-        #   print(Biomass[, t, cr, , fdr])
-        #   print(SSB[, t, cr, , fdr])
-        #   print(Abundance[, t, cr, , fdr, ])
-        # }
+        if (t > 64) {
+          print(paste('t = ', t, '; nm = ', nm, sep = ''))
+          print(FM[, , t, cr, , fdr])
+        }
 
         for (nm in 1:NM) {
 

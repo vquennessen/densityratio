@@ -384,7 +384,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Dimensions = age * area * time * CR * M * FDR values (3)
   FM <- array(rep(0, num*A*TimeT*CR*NM*FDR), c(num, A, TimeT, CR, NM, FDR))
   # initialise FM values, dimensions num*A
-  fm <- f_mortality(t = 1, cr = 1, nm = ENM, fdr = 1, FM, A, Fb, E, S)
+  fm <- f_mortality(t = 1, cr = 1, NM, fdr = 1, FM, A, Fb, E, S)
 
   # Initialize catch-at-age matrix
   # Dimensions = age * area * time * CR * M * FDR values (3)
@@ -409,9 +409,11 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   for (t in 1:Rec_age) {
     for (cr in 1:CR) {
       for (fdr in 1:FDR) {
+
+        FM[, , t, cr, , fdr] <- fm
+
         for (nm in 1:NM) {
           N[, , t, cr, nm, fdr] <- array(rep(SAD, A), c(num, A))
-          FM[, , t, cr, nm, fdr] <- fm
           Biomass[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr] * W)
           SSB[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr]*W*Mat)
           E[, t, cr, nm, fdr] <- rep(0.2, A)

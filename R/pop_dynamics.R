@@ -174,14 +174,10 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   ages <- Rec_age:Max_age
   num <- length(ages)
 
-  for (nm in 1:NM) {
-
-    # Calculate fishing mortality
-    if (Fishing == T) {
-      FM[, , t, cr, nm, fdr] <- f_mortality(t, cr, nm, fdr, FM, A, Fb, E, S)
-    } else { FM[, , t, cr, nm, fdr] <- 0 }
-
-  }
+  # Calculate fishing mortality
+  if (Fishing == T) {
+    FM[, , t, cr, , fdr] <- f_mortality(t, cr, NM, fdr, FM, A, Fb, E, S)
+  } else { FM[, , t, cr, , fdr] <- 0 }
 
   ##### Step population foward in time
 
