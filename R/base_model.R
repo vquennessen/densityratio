@@ -317,20 +317,20 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         SSB[, t, cr, , fdr]                <- PD[[4]]
         Abundance[, t, cr, , fdr, ]        <- PD[[5]]
 
-        # if (t > 64) {
-        #   print(paste('t = ', t, '; nm = ', nm, sep = ''))
-        #   print(FM[, , t, cr, , fdr])
-        # }
-
-        for (nm in 1:NM) {
-
         # fishing
           if (Fishing == TRUE) {
-            Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
-                                               Nat_mortality, N, A, Fb, E,
-                                               Catch)
-            Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
+            Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality,
+                                             N, A, Fb, E, Catch)
+            Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
           }
+
+        if (t > 64) {
+          print(paste('t = ', t, '; nm = ', nm, sep = ''))
+          print(Catch[, , t, cr, , fdr])
+          print(Yield[, t, cr, , fdr])
+        }
+
+        for (nm in 1:NM) {
 
           # sampling
           if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {

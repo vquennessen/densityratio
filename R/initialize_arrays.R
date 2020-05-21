@@ -417,9 +417,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
           Biomass[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr] * W)
           SSB[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr]*W*Mat)
           E[, t, cr, nm, fdr] <- rep(0.2, A)
-          Catch[, , t, cr, nm, fdr] <- catch(t, cr, nm, fdr, FM,
-                                             Nat_mortality, N, A, Fb, E, Catch)
-          Yield[, t, cr, nm, fdr] <- colSums(Catch[, , t, cr, nm, fdr]*W)
+
           Abundance[, t, cr, nm, fdr, 1] <- colSums(N[, , t, cr, nm, fdr])
 
           # Abundance
@@ -430,8 +428,12 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                                                     Gamma, Abundance, Transects,
                                                     X, Count, NuS, A, Ind_sampled)
           }
+
         }
 
+        Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality, N,
+                                         A, Fb, E, Catch)
+        Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
                                              Outside, Density_ratio, ENM)
       }
