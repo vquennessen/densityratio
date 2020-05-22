@@ -4,14 +4,14 @@
 \alias{catch}
 \title{Catch at age}
 \usage{
-catch(t, cr, nm, fdr, FM, Nat_mortality, N, A, Fb, E, Catch)
+catch(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
 
-\item{nm}{temporary numeric value, the current natural mortality estimate.}
+\item{NM}{numeric value, the total number of natural mortality estimate.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -54,6 +54,6 @@ FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Catch <- array(rep(2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-catch(t = 1, cr = 1, nm = 1, fdr = 1, FM,
-   Nat_mortality = c(0.09, 0.14, 0.19), N, A = 5, Fb = 0.2, E, Catch)
+catch(t = 1, cr = 1, NM, fdr = 1, FM, Nat_mortality = c(0.09, 0.14, 0.19),
+   N, A = 5, Fb = 0.2, E, Catch)
 }

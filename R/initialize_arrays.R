@@ -339,7 +339,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
                  c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
- if (Sampling_Error == TRUE) {
+  if (Sampling_Error == TRUE) {
 
     # Calculate standard deviation of normal variable for sampling
     # Based on Babcock & MacCall (2011): Eq. (15)
@@ -411,31 +411,28 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
       for (fdr in 1:FDR) {
 
         FM[, , t, cr, , fdr] <- fm
+        N[, , t, cr, , fdr] <- array(rep(SAD, A*NM), c(num, A, NM))
+        Biomass[, t, cr, , fdr] <- colSums(N[, , t, cr, , fdr] * W)
+        SSB[, t, cr, , fdr] <- colSums(N[, , t, cr, , fdr]*W*Mat)
+        E[, t, cr, , fdr] <- rep(0.2, A*NM)
 
-        for (nm in 1:NM) {
-          N[, , t, cr, nm, fdr] <- array(rep(SAD, A), c(num, A))
-          Biomass[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr] * W)
-          SSB[, t, cr, nm, fdr] <- colSums(N[, , t, cr, nm, fdr]*W*Mat)
-          E[, t, cr, nm, fdr] <- rep(0.2, A)
-
-          Abundance[, t, cr, nm, fdr, 1] <- colSums(N[, , t, cr, nm, fdr])
-
-          # Abundance
-          if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-            Abundance[, t, cr, nm, fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),  , t, cr, nm, fdr])}
-          if (t > 1 && Sampling_Error == TRUE) {
-            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
-                                                    Gamma, Abundance, Transects,
-                                                    X, Count, NuS, A, Ind_sampled)
-          }
-
-        }
+        # Abundance
+        Abundance[, t, cr, , fdr, 1] <- colSums(N[, , t, cr, , fdr])
+        if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
+          Abundance[, t, cr, , fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),  ,
+                                                    t, cr, , fdr])}
 
         Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality, N,
                                          A, Fb, E, Catch)
         Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
                                              Outside, Density_ratio, ENM)
+
+        if (t > 1 && Sampling_Error == TRUE) {
+          Count[, t, , , cr, , fdr] <- sampling(t, cr, NM, fdr, Delta, Gamma,
+                                                Abundance, Transects, X,
+                                                Count, NuS, A, Ind_sampled)
+        }
       }
     }
   }

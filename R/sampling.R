@@ -5,7 +5,7 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
-#' @param nm temporary numeric value, the current natural mortality estimate.
+#' @param NM numeric value, the total number of natural mortality estimates.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param Delta numeric value, the proportion of positive transects divided by
 #'    depletion, also known as the constant of proportionality
@@ -46,9 +46,9 @@
 #' Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),
 #'    c(A, TimeT, Transects, 2, CR, NM, FDR))
 #' NuS <- array(rnorm(A*TimeT*CR*NM*FDR*1, 0, 0.89), c(A, TimeT, CR, NM, FDR, 1))
-#' sampling(t = 51, cr = 1, nm = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
+#' sampling(t = 51, cr = 1, NM, fdr = 1, Delta = 1.6, Gamma = 31.6,
 #'    Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
-sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24,
+sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
                      X, Count, NuS, A = 5, Ind_sampled = 'all') {
 
   ###### Error handling ########################################################
@@ -56,7 +56,7 @@ sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24,
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
-  if (nm %% 1 != 0) {stop('nm must be an integer value.')}
+  if (NM %% 1 != 0) {stop('NM must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.numeric(Delta)) {stop('Delta must be a numeric value.')}
   if (!is.numeric(Gamma)) {stop('Gamma must be a numeric value.')}
@@ -72,8 +72,8 @@ sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (nm <= 0 || nm > 3) {
-    stop('nm must be greater than 0 and less than or equal to 3.')}
+  if (NM <= 0 || NM > 3) {
+    stop('NM must be greater than 0 and less than or equal to 3.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (Delta <= 0) {stop('Delta must be greater than 0.')}
   if (Gamma <= 0) {stop('Gamma must be greater than 0.')}
@@ -95,12 +95,14 @@ sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24,
     stop('The given "t" value is too high for Abundance or Count.')}
   if (cr > dim(Abundance)[3]|| cr > dim(Count)[5]) {
     stop('The given "cr" value is too high for Abundance or Count.')}
-  if (nm > dim(Abundance)[4] || nm > dim(Count)[6]) {
-    stop('The given "nm" value is too high for Abundance or Count.')}
+  if (NM > dim(Abundance)[4] || NM > dim(Count)[6]) {
+    stop('The given "NM" value is too high for Abundance or Count.')}
   if (fdr > dim(Abundance)[5] || fdr > dim(Count)[7]) {
     stop('The given "fdr" value is too high for Abundance or Count.')}
 
   ##############################################################################
+
+  for (nm in 1:NM) {
 
   # Calculate probability of detection based on odds ratio
   # Based on Babcock & MacCall (2011): Eq. (12)
@@ -141,6 +143,8 @@ sampling <- function(t, cr, nm, fdr, Delta, Gamma, Abundance, Transects = 24,
 
   }
 
-  return(Count[, t, , , cr, nm, fdr])
+}
+
+  return(Count[, t, , , cr, , fdr])
 
 }

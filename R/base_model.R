@@ -318,28 +318,22 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         Abundance[, t, cr, , fdr, ]        <- PD[[5]]
 
         # fishing
-          if (Fishing == TRUE) {
-            Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality,
-                                             N, A, Fb, E, Catch)
-            Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
-          }
+        if (Fishing == TRUE) {
+          Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality,
+                                           N, A, Fb, E, Catch)
+          Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
+        }
 
-        # if (t > 64) {
-        #   print(paste('t = ', t, '; nm = ', nm, sep = ''))
-        #   print(Catch[, , t, cr, , fdr])
-        #   print(Yield[, t, cr, , fdr])
-        # }
+        # sampling
+        if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
+          Count[, t, , , cr, , fdr] <- sampling(t, cr, NM, fdr, Delta, Gamma,
+                                                Abundance, Transects, X, Count,
+                                                NuS, A, Ind_sampled)
+        }
 
-        for (nm in 1:NM) {
-
-          # sampling
-          if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
-            Count[, t, , , cr, nm, fdr] <- sampling(t, cr, nm, fdr, Delta,
-                                                    Gamma, Abundance, Transects,
-                                                    X, Count, NuS, A,
-                                                    Ind_sampled)
-          }
-
+        if (t > 64) {
+          print(paste('t = ', t, sep = ''))
+          print(Count[, t, , , cr, , fdr])
         }
 
         # calculate true density ratio
@@ -347,7 +341,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                              Outside, Density_ratio, ENM)
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
-          E[, t + 1, cr, , fdr] <- control_rule(t, cr, nm, fdr, A, E, Count, Time1,
+          E[, t + 1, cr, , fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
                                                 TimeT, Transects, Nat_mortality,
                                                 Final_DRs, Inside, Outside,
                                                 Years_sampled, Areas_sampled,
