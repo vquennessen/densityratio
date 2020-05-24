@@ -42,7 +42,7 @@ a numeric vector that corresponds to the fishing mortality at each
    estimate of natural mortality
 }
 \examples{
-n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 FM <- array(rep(0, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 L <- length_age(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,

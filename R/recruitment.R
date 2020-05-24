@@ -38,11 +38,11 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 #' SSB <- array(rep(10, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
-#' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
-#' recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A = 5, R0 = 1e+5, H = 0.65,
+#' Eps <- epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
+#' recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A, R0 = 1e+5, H = 0.65,
 #'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
 #'    LDP = 0.1)
 recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
@@ -70,8 +70,8 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (NM <= 0 || NM > 3) {
-    stop('NM must be greater than 0 and less than or equal to 3.')}
+  if (NM <= 0 || NM > 2) {
+    stop('NM must be greater than 0 and less than or equal to 2.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(SSB < 0) > 0) {
     stop('All values in SSB must be greater than or equal to 0.')}

@@ -31,7 +31,7 @@
 #' @export
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 #' FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 #' N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 #' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
@@ -90,16 +90,21 @@ catch <- function(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
 
   ##############################################################################
 
-    # natural mortality array
-    num <- dim(FM)[1]
-    m <- array(rep(Nat_mortality, each = num*A), c(num, A, NM))
+  # natural mortality array
+  if (NM > 1) {
+    j <- ifelse(cr < 3, 1, 2)
+    ms <- c(Nat_mortality[1], Nat_mortality[j])
+  } else { ms <- Nat_mortality }
 
-    # calculate the coefficient
-    coeff <- FM[ , , t, cr, , fdr]/(m + FM[ , , t, cr, , fdr])
+  num <- dim(FM)[1]
+  m <- array(rep(ms, each = num*A), c(num, A, NM))
 
-    # calculate catch at age
-    Catch[ , , t, cr, , fdr] <- coeff * N[ , , t, cr, , fdr] *
-      exp(-1*m - FM[ , , t, cr, , fdr])
+  # calculate the coefficient
+  coeff <- FM[ , , t, cr, , fdr]/(m + FM[ , , t, cr, , fdr])
+
+  # calculate catch at age
+  Catch[ , , t, cr, , fdr] <- coeff * N[ , , t, cr, , fdr] *
+    exp(-1*m - FM[ , , t, cr, , fdr])
 
   return(Catch[, , t, cr, , fdr])
 

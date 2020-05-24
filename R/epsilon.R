@@ -10,7 +10,7 @@
 #' @param CR numeric value, the number of control rules to be compared. Default
 #'    value is 6.
 #' @param NM numeric value, the total number of estimated values of natural
-#'    mortality. Default value is 3.
+#'    mortality.
 #' @param FDR numeric value, the total number of final density ratios.
 #' @param NuR numeric vector, the recruitment random normal variable, pulled
 #'    from a normal distribution of mean 0 and standard deviation equal to
@@ -23,10 +23,10 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 #' NuR <- array(stats::rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
 #' epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
-epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0) {
+epsilon <- function (A = 5, TimeT = 70, CR = 6, NM, FDR, NuR, Rho_R = 0) {
 
   ###### Error handling ########################################################
 
@@ -43,7 +43,7 @@ epsilon <- function (A = 5, TimeT = 70, CR = 6, NM = 3, FDR, NuR, Rho_R = 0) {
   if (A <= 0) {stop('A must be greater than 0.')}
   if (TimeT <= 0) {stop('TimeT must be greater than 0.')}
   if (CR < 1) {stop('CR must be greater than or equal to 1.')}
-  if (NM != 1 && NM != 3) {stop('NM must be equal to 1 or 3.')}
+  if (NM != 1 && NM != 2) {stop('NM must be equal to 1 or 2.')}
   if (FDR <= 0) {stop('FDR must be greater than 0.')}
   if (Rho_R < -1 || Rho_R > 1) {stop('Rho_R must be between -1 and 1.')}
 

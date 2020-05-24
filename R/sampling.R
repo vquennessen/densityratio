@@ -40,7 +40,7 @@
 #' @importFrom stats rbinom
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Transects = 24
 #' Abundance <- array(rep(340, A*TimeT*CR*NM*FDR*1),
 #'    c(A, TimeT, CR, NM, FDR, 1))
 #' Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),

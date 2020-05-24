@@ -56,7 +56,7 @@
 #' @export
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 #' SSB <- array(rep(548, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Biomass <- array(rep(568, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1), c(A, TimeT, CR, NM, FDR, 1))
@@ -72,8 +72,8 @@
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), Alpha = c(0.33, 0.6, 0.64),
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
-#' Eps <- epsilon(A = 5, TimeT = 70, CR = 6, NM = 3, FDR = 4, NuR, Rho_R = 0)
-#' R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A = 5, R0 = 1e+5,
+#' Eps <- epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
+#' R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A, R0 = 1e+5,
 #'    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
 #'    Recruitment_mode = 'pool', LDP = 0.1)
 #' pop_dynamics(t = 3, cr = 1, NM, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
@@ -112,8 +112,8 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (NM <= 0 || NM > 3) {
-    stop('NM must be greater than 0 and less than or equal to 3.')}
+  if (NM <= 0 || NM > 2) {
+    stop('NM must be greater than 0 and less than or equal to 2.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (Rec_age <= 0) {stop('Rec_age must be greater than 0.')}
   if (sum(SSB < 0) > 0) {stop('All values in SSB must be greater than or equal to 0.')}
@@ -189,7 +189,11 @@ pop_dynamics <- function(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   }
 
   # natural mortality array
-  m <- array(rep(Nat_mortality, each = A), c(A, NM))
+  if (NM > 1) {
+    j <- ifelse(cr < 3, 1, 2)
+    ms <- c(Nat_mortality[1], Nat_mortality[j])
+  } else { ms <- Nat_mortality }
+  m <- array(rep(ms, each = A), c(A, NM))
 
   # Ages rec_age + 1 to max_age - 1
   for (i in 2:(num - 1)) {

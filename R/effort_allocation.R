@@ -29,7 +29,7 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+#' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 #' E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Yield <- array(rep(2458, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' effort_allocation(t = 51, cr = 1, NM, fdr = 1, Allocation = 'IFD', E,

@@ -83,7 +83,7 @@ a numeric vector of fishing effort for the next timestep, under the
    the fishery (i.e. set fishing effort for the next timestep).
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Transects = 24
 E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
    c(A, TimeT, Transects, 2, CR, NM, FDR))

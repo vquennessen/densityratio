@@ -34,7 +34,7 @@ numeric array of updated N (numbers at age, area, timestep, control
 \code{movement} redistributes individuals amongst areas.
 }
 \examples{
-n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-movement(t = 1, cr = 1, NM, fdr = 1, N, A = 5, AMP = 0.1)
+movement(t = 1, cr = 1, NM, fdr = 1, N, A , AMP = 0.1)
 }

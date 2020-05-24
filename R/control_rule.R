@@ -51,7 +51,7 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+#' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Transects = 24
 #' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 #' Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
 #'    c(A, TimeT, Transects, 2, CR, NM, FDR))
@@ -154,8 +154,6 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
          ratios.')}
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (length(Nat_mortality) > dim(E)[4]) {
-    stop('Incorrect number of natural mortality estimates.')}
   if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
   if (Floor_DR > min(Final_DRs)) {
     stop('Floor_DR must be less than or equal to the minimum final density
@@ -169,11 +167,13 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
 
   if (BM == FALSE) {
 
-    # static control rules, with constant target density ratios
-    if (cr <= 3) {
+    nm <- ifelse(cr < 3, 1, 2)
+
+    # static control rules, with constant target DRs (cr = 1, 3, 5)
+    if (cr %% 2 == 1) {
 
       if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm = cr, fdr, A, Count, Years_sampled,
+        DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
                           Areas_sampled, Ind_sampled, Transects, Inside,
                           Outside)
       } else { DR <- True_DR }
@@ -185,15 +185,14 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                                           floor_DR = Floor_DR,
                                           effort_inc_allowed = 0.1, Time1)
 
-      # transient control rules with shifting target density ratios
-    } else if (cr <= 6) {
+      # transient control rules with shifting target DRs (cr = 2, 4, 6)
+    } else if (cr %% 2 == 0) {
 
-      nm = cr - 3
       target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm, fdr)
 
       # calculate density ratio
       if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm = cr - 3, fdr, A, Count, Years_sampled,
+        DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
                             Areas_sampled, Ind_sampled, Transects, Inside,
                             Outside)
       } else { DR <- True_DR }

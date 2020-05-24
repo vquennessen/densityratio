@@ -59,7 +59,7 @@ numeric value, the calculated density ratio for a specific timestep,
    specific control rule.
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4; Transects = 24
+A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Transects = 24
 Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
    c(A, TimeT, Transects, 2, CR, NM, FDR))
 density_ratio(t = 51, cr = 1, nm = 1, fdr = 1, A = 5, Count,

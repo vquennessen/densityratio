@@ -49,7 +49,7 @@ natural mortality (M) are proportional to fish abundance (N) and act
 simultaneously  and uniformly throughout the year, i.e. dN/dt = -(M+F)*N.
 }
 \examples{
-n = 34; A = 5; TimeT = 70; CR = 6; NM = 3; FDR = 4
+n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
 FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
