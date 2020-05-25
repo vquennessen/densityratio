@@ -92,7 +92,7 @@ catch <- function(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
 
   # natural mortality array
   if (NM > 1) {
-    j <- ifelse(cr < 3, 1, 2)
+    j <- ifelse((cr == 1 | cr == 2), 1, ifelse((cr == 3 | cr == 4), 2, 3))
     ms <- c(Nat_mortality[1], Nat_mortality[j])
   } else { ms <- Nat_mortality }
 

@@ -57,7 +57,7 @@
 #'    c(A, TimeT, Transects, 2, CR, NM, FDR))
 #' Density_Ratio <- array(rep(0.5, TimeT*CR*FDR), c(TimeT, CR, FDR))
 #' control_rule(t = 51, cr = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
-#'    TimeT = 70, Transects = 24, Nat_mortality = c(0.09, 0.14, 0.19),
+#'    TimeT = 70, Transects = 24, Nat_mortality = c(0.14, 0.09, 0.19),
 #'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
 #'    Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio)
@@ -168,6 +168,7 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
   if (BM == FALSE) {
 
     nm <- ifelse(cr < 3, 1, 2)
+    j <- ifelse((cr == 1 | cr == 2), 1, ifelse((cr == 3 | cr == 4), 2, 3))
 
     # static control rules, with constant target DRs (cr = 1, 3, 5)
     if (cr %% 2 == 1) {
@@ -188,7 +189,8 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
       # transient control rules with shifting target DRs (cr = 2, 4, 6)
     } else if (cr %% 2 == 0) {
 
-      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm, fdr)
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = j,
+                             fdr)
 
       # calculate density ratio
       if (Sampling_Error == TRUE) {
