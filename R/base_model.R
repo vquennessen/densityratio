@@ -319,11 +319,6 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                                 NuS, A, Ind_sampled)
         }
 
-        # if (t > 64) {
-        #   print(paste('t = ', t, sep = ''))
-        #   print(Count[, t, , , cr, , fdr])
-        # }
-
         # calculate true density ratio
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
                                              Outside, Density_ratio)

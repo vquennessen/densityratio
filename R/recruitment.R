@@ -112,13 +112,11 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
     recruits <- array(rep(0, A*NM), c(A, NM))
 
-    for (nm in 1:NM) {
-
       # closed recruitment indicates that recruits are only offspring of adults from
       # the same area
       if (Recruitment_mode == 'closed') {
 
-        ssb <- SSB[, t - Rec_age, cr, nm, fdr]
+        ssb <- SSB[, t - Rec_age, cr, , fdr]
 
         R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
 
@@ -126,8 +124,9 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
         # by adults from all areas
       } else if (Recruitment_mode == 'pool') {
 
-        ssb <- SSB[, t - Rec_age, cr, nm, fdr]
-        nume <- 0.8 * adjR0 * H * sum(ssb) / A
+        ssb <- SSB[, t - Rec_age, cr, , fdr]
+        sum_ssb <- array(rep(colSums(ssb), each = A), c(A, NM))
+        nume <- 0.8 * adjR0 * H * sum_ssb / A
         denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
         R1 <- nume / denom
@@ -137,19 +136,19 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
         # dependence in each area
       } else if (Recruitment_mode == 'regional_DD') {
 
-        # ssb <- colSums(SSB[, t - Rec_age, cr, , fdr])
-        ssb <- sum(SSB[, t - Rec_age, cr, nm, fdr])
+        ssb <- colSums(SSB[, t - Rec_age, cr, , fdr])
+        # ssb <- sum(SSB[, t - Rec_age, cr, nm, fdr])
         nume <- 0.8 * R0 * H * ssb
         denom <- A * (0.2 * B0 * (1 - H) + (H - 0.2) * ssb)
 
-        # R1 <- array(rep(nume / denom, each = A), c(A, NM))
-        R1 <- rep(nume / denom, each = A)
+        R1 <- array(rep(nume / denom, each = A), c(A, NM))
+        # R1 <- rep(nume / denom, each = A)
 
         # larval density dependence within areas and recruitment in equal amounts
         # in each area
       } else if (Recruitment_mode == 'local_DD') {
 
-        ssb <- SSB[, t - Rec_age, cr, nm, fdr]
+        ssb <- SSB[, t - Rec_age, cr, , fdr]
         nume <- 0.8 * adjR0 * H * ssb
         denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
@@ -157,27 +156,25 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
       }
 
-      recruits[, nm] <- R1 * (exp(Eps[, t, cr, nm, fdr] - Sigma_R^2 / 2))
+      recruits <- R1 * (exp(Eps[, t, cr, , fdr] - Sigma_R^2 / 2))
 
 
       # larval movement if there are multiple areas and LDP != 0
       if (A > 1 && dim(SSB)[1] > 1) {
 
         # First area to second area
-        recruits[1, nm] <- (1 - LDP)*recruits[1, nm] + LDP*recruits[2, nm]
+        recruits[1, ] <- (1 - LDP)*recruits[1, ] + LDP*recruits[2, ]
 
         # Intermediate areas to adjacent areas
         for (a in 2:(A-1)) {
-          recruits[a, nm] <- (1 - 2*LDP)*recruits[a, nm] +
-            LDP*(recruits[a - 1, nm] + recruits[a + 1, nm])
+          recruits[a, ] <- (1 - 2*LDP)*recruits[a, ] +
+            LDP*(recruits[a - 1, ] + recruits[a + 1, ])
         }
 
         # Last area to next to last area
-        recruits[A, nm] <- (1 - LDP)*recruits[A, nm] + LDP*recruits[A - 1, nm]
+        recruits[A, ] <- (1 - LDP)*recruits[A, ] + LDP*recruits[A - 1, ]
 
       }
-
-    }
 
   } else if (NM == 1) {
 
