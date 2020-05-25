@@ -168,17 +168,16 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
   if (BM == FALSE) {
 
     nm <- ifelse(cr < 3, 1, 2)
-    j <- ifelse((cr == 1 | cr == 2), 1, ifelse((cr == 3 | cr == 4), 2, 3))
+    j <- ceiling(cr / 2)
 
-    # static control rules, with constant target DRs (cr = 1, 3, 5)
-    if (cr %% 2 == 1) {
-
-      if (Sampling_Error == TRUE) {
+    if (Sampling_Error == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
                           Areas_sampled, Ind_sampled, Transects, Inside,
                           Outside)
       } else { DR <- True_DR }
 
+    # static control rules, with constant target DRs (cr = 1, 3, 5)
+    if (cr %% 2 == 1) {
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
@@ -191,13 +190,6 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
 
       target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = j,
                              fdr)
-
-      # calculate density ratio
-      if (Sampling_Error == TRUE) {
-        DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
-                            Areas_sampled, Ind_sampled, Transects, Inside,
-                            Outside)
-      } else { DR <- True_DR }
 
       # calculate effort at the next timestep
       E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,

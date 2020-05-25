@@ -54,8 +54,8 @@ f_mortality <- function(t, cr, NM, fdr, FM, A, Fb, E, S) {
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (NM <= 0 || NM > 3) {
-    stop('NM must be greater than 0 and less than or equal to 3.')}
+  if (NM <= 0 || NM > 2) {
+    stop('NM must be greater than 0 and less than or equal to 2.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(FM < 0) > 0) {
     stop('All values in FM must be greater than or equal to 0.')}

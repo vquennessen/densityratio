@@ -291,7 +291,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     NM <- 2
     Control_rules <- 1:6
   } else {
-    Nat_mortality <- M
+    Nat_mortality <- c(M)
     NM <- 1
     Control_rules <- 1:2
     }

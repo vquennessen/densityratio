@@ -108,7 +108,7 @@ R <- recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A, R0 = 1e+5,
    H = 0.65, B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2,
    Recruitment_mode = 'pool', LDP = 0.1)
 pop_dynamics(t = 3, cr = 1, NM, fdr = 1, Rec_age = 2, Max_age = 35, SSB,
-   N, W, Mat, A = 5, Fb = 0.2, E, S, FM, A50_mat = 8, Biomass,
-   Abundance, Fishing = TRUE, Nat_mortality = c(0.09, 0.14, 0.19), R,
+   N, W, Mat, A, Fb = 0.2, E, S, FM, A50_mat = 8, Biomass,
+   Abundance, Fishing = TRUE, Nat_mortality = c(0.14, 0.09, 0.19), R,
    Ind_sampled = 'all')
 }

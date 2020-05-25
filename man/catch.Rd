@@ -54,6 +54,6 @@ FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
 E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Catch <- array(rep(2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-catch(t = 1, cr = 1, NM, fdr = 1, FM, Nat_mortality = c(0.09, 0.14, 0.19),
+catch(t = 1, cr = 1, NM, fdr = 1, FM, Nat_mortality = c(0.14, 0.09, 0.19),
    N, A = 5, Fb = 0.2, E, Catch)
 }
