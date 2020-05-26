@@ -8,10 +8,10 @@ base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Time2 = 20, Recruitment_mode = "pool", M_Error = 0.05,
   Sampling_Error = TRUE, Stochasticity = TRUE, Surveys = TRUE,
   Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-  Adult_movement = TRUE, Plotting = FALSE, Final_DRs,
-  Years_sampled = 1, Areas_sampled = "all", Ind_sampled = "all",
-  Floor_DR = 0.2, Allocation = "IFD", BM = FALSE, LDP = 0.1,
-  Output.N = FALSE, Output.Abundance = FALSE, Output.Biomass = FALSE,
+  Adult_movement = TRUE, Final_DRs, Years_sampled = 1,
+  Areas_sampled = "all", Ind_sampled = "all", Floor_DR = 0.2,
+  Allocation = "IFD", BM = FALSE, LDP = 0.1, Output.N = FALSE,
+  Output.Abundance = FALSE, Output.Biomass = FALSE,
   Output.SSB = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
   Output.Density.Ratio = TRUE)
 }
@@ -67,9 +67,6 @@ in each area to estimate density ratio. Default value is 24.}
 
 \item{Adult_movement}{logical value, do adults move between areas? Default
 value is TRUE.}
-
-\item{Plotting}{logical value, should individual runs be plotted? Default
-value is FALSE.}
 
 \item{Final_DRs}{numeric vector, the final target density ratios.}
 
@@ -136,11 +133,11 @@ a list, containing numerical arrays of the relative biomass, yield,
    on Babcock & MacCall (2011).
 }
 \examples{
-base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 25,
-   Time2 = 10, Recruitment_mode = 'closed', M_Error = 0.05,
-   Sampling_Error = FALSE, Stochasticity = FALSE, Surveys = TRUE,
+base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
+   Time2 = 20, Recruitment_mode = 'closed', M_Error = 0.05,
+   Sampling_Error = TRUE, Stochasticity = TRUE, Surveys = TRUE,
    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-   Adult_movement = TRUE, Plotting = FALSE, Final_DRs = c(0.6, 0.8),
+   Adult_movement = TRUE, Final_DRs = c(0.6, 0.8),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
    Output.N = FALSE, Output.Abundance = FALSE,
