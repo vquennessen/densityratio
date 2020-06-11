@@ -286,6 +286,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Range of natural mortalities (low, correct, and high) if error =/= 0
   if (BM == TRUE) {
     Control_rules <- 1:8
+    Nat_mortality <- c(M)
     NM <- 1
 
   } else if (M_Error != 0) {
