@@ -5,7 +5,7 @@
 \title{Effort allocation}
 \usage{
 effort_allocation(t, cr, NM, fdr, Allocation = "IFD", E, Yield,
-  Time1 = 50, Inside = c(3), Outside = c(1, 2, 4, 5))
+  Time1 = 50, Inside = 3, Outside = c(1, 2, 4, 5))
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}

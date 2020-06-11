@@ -5,7 +5,8 @@
 \title{True density ratio}
 \usage{
 true_DR(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
-  Density_ratio)
+  Density_ratio, BM = FALSE, Years_sampled = 1,
+  Areas_sampled = "all", Ind_sampled = "all", A = 5)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -26,6 +27,28 @@ Default value is c(1, 2, 4, 5).}
 
 \item{Density_ratio}{numeric array, the true density ratios at each timestep,
 under each control rule, and for each estimate of natural mortality.}
+
+\item{BM}{logical value, are the control rules from Babcock and MacCall 2011?
+Default value is FALSE.}
+
+\item{Years_sampled}{numeric value, the number of years of sampling upon
+which to base the estimate of density ratio. Default value is 1.}
+
+\item{Areas_sampled}{character value, the areas to be sampled to calculate
+density ratio. Values can be:
+'all' - sample all areas.
+'far' - sample only the first and last areas (assuming the reserve is
+   somewhere in the middle.
+Default value is 'all'.}
+
+\item{Ind_sampled}{character value, the individuals to be sampled to
+calculate density ratio. Values can be:
+'all' - sample all individuals.
+'mature' - sample only mature individuals.
+Default value is 'all'.}
+
+\item{A}{numeric value, the number of total areas in the model. Default value
+is 5.}
 }
 \value{
 a numeric array that updates the true density ratios for the most
@@ -41,5 +64,6 @@ Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
 c(A, TimeT, CR, NM, FDR, 1))
 Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
-   Outside = c(1, 2, 4, 5), Density_ratio)
+   Outside = c(1, 2, 4, 5), Density_ratio, BM = FALSE, Years_sampled = 1,
+   Areas_sampled = 'all', Ind_sampled = 'all', A = 5)
 }

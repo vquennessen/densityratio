@@ -318,7 +318,9 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
         # calculate true density ratio
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio)
+                                             Outside, Density_ratio, BM,
+                                             Years_sampled, Areas_sampled,
+                                             Ind_sampled, A)
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
           E[, t + 1, cr, , fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
