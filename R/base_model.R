@@ -264,7 +264,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   Transects        <- IA[[24]]    # Species count when sampling, dim = area*time
   Count            <- IA[[25]]    # Species count when sampling, dim = area*time
 
-  if (Sampling_Error == TRUE | BM == TRUE) {
+  if (Sampling_Error == TRUE) {
     Sigma_S          <- IA[[26]]  # Sampling normal standard deviation
     NuS              <- IA[[27]]  # Sampling normal variable, dim = area*time*CR
     Delta            <- IA[[28]]  # Constant of proportionality
@@ -310,7 +310,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         }
 
         # sampling
-        if ((Surveys == TRUE & Sampling_Error == TRUE) | BM == TRUE) {
+        if (Surveys == TRUE & Sampling_Error == TRUE) {
           Count[, t, , , cr, , fdr] <- sampling(t, cr, NM, fdr, Delta, Gamma,
                                                 Abundance, Transects, X, Count,
                                                 NuS, A, Ind_sampled)
@@ -318,9 +318,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 
         # calculate true density ratio
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
-                                             Outside, Density_ratio, BM,
-                                             Years_sampled, Areas_sampled,
-                                             Ind_sampled, A)
+                                             Outside, Density_ratio)
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
           E[, t + 1, cr, , fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
@@ -328,7 +326,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                                 Final_DRs, Inside, Outside,
                                                 Years_sampled, Areas_sampled,
                                                 Ind_sampled, Floor_DR, BM,
-                                                Sampling_Error, Density_ratio)
+                                                Sampling_Error, Density_ratio,
+                                                Abundance)
         }
 
       }

@@ -8,7 +8,7 @@ control_rule(t, cr, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
   Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
   Outside = c(1, 2, 4, 5), Years_sampled = 1, Areas_sampled = "all",
   Ind_sampled = "all", Floor_DR = 0.2, BM = FALSE,
-  Sampling_Error = TRUE, Density_ratio)
+  Sampling_Error = TRUE, Density_ratio, Abundance)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -73,6 +73,10 @@ value is TRUE.}
 
 \item{Density_ratio}{numeric array, the true density ratio at each time step
 under each control rule and for each final density ratio.}
+
+\item{Abundance}{numeric array, the total number of individuals in each area,
+at each timestep, under all control rules, with all estimates of natural
+mortality.}
 }
 \value{
 a numeric vector of fishing effort for the next timestep, under the
@@ -88,9 +92,12 @@ E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
 Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
    c(A, TimeT, Transects, 2, CR, NM, FDR))
 Density_Ratio <- array(rep(0.5, TimeT*CR*FDR), c(TimeT, CR, FDR))
+Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
+   c(A, TimeT, CR, NM, FDR, 1))
 control_rule(t = 51, cr = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
    TimeT = 70, Transects = 24, Nat_mortality = c(0.14, 0.09, 0.19),
    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-   Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio)
+   Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio,
+   Abundance)
 }

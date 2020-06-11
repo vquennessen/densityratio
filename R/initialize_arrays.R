@@ -440,7 +440,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     }
   }
 
-  if (BM == TRUE | Sampling_Error == TRUE) {
+  if (Sampling_Error == TRUE) {
     output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                    Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM, E, Catch,
                    Yield, Density_ratio, Abundance, Transects, Count,

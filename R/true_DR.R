@@ -40,7 +40,7 @@
 #' @examples
 #' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Time2 = 20
 #' Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
-#' c(A, TimeT, CR, NM, FDR, 1))
+#'    c(A, TimeT, CR, NM, FDR, 1))
 #' Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 #' true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
 #'    Outside = c(1, 2, 4, 5), Density_ratio, BM = FALSE, Years_sampled = 1,
@@ -102,12 +102,16 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     stop('Abundance has the wrong number of time steps.')}
   if (cr > dim(Abundance)[3]) {
     stop('Abundance has the wrong number of control rules.')}
-  if (fdr> dim(Abundance)[5]) {
+  if (fdr > dim(Abundance)[5]) {
     stop('Abundance has the wrong number of final density ratios.')}
 
   ##############################################################################
 
   if (BM == TRUE) {
+
+    Years_sampled <- ifelse(cr == 2, 3, 1)
+    Areas_sampled <- ifelse(cr == 4, 'far', 'all')
+    Ind_sampled <- ifelse(cr == 5, 'mature', 'all')
 
     # sample all fish or just mature fish
     if (Ind_sampled == 'all') { ind <- 1 } else { ind <- 2 }

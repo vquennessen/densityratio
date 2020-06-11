@@ -61,7 +61,7 @@ a numeric array that updates the true density ratios for the most
 \examples{
 A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Time2 = 20
 Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
-c(A, TimeT, CR, NM, FDR, 1))
+   c(A, TimeT, CR, NM, FDR, 1))
 Density_ratio <- array(rep(0, TimeT*CR*FDR), c(TimeT, CR, FDR))
 true_DR(t = 51, cr = 1, fdr = 1, Abundance, Inside = 3,
    Outside = c(1, 2, 4, 5), Density_ratio, BM = FALSE, Years_sampled = 1,
