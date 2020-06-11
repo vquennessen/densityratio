@@ -153,7 +153,7 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
 
     } else if (t > Time1 & Allocation == 'equal') {
 
-      E[Outside, t, cr, 1, fdr] <- rep(colSums(E[, t, cr, , fdr])/outs, each = outs)
+      E[Outside, t, cr, 1, fdr] <- rep(sum(E[, t, cr, , fdr])/outs, each = outs)
       E[Inside, t, cr, 1, fdr] <- 0
 
     }
