@@ -126,7 +126,7 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
 
   }
 
-  } else if (NM == 1) {
+  } else {
 
     # number of areas not in a reserve
     outs <- length(Outside)
@@ -135,7 +135,7 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
 
     if (t == Time1) {
 
-      E[Outside, t, cr, 1, fdr] <- rep(colSums(E[, t - 1, cr, 1, fdr]) / outs, outs)
+      E[Outside, t, cr, 1, fdr] <- rep(sum(E[, t - 1, cr, 1, fdr]) / outs, outs)
       E[Inside, t, cr, 1, fdr] <- 0
 
       # If effort is allocated using the ideal free distribution, effort for one

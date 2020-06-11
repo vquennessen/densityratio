@@ -105,7 +105,9 @@ catch <- function(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
   } else { ms <- Nat_mortality }
 
   num <- dim(FM)[1]
-  m <- array(rep(ms, each = num*A), c(num, A, NM))
+
+  if (NM > 1) { m <- array(rep(ms, each = num*A), c(num, A, NM))
+  } else { m <- array(rep(ms, num*A), c(num, A)) }
 
   # calculate the coefficient
   coeff <- FM[ , , t, cr, , fdr]/(m + FM[ , , t, cr, , fdr])

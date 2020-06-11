@@ -283,18 +283,20 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Cutoff for maturity
   A50_mat <- ages[min(which(Mat > 0.5))]
 
-
-
   # Range of natural mortalities (low, correct, and high) if error =/= 0
-  if (M_Error != 0) {
+  if (BM == TRUE) {
+    Control_rules <- 1:8
+
+  } else if (M_Error != 0) {
     Nat_mortality <- c(M, M - M_Error, M + M_Error)
     NM <- 2
     Control_rules <- 1:6
+
   } else {
     Nat_mortality <- c(M)
     NM <- 1
     Control_rules <- 1:2
-    }
+  }
 
   # Number of control rules
   CR <- length(Control_rules)
