@@ -121,13 +121,13 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     } else { years <- (t - Years_sampled):(t - 1) }
 
     # calculate density inside marine reserve
-    Inside_count <- sum(Abundance[Inside, years, , ind, cr, 1, fdr])
+    Inside_count <- sum(Abundance[Inside, years, cr, 1, fdr, ind])
 
     # calculate counts outside marine reserve
     if (Areas_sampled == 'far') {
-      Outside_count <- sum(Abundance[c(1, A), years, , ind, cr, 1, fdr])
+      Outside_count <- sum(Abundance[c(1, A), years, cr, 1, fdr, ind])
     } else if (Areas_sampled == 'all') {
-      Outside_count <- sum(Abundance[Outside, years, , ind, cr, 1, fdr])
+      Outside_count <- sum(Abundance[Outside, years, cr, 1, fdr, ind])
     }
 
     # Density of fish outside marine reserve(s)
@@ -135,9 +135,6 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
 
     # Density of fish inside marine reserve(s)
     Inside_density <- Inside_count / length(Inside)
-
-    # True density ratio
-    Density_ratio[t, cr, fdr] <- Outside_density / Inside_density
 
   } else {
 
@@ -147,12 +144,10 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     # Density of fish inside marine reserve(s)
     Inside_density <- sum(Abundance[Inside, t, cr, 1, fdr, 1]) / length(Inside)
 
-    # True density ratio
-    Density_ratio[t, cr, fdr] <- Outside_density / Inside_density
-
   }
 
-
+    # True density ratio
+    Density_ratio[t, cr, fdr] <- Outside_density / Inside_density
 
   return(Density_ratio[t, cr, fdr])
 }
