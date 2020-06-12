@@ -422,8 +422,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
         # Abundance
         Abundance[, t, cr, , fdr, 1] <- colSums(N[, , t, cr, , fdr])
         if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
-          Abundance[, t, cr, , fdr, 2] <- colSums(N[A50_mat:(Max_age-Rec_age + 1),  ,
-                                                    t, cr, , fdr])}
+          Abundance[, t, cr, , fdr, 2] <- colSums(N[A50_mat:num,  , t, cr, , fdr])}
 
         Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality, N,
                                          A, Fb, E, Catch)
