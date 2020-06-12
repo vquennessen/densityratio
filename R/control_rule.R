@@ -214,6 +214,8 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
 
   } else if (BM == TRUE) {
 
+    Final_DRs <- c(0.7, 0.8, 0.9)
+
     if (cr == 1) {
 
       # calculate effort at the next timestep
@@ -224,10 +226,6 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
       DR <- true_DR(t, cr, fdr = 1, Abundance, Inside, Outside, Density_ratio,
                     BM = TRUE, Years_sampled = 3, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
-
-        # DR <- density_ratio(t, cr, nm = 1, fdr = 1, A, Count, Years_sampled = 3,
-        #                   Areas_sampled = 'all', Ind_sampled = 'all',
-        #                   Transects, Inside, Outside)
 
       # calculate effort at the next timestep
       E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -240,10 +238,6 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
 
-        # DR <- density_ratio(t, cr, nm = 1, fdr = 1, A, Count, Years_sampled = 1,
-        #                   Areas_sampled = 'all', Ind_sampled = 'all',
-        #                   Transects, Inside, Outside)
-
       # calculate effort at the next timestep
       E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
                                           target_DR = 0.6, floor_DR = 0.2,
@@ -255,24 +249,16 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'far',
                     Ind_sampled = 'all', A = 5)
 
-        # DR <- density_ratio(t, cr, nm = 1, fdr = 1, A, Count, Years_sampled = 1,
-        #                   Areas_sampled = 'far', Ind_sampled = 'all',
-        #                   Transects, Inside, Outside)
-
       # calculate effort at the next timestep
       E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 0.6, floor_DR = 0.2,
-                                          effort_inc_allowed = 0.1, Time1)
+                                           target_DR = 0.6, floor_DR = 0.2,
+                                           effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 5) {
 
       DR <- true_DR(t, cr, fdr = 1, Abundance, Inside, Outside, Density_ratio,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'mature', A = 5)
-
-        # DR <- density_ratio(t, cr, nm = 1, fdr = 1, A, Count, Years_sampled = 1,
-        #                   Areas_sampled = 'all', Ind_sampled = 'mature',
-        #                   Transects, Inside, Outside)
 
       # calculate effort at the next timestep
       E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -284,10 +270,6 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
       DR <- true_DR(t, cr, fdr = 1, Abundance, Inside, Outside, Density_ratio,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
-
-        # DR <- density_ratio(t, cr, nm = 1, fdr = 1, A, Count, Years_sampled = 1,
-        #                   Areas_sampled = 'all', Ind_sampled = 'all',
-        #                   Transects, Inside, Outside)
 
       # calculate effort at the next timestep
       E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
@@ -305,14 +287,56 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
 
-        # DR <- density_ratio(t, cr, nm = 1, fdr = 1, A, Count, Years_sampled = 1,
-        #                   Areas_sampled = 'all', Ind_sampled = 'all',
-        #                   Transects, Inside, Outside)
-
       # calculate effort at the next timestep
       E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
                                           target_DR = 0.6, floor_DR = 0.2,
                                           effort_inc_allowed = 0, Time1)
+
+    } else if (cr == 9) {
+
+      DR <- true_DR(t, cr, fdr = 1, Abundance, Inside, Outside, Density_ratio,
+                    BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
+                    Ind_sampled = 'all', A = 5)
+
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = 1,
+                             fdr = 1)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                           target_DR = target[t - Time1 + 1],
+                                           floor_DR = 0.2,
+                                           effort_inc_allowed = 0.1, Time1)
+
+    } else if (cr == 10) {
+
+      DR <- true_DR(t, cr, fdr = 1, Abundance, Inside, Outside, Density_ratio,
+                    BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
+                    Ind_sampled = 'all', A = 5)
+
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = 1,
+                             fdr = 2)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                           target_DR = target[t - Time1 + 1],
+                                           floor_DR = 0.2,
+                                           effort_inc_allowed = 0.1, Time1)
+
+    } else if (cr == 11) {
+
+      DR <- true_DR(t, cr, fdr = 1, Abundance, Inside, Outside, Density_ratio,
+                    BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
+                    Ind_sampled = 'all', A = 5)
+
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = 1,
+                             fdr = 3)
+
+      # calculate effort at the next timestep
+      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                           target_DR = target[t - Time1 + 1],
+                                           floor_DR = 0.2,
+                                           effort_inc_allowed = 0.1, Time1)
+
     }
   }
 
