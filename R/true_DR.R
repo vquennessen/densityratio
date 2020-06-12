@@ -125,13 +125,15 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
 
     # calculate counts outside marine reserve
     if (Areas_sampled == 'far') {
-      Outside_count <- sum(Abundance[c(1, A), years, cr, 1, fdr, ind])
+      areas <- c(1, A)
+      Outside_count <- sum(Abundance[areas, years, cr, 1, fdr, ind])
     } else if (Areas_sampled == 'all') {
-      Outside_count <- sum(Abundance[Outside, years, cr, 1, fdr, ind])
+      areas <- Outside
+      Outside_count <- sum(Abundance[areas, years, cr, 1, fdr, ind])
     }
 
     # Density of fish outside marine reserve(s)
-    Outside_density <- Outside_count / length(Outside)
+    Outside_density <- Outside_count / length(areas)
 
     # Density of fish inside marine reserve(s)
     Inside_density <- Inside_count / length(Inside)

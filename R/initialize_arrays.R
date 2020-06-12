@@ -337,9 +337,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Unfished spawning stock biomass
   B0 <- R0 / Phi
 
-  # Adjust number of transects for BM control rules if there is no sampling error
-  Transects <- ifelse(BM == TRUE, 1000, Transects)
-
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
   Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
