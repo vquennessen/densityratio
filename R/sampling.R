@@ -114,6 +114,7 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
   # Determine if species is detected at least once, and replace a random 0 with
   #   a 1 if all zeros to prevent errors in calculating density ratio
   # Dimensions = 1 * transects
+  # TODO: adjust so that presence_all is re-calculated for each area
   presence_all <- array(rbinom(Transects, 1, p_all), c(Transects, 1))
   if (sum(presence_all) == 0) {r <- sample(1:Transects, 1); presence_all[r] = 1}
 
