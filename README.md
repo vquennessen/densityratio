@@ -7,6 +7,9 @@
 
 [![Travis build
 status](https://travis-ci.org/vquennessen/densityratio.svg?branch=master)](https://travis-ci.org/vquennessen/densityratio)
+
+[![DOI](https://zenodo.org/badge/233111500.svg)](https://zenodo.org/badge/latestdoi/233111500)
+
 <!-- badges: end -->
 
 The goal of densityratio is to compare the performance of density ratio control rules (DRCR) using transient and static target density ratios in terms of biomass, yield, spawning stock abundance, age structure, or some other 
