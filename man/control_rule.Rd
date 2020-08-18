@@ -8,7 +8,7 @@ control_rule(t, cr, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
   Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
   Outside = c(1, 2, 4, 5), Years_sampled = 1, Areas_sampled = "all",
   Ind_sampled = "all", Floor_DR = 0.2, BM = FALSE,
-  Sampling_Error = TRUE, Density_ratio, Abundance)
+  Sampling_Var = TRUE, Density_ratio, Abundance)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
@@ -68,7 +68,7 @@ reduced to 10\% of its starting value. Default value is 0.2.}
 \item{BM}{logical value, are the control rules from Babcock and MacCall 2011?
 Default value is FALSE.}
 
-\item{Sampling_Error}{logical value, is there any error in sampling? Default
+\item{Sampling_Var}{logical value, is there any error in sampling? Default
 value is TRUE.}
 
 \item{Density_ratio}{numeric array, the true density ratio at each time step
@@ -98,6 +98,6 @@ control_rule(t = 51, cr = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
    TimeT = 70, Transects = 24, Nat_mortality = c(0.14, 0.09, 0.19),
    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-   Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio,
+   Floor_DR = 0.2, BM = FALSE, Sampling_Var = TRUE, Density_Ratio,
    Abundance)
 }

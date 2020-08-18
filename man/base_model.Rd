@@ -6,7 +6,7 @@
 \usage{
 base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
   Time2 = 20, Recruitment_mode = "pool", M_Error = 0.05,
-  Sampling_Error = TRUE, Stochasticity = TRUE, Surveys = TRUE,
+  Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
   Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
   Adult_movement = TRUE, Final_DRs, Years_sampled = 1,
   Areas_sampled = "all", Ind_sampled = "all", Floor_DR = 0.2,
@@ -48,11 +48,11 @@ Default value is 'pool'.}
 \item{M_Error}{numeric value, the error between estimated and correct natural
 mortality.}
 
-\item{Sampling_Error}{logical value, is there any error in sampling? Default
-value is TRUE.}
+\item{Sampling_Var}{logical value, is there any variability in sampling?
+Default value is TRUE.}
 
-\item{Stochasticity}{logical vector, does recruitment contain a stochastic
-component? Default value is TRUE.}
+\item{Recruitment_Var}{logical vector, is there any variability in
+recruitment? Default value is TRUE.}
 
 \item{Surveys}{logical value, are surveys being conducted? Default value is
 TRUE.}
@@ -135,7 +135,7 @@ a list, containing numerical arrays of the relative biomass, yield,
 \examples{
 base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
    Time2 = 20, Recruitment_mode = 'closed', M_Error = 0.05,
-   Sampling_Error = TRUE, Stochasticity = TRUE, Surveys = TRUE,
+   Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
    Adult_movement = TRUE, Final_DRs = c(0.6, 0.8),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',

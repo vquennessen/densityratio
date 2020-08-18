@@ -23,7 +23,7 @@
 #'    determine the stable age distribution. Default value is 150.
 #' @param A50_mat numeric value, the first age at which 50\% or more individuals
 #'    are estimated to be mature, on the interval (Rec_age, Max_age).
-#' @param Stochasticity logical vector, does recruitment contain a stochastic
+#' @param Recruitment_Var logical vector, does recruitment contain a stochastic
 #'    component? Default value is FALSE.
 #' @param Rho_R numeric value, the recruitment autocorrelation on the interval
 #'    (-1, 1). Default value is 0.
@@ -56,10 +56,10 @@
 #'    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 #' stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65,
 #'    B0 = 1e+5/1.1, Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150,
-#'    A50_mat = 8, Stochasticity = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
+#'    A50_mat = 8, Recruitment_Var = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
 #'    A = 5)
 stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                     eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+                     eq_time = 150, A50_mat, Recruitment_Var = FALSE, Rho_R,
                      Recruitment_mode = 'pool', A = 5) {
 
   ###### Error handling ########################################################
@@ -78,8 +78,8 @@ stable_AD <- function(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
   if (!is.numeric(M)) {stop('M must be a numeric value.')}
   if (eq_time %% 1 != 0) {stop('eq_time must be an integer value.')}
   if (A50_mat %% 1 != 0) {stop('A50_mat must be an integer value.')}
-  if (!is.logical(Stochasticity)) {
-    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Recruitment_Var)) {
+    stop('Recruitment_Var must be a logical value.')}
   if (!is.numeric(Rho_R)) {stop('Rho_R must be a numeric array.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}

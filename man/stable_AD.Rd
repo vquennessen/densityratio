@@ -5,7 +5,7 @@
 \title{Stable Age Distribution}
 \usage{
 stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-  eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+  eq_time = 150, A50_mat, Recruitment_Var = FALSE, Rho_R,
   Recruitment_mode = "pool", A = 5)
 }
 \arguments{
@@ -41,7 +41,7 @@ determine the stable age distribution. Default value is 150.}
 \item{A50_mat}{numeric value, the first age at which 50\% or more individuals
 are estimated to be mature, on the interval (Rec_age, Max_age).}
 
-\item{Stochasticity}{logical vector, does recruitment contain a stochastic
+\item{Recruitment_Var}{logical vector, does recruitment contain a stochastic
 component? Default value is FALSE.}
 
 \item{Rho_R}{numeric value, the recruitment autocorrelation on the interval
@@ -79,6 +79,6 @@ S <- selectivity(Rec_age = 2, Max_age = 35, A1 = 5, L1 = 32.21, A2 = 15,
    F_fin = c(0.25, 0.06, 1), Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01))
 stable_AD(Rec_age = 2, Max_age = 35, W, R0 = 1e+5, Mat, H = 0.65,
    B0 = 1e+5/1.1, Sigma_R = 0.5, Fb = 0.2, S, M = 0.14, eq_time = 150,
-   A50_mat = 8, Stochasticity = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
+   A50_mat = 8, Recruitment_Var = FALSE, Rho_R = 0, Recruitment_mode = 'pool',
    A = 5)
 }

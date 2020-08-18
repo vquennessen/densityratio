@@ -13,7 +13,7 @@
 #'    value is 1e+5.
 #' @param LDP numeric value, the proportion of larvae that drift to adjacent
 #'    areas. Default value is 0.1.
-#' @param Stochasticity logical vector, does recruitment contain a stochastic
+#' @param Recruitment_Var logical vector, does recruitment contain a stochastic
 #'    component? Default value is FALSE.
 #' @param Recruitment_mode character value, values can be:
 #'    'closed' - the recruits in each area originate from adults in that area.
@@ -33,9 +33,9 @@
 #'
 #' @examples
 #' historical_FM(Species = 'BR_CA_2003', eq_time = 150, R0 = 1e+5, LDP = 0.1,
-#'    Stochasticity = FALSE, Recruitment_mode = 'pool')
+#'    Recruitment_Var = FALSE, Recruitment_mode = 'pool')
 historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
-                          Stochasticity = FALSE, Recruitment_mode = 'pool') {
+                          Recruitment_Var = FALSE, Recruitment_mode = 'pool') {
 
   ###### Error handling ########################################################
 
@@ -44,8 +44,8 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
     stop('Study species must be a character value.')}
   if (eq_time %% 1 != 0) {stop('eq_time must be an integer value.')}
   if (R0 %% 1 != 0) {stop('R0 must be an integer value.')}
-  if (!is.logical(Stochasticity)) {
-    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Recruitment_Var)) {
+    stop('Recruitment_Var must be a logical value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
 
@@ -103,7 +103,7 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
   S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                    A50_down, Alpha, F_fin, Beta, Cf)
 
-  # Recruitment error = 0 without stochasticity
+  # Recruitment error = 0 without Recruitment_Var
   Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
   ##### Initialize arrays #####
@@ -129,7 +129,7 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
 
   # calculate stable age distribution
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
-                   eq_time = 150, A50_mat, Stochasticity, Rho_R,
+                   eq_time = 150, A50_mat, Recruitment_Var, Rho_R,
                    Recruitment_mode, A = 1)
 
   # initial final biomass with no fishing

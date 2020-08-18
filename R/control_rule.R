@@ -42,7 +42,7 @@
 #'    reduced to 10\% of its starting value. Default value is 0.2.
 #' @param BM logical value, are the control rules from Babcock and MacCall 2011?
 #'    Default value is FALSE.
-#' @param Sampling_Error logical value, is there any error in sampling? Default
+#' @param Sampling_Var logical value, is there any error in sampling? Default
 #'    value is TRUE.
 #' @param Density_ratio numeric array, the true density ratio at each time step
 #'    under each control rule and for each final density ratio.
@@ -65,13 +65,13 @@
 #'    TimeT = 70, Transects = 24, Nat_mortality = c(0.14, 0.09, 0.19),
 #'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-#'    Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE, Density_Ratio,
+#'    Floor_DR = 0.2, BM = FALSE, Sampling_Var = TRUE, Density_Ratio,
 #'    Abundance)
 control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                          TimeT = 70, Transects = 24, Nat_mortality, Final_DRs,
                          Inside = 3, Outside = c(1, 2, 4, 5), Years_sampled = 1,
                          Areas_sampled = 'all', Ind_sampled = 'all',
-                         Floor_DR = 0.2, BM = FALSE, Sampling_Error = TRUE,
+                         Floor_DR = 0.2, BM = FALSE, Sampling_Var = TRUE,
                          Density_ratio, Abundance) {
 
   ###### Error handling ########################################################
@@ -100,8 +100,8 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
     stop('Ind_sampled must be a character value or NULL.')}
   if (!is.numeric(Floor_DR)) {stop('Floor_DR must be a numeric vector.')}
   if (!is.logical(BM)) {stop('BM must be a logical value.')}
-  if (!is.logical(Sampling_Error)) {
-    stop('Sampling_Error must be a logical value.')}
+  if (!is.logical(Sampling_Var)) {
+    stop('Sampling_Var must be a logical value.')}
   if (!is.numeric(Density_ratio)) {stop('Density_ratio must be a numeric array.')}
   if (!is.numeric(Abundance)) {stop('Abundance must be a numeric array.')}
 
@@ -184,7 +184,7 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
     nm <- ifelse(cr < 3, 1, 2)
     j <- ceiling(cr / 2)
 
-    if (Sampling_Error == TRUE) {
+    if (Sampling_Var == TRUE) {
         DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
                           Areas_sampled, Ind_sampled, Transects, Inside,
                           Outside)

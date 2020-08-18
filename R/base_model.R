@@ -27,10 +27,10 @@
 #'    Default value is 'pool'.
 #' @param M_Error numeric value, the error between estimated and correct natural
 #'    mortality.
-#' @param Sampling_Error logical value, is there any error in sampling? Default
-#'    value is TRUE.
-#' @param Stochasticity logical vector, does recruitment contain a stochastic
-#'    component? Default value is TRUE.
+#' @param Sampling_Var logical value, is there any variability in sampling?
+#'    Default value is TRUE.
+#' @param Recruitment_Var logical vector, is there any variability in
+#'    recruitment? Default value is TRUE.
 #' @param Surveys logical value, are surveys being conducted? Default value is
 #'    TRUE.
 #' @param Fishery_management logical value, is the fishery being managed using
@@ -89,7 +89,7 @@
 #' @examples
 #' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 #'    Time2 = 20, Recruitment_mode = 'closed', M_Error = 0.05,
-#'    Sampling_Error = TRUE, Stochasticity = TRUE, Surveys = TRUE,
+#'    Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
 #'    Adult_movement = TRUE, Final_DRs = c(0.6, 0.8),
 #'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
@@ -99,7 +99,7 @@
 #'    Output.Effort = FALSE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                        Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
-                       Sampling_Error = TRUE, Stochasticity = TRUE,
+                       Sampling_Var = TRUE, Recruitment_Var = TRUE,
                        Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Final_DRs,
                        Years_sampled = 1, Areas_sampled = 'all',
@@ -122,10 +122,10 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
   if (!is.numeric(M_Error)) {stop('M_Error must be a numeric value.')}
-  if (!is.logical(Sampling_Error)) {
-    stop('Sampling_Error must be a logical value.')}
-  if (!is.logical(Stochasticity)) {
-    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Sampling_Var)) {
+    stop('Sampling_Var must be a logical value.')}
+  if (!is.logical(Recruitment_Var)) {
+    stop('Recruitment_Var must be a logical value.')}
   if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
   if (!is.logical(Fishery_management)) {
     stop('Fishery_management must be a logical value.')}
@@ -234,8 +234,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   IA <- initialize_arrays(A, MPA, Final_DRs, Time1, Time2, R0, Rec_age, Max_age,
                           A1, L1, A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
-                          Cf, P, X, SP, M, Phi, Stochasticity, D, Transects, H,
-                          Surveys, Fishing, M_Error, Sampling_Error,
+                          Cf, P, X, SP, M, Phi, Recruitment_Var, D, Transects, H,
+                          Surveys, Fishing, M_Error, Sampling_Var,
                           Recruitment_mode, LDP, Ind_sampled, BM)
 
   Inside           <- IA[[1]]     # Area(s) in the marine reserve
@@ -264,7 +264,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   Transects        <- IA[[24]]    # Species count when sampling, dim = area*time
   Count            <- IA[[25]]    # Species count when sampling, dim = area*time
 
-  if (Sampling_Error == TRUE) {
+  if (Sampling_Var == TRUE) {
     Sigma_S          <- IA[[26]]  # Sampling normal standard deviation
     NuS              <- IA[[27]]  # Sampling normal variable, dim = area*time*CR
     Delta            <- IA[[28]]  # Constant of proportionality
@@ -310,7 +310,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         }
 
         # sampling
-        if (Surveys == TRUE & Sampling_Error == TRUE) {
+        if (Surveys == TRUE & Sampling_Var == TRUE) {
           Count[, t, , , cr, , fdr] <- sampling(t, cr, NM, fdr, Delta, Gamma,
                                                 Abundance, Transects, X, Count,
                                                 NuS, A, Ind_sampled)
@@ -326,7 +326,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                                 Final_DRs, Inside, Outside,
                                                 Years_sampled, Areas_sampled,
                                                 Ind_sampled, Floor_DR, BM,
-                                                Sampling_Error, Density_ratio,
+                                                Sampling_Var, Density_ratio,
                                                 Abundance)
         }
 
