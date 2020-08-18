@@ -64,7 +64,8 @@ Abundance <- array(rep(340, A*TimeT*CR*NM*FDR*1),
    c(A, TimeT, CR, NM, FDR, 1))
 Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),
    c(A, TimeT, Transects, 2, CR, NM, FDR))
-NuS <- array(rnorm(A*TimeT*CR*NM*FDR*1, 0, 0.89), c(A, TimeT, CR, NM, FDR, 1))
+NuS <- array(rnorm(A*TimeT*Transects*1*CR*NM*FDR, 0, 0.89),
+   c(A, TimeT, Transects, 1, CR, NM, FDR))
 sampling(t = 51, cr = 1, NM, fdr = 1, Delta = 1.6, Gamma = 31.6,
    Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
 }

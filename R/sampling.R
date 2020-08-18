@@ -45,7 +45,8 @@
 #'    c(A, TimeT, CR, NM, FDR, 1))
 #' Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),
 #'    c(A, TimeT, Transects, 2, CR, NM, FDR))
-#' NuS <- array(rnorm(A*TimeT*CR*NM*FDR*1, 0, 0.89), c(A, TimeT, CR, NM, FDR, 1))
+#' NuS <- array(rnorm(A*TimeT*Transects*1*CR*NM*FDR, 0, 0.89),
+#'    c(A, TimeT, Transects, 1, CR, NM, FDR))
 #' sampling(t = 51, cr = 1, NM, fdr = 1, Delta = 1.6, Gamma = 31.6,
 #'    Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
 sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
@@ -114,14 +115,19 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
   # Determine if species is detected at least once, and replace a random 0 with
   #   a 1 if all zeros to prevent errors in calculating density ratio
   # Dimensions = 1 * transects
-  # TODO: adjust so that presence_all is re-calculated for each area
-  presence_all <- array(rbinom(Transects, 1, p_all), c(Transects, 1))
-  if (sum(presence_all) == 0) {r <- sample(1:Transects, 1); presence_all[r] = 1}
+  presence_all <- array(rbinom(Transects*A, 1, p_all), c(A, Transects))
+
+  for (a in 1:A) {
+    if (sum(presence_all[a, ]) == 0) {
+      r <- sample(1:Transects, 1)
+      presence_all[a, r] = 1
+    }
+  }
 
   # Calculate species count given transects with positive visuals
-  nus <- NuS[, t - 1, cr, nm, fdr, 1]
-  All <- Gamma*Abundance[, t - 1, cr, nm, fdr, 1]*exp(nus)
-  Count[, t, , 1, cr, nm, fdr] <- presence_all %*% All
+  nus <- NuS[, t - 1, , 1, cr, nm, fdr]
+  All <- Gamma * A_all * exp(nus)
+  Count[, t, , 1, cr, nm, fdr] <- presence_all * All
 
   if (Ind_sampled == 'mature' || is.null(Ind_sampled)) {
 
@@ -132,14 +138,19 @@ sampling <- function(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24,
     p_mature <- 1 / (1 + exp(odds_mature))
 
     # Determine if species is detected at least once, and replace a random 0
-    #   with a 1 if all zeros to prevent errors in calculating density ratio
-    presence_mature <- array(rbinom(Transects, 1, p_mature), c(Transects, 1))
-    if (sum(presence_mature) == 0) {
-      r <- sample(1:Transects, 1); presence_mature[r] = 1}
+    # with a 1 if all zeros to prevent errors in calculating density ratio
+    presence_mature <- array(rbinom(Transects*A, 1, p_mature), c(A, Transects))
+
+    for (a in 1:A) {
+      if (sum(presence_mature[a, ]) == 0) {
+        r <- sample(1:Transects, 1)
+        presence_mature[a, r] = 1
+      }
+    }
 
     # Calculate species count given transects with positive visuals
-    nus <- NuS[, t - 1, cr, nm, fdr, 2]
-    Mature <- Gamma*A_mature*exp(nus)
+    nus <- NuS[, t - 1, , 2, cr, nm, fdr]
+    Mature <- Gamma * A_mature * exp(nus)
     Count[, t, , 2, cr, nm, fdr] <- presence_mature %*% Mature
 
   }
