@@ -67,7 +67,7 @@
 #'    positive transects.
 #' @param M numeric value, the natural mortality on the interval (0, 1).
 #' @param Phi numeric value, the unfished recruits per spawner.
-#' @param Stochasticity logical vector, does recruitment contain a stochastic
+#' @param Recruitment_Var logical vector, does recruitment contain a stochastic
 #'    component? Default value is TRUE.
 #' @param D numeric value, the current depletion of the stock, on the interval
 #'    (0, 1).
@@ -79,7 +79,7 @@
 #' @param Fishing logical value, is fishing occurring? Default value is TRUE.
 #' @param M_Error numeric value, the error between estimated and correct natural
 #'    mortality.
-#' @param Sampling_Error logical value, is there any error in sampling? Default
+#' @param Sampling_Var logical value, is there any error in sampling? Default
 #'    value is TRUE.
 #' @param Recruitment_mode character value, values can be:
 #'    'closed' - the recruits in each area originate from adults in that area.
@@ -117,17 +117,17 @@
 #'    Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
 #'    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
-#'    SP = 16.97, M = 0.14, Phi = 1.1, Stochasticity = TRUE, D = 0.488,
+#'    SP = 16.97, M = 0.14, Phi = 1.1, Recruitment_Var = TRUE, D = 0.488,
 #'    Transects = 24, H = 0.65, Surveys = TRUE, Fishing = TRUE, M_Error = 0.05,
-#'    Sampling_Error = TRUE, Recruitment_mode = 'pool', LDP = 0.1,
+#'    Sampling_Var = TRUE, Recruitment_mode = 'pool', LDP = 0.1,
 #'    Ind_sampled = 'all', BM = FALSE)
 initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
-                              P, X, SP, M, Phi, Stochasticity = TRUE, D,
+                              P, X, SP, M, Phi, Recruitment_Var = TRUE, D,
                               Transects = 24, H, Surveys = TRUE, Fishing = TRUE,
-                              M_Error, Sampling_Error = TRUE,
+                              M_Error, Sampling_Var = TRUE,
                               Recruitment_mode = 'pool', LDP = 0.1,
                               Ind_sampled = 'all', BM = FALSE) {
 
@@ -166,16 +166,16 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (!is.numeric(SP)) {stop('SP must be a numeric value.')}
   if (!is.numeric(M)) {stop('M must be a numeric value.')}
   if (!is.numeric(Phi)) {stop('Phi must be a numeric value.')}
-  if (!is.logical(Stochasticity)) {
-    stop('Stochasticity must be a logical value.')}
+  if (!is.logical(Recruitment_Var)) {
+    stop('Recruitment_Var must be a logical value.')}
   if (!is.numeric(D)) {stop('D must be a numeric value.')}
   if (Transects %% 1 != 0) {stop('Transects must be an integer value.')}
   if (!is.numeric(H)) {stop('H must be a numeric value.')}
   if (!is.logical(Surveys)) {stop('Surveys must be a logical value.')}
   if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
   if (!is.numeric(M_Error)) {stop('M_Error must be a numeric value.')}
-  if (!is.logical(Sampling_Error)) {
-    stop('Sampling_Error must be a logical value.')}
+  if (!is.logical(Sampling_Var)) {
+    stop('Sampling_Var must be a logical value.')}
   if (!is.character(Recruitment_mode)) {
     stop('Recruitment mode must be a character value.')}
   if (!is.numeric(LDP)) {stop('LDP must be a numeric value.')}
@@ -324,9 +324,9 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
   # Recruitment normal variable
   # Dimensions = area * timeT * CR * M * FDR values (3)
-  if (Stochasticity == T) {
+  if (Recruitment_Var == T) {
     NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, Sigma_R), c(A, TimeT, CR, NM, FDR))
-  } else if (Stochasticity == F) {
+  } else if (Recruitment_Var == F) {
     NuR <- array(rep(0, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
   }
 
@@ -342,7 +342,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   Count <- array(rep(0, A*TimeT*Transects*dimension*CR*NM*FDR),
                  c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
-  if (Sampling_Error == TRUE) {
+  if (Sampling_Var == TRUE) {
 
     # Calculate standard deviation of normal variable for sampling
     # Based on Babcock & MacCall (2011): Eq. (15)
@@ -350,13 +350,8 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
 
     # Sampling normal variable
     # Dimensions = area * timeT * CR * M * FDR values (3)
-    if (Stochasticity == T) {
-      NuS <- array(rnorm(A*TimeT*CR*NM*FDR*dimension, 0, Sigma_S),
-                   c(A, TimeT, CR, NM, FDR, dimension))
-    } else if (Stochasticity == F) {
-      NuS <- array(rep(0, A*TimeT*CR*NM*FDR*dimension),
-                   c(A, TimeT, CR, NM, FDR, dimension))
-    }
+    NuS <- array(rnorm(A*TimeT*Transects*dimension*CR*NM*FDR, 0, Sigma_S),
+                 c(A, TimeT, Transects, dimension, CR, NM, FDR))
 
     # Calculate delta - constant of proportionality
     # Based on Babcock & MacCall (2011): Eq. (13)
@@ -397,7 +392,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   # Stable age distribution, derived from equilibrium conditions with Fb = 0
   # Dimensions age
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-                   eq_time = 150, A50_mat, Stochasticity = FALSE, Rho_R,
+                   eq_time = 150, A50_mat, Recruitment_Var = FALSE, Rho_R,
                    Recruitment_mode, A)
 
   # initialize density ratio matrix
@@ -427,7 +422,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
         Density_ratio[t, cr, fdr] <- true_DR(t, cr, fdr, Abundance, Inside,
                                              Outside, Density_ratio)
 
-        if (t > 1 && Sampling_Error == TRUE) {
+        if (t > 1 && Sampling_Var == TRUE) {
           Count[, t, , , cr, , fdr] <- sampling(t, cr, NM, fdr, Delta, Gamma,
                                                 Abundance, Transects, X,
                                                 Count, NuS, A, Ind_sampled)
@@ -436,7 +431,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
     }
   }
 
-  if (Sampling_Error == TRUE) {
+  if (Sampling_Var == TRUE) {
     output <- list(Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
                    Nat_mortality, NM, N, SSB, Biomass, Eps, B0, FM, E, Catch,
                    Yield, Density_ratio, Abundance, Transects, Count,
