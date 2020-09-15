@@ -4,8 +4,14 @@
 \alias{historical_FM}
 \title{Historical fishing mortality to cause estimated depletion}
 \usage{
-historical_FM(Species, eq_time = 150, R0 = 1e+05, LDP = 0.1,
-  Recruitment_Var = FALSE, Recruitment_mode = "pool")
+historical_FM(
+  Species,
+  eq_time = 150,
+  R0 = 1e+05,
+  LDP = 0.1,
+  Recruitment_Var = FALSE,
+  Recruitment_mode = "pool"
+)
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in

@@ -4,9 +4,20 @@
 \alias{density_ratio}
 \title{Density ratio}
 \usage{
-density_ratio(t, cr, nm, fdr, A, Count, Years_sampled = 1,
-  Areas_sampled = "all", Ind_sampled = "all", Transects = 24, Inside,
-  Outside)
+density_ratio(
+  t,
+  cr,
+  nm,
+  fdr,
+  A,
+  Count,
+  Years_sampled = 1,
+  Areas_sampled = "all",
+  Ind_sampled = "all",
+  Transects = 24,
+  Inside,
+  Outside
+)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}

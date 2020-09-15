@@ -4,16 +4,38 @@
 \alias{base_model}
 \title{Base Model}
 \usage{
-base_model(Species, R0 = 1e+05, A = 5, MPA = 3, Time1 = 50,
-  Time2 = 20, Recruitment_mode = "pool", M_Error = 0.05,
-  Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
-  Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-  Adult_movement = TRUE, Final_DRs, Years_sampled = 1,
-  Areas_sampled = "all", Ind_sampled = "all", Floor_DR = 0.2,
-  Allocation = "IFD", BM = FALSE, LDP = 0.1, Output.N = FALSE,
-  Output.Abundance = FALSE, Output.Biomass = FALSE,
-  Output.SSB = FALSE, Output.Yield = FALSE, Output.Effort = FALSE,
-  Output.Density.Ratio = TRUE)
+base_model(
+  Species,
+  R0 = 1e+05,
+  A = 5,
+  MPA = 3,
+  Time1 = 50,
+  Time2 = 20,
+  Recruitment_mode = "pool",
+  M_Error = 0.05,
+  Sampling_Var = TRUE,
+  Recruitment_Var = TRUE,
+  Surveys = TRUE,
+  Fishery_management = TRUE,
+  Fishing = TRUE,
+  Transects = 24,
+  Adult_movement = TRUE,
+  Final_DRs,
+  Years_sampled = 1,
+  Areas_sampled = "all",
+  Ind_sampled = "all",
+  Floor_DR = 0.2,
+  Allocation = "IFD",
+  BM = FALSE,
+  LDP = 0.1,
+  Output.N = FALSE,
+  Output.Abundance = FALSE,
+  Output.Biomass = FALSE,
+  Output.SSB = FALSE,
+  Output.Yield = FALSE,
+  Output.Effort = FALSE,
+  Output.Density.Ratio = TRUE
+)
 }
 \arguments{
 \item{Species}{character value, the species to analyze. Species names are in

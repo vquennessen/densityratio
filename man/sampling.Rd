@@ -4,8 +4,21 @@
 \alias{sampling}
 \title{Sampling}
 \usage{
-sampling(t, cr, NM, fdr, Delta, Gamma, Abundance, Transects = 24, X,
-  Count, NuS, A = 5, Ind_sampled = "all")
+sampling(
+  t,
+  cr,
+  NM,
+  fdr,
+  Delta,
+  Gamma,
+  Abundance,
+  Transects = 24,
+  X,
+  Count,
+  NuS,
+  A = 5,
+  Ind_sampled = "all"
+)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
