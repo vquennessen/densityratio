@@ -21,6 +21,7 @@ library(densityratio)
 library(abind)
 library(ggplot2)
 ```
+
 # Introduction
 
 Historically, fisheries management has relied on knowing a stock's unfished biomass. Then, if the estimated stock biomass is below the target biomass, fishing effort is allowed to increase; if not, effort is decreased to allow the biomass to rebuild. However, there is one major issue with this system - the unfished biomass of a fished stock is difficult to estimate, and requires a long time series of catch and abundance data. For smaller, newer, or data-poor fisheries, this can make estimations very inaccurate and lead to mismanagement. A decade ago, a new reference point was proposed by Drs. Babcock and MacCall, called the density ratio - with only 1 year of sampling, this reference point could allow for the adaptive management of even small, new, or data-poor stocks. 

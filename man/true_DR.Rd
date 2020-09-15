@@ -4,20 +4,9 @@
 \alias{true_DR}
 \title{True density ratio}
 \usage{
-true_DR(
-  t,
-  cr,
-  fdr,
-  Abundance,
-  Inside = 3,
-  Outside = c(1, 2, 4, 5),
-  Density_ratio,
-  BM = FALSE,
-  Years_sampled = 1,
-  Areas_sampled = "all",
-  Ind_sampled = "all",
-  A = 5
-)
+true_DR(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
+  Density_ratio, BM = FALSE, Years_sampled = 1,
+  Areas_sampled = "all", Ind_sampled = "all", A = 5)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}

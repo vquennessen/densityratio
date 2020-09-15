@@ -4,29 +4,11 @@
 \alias{control_rule}
 \title{Control rule}
 \usage{
-control_rule(
-  t,
-  cr,
-  fdr,
-  A = 5,
-  E,
-  Count,
-  Time1 = 50,
-  TimeT = 70,
-  Transects = 24,
-  Nat_mortality,
-  Final_DRs,
-  Inside = 3,
-  Outside = c(1, 2, 4, 5),
-  Years_sampled = 1,
-  Areas_sampled = "all",
-  Ind_sampled = "all",
-  Floor_DR = 0.2,
-  BM = FALSE,
-  Sampling_Var = TRUE,
-  Density_ratio,
-  Abundance
-)
+control_rule(t, cr, fdr, A = 5, E, Count, Time1 = 50, TimeT = 70,
+  Transects = 24, Nat_mortality, Final_DRs, Inside = 3,
+  Outside = c(1, 2, 4, 5), Years_sampled = 1, Areas_sampled = "all",
+  Ind_sampled = "all", Floor_DR = 0.2, BM = FALSE,
+  Sampling_Var = TRUE, Density_ratio, Abundance)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}

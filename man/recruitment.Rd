@@ -4,22 +4,8 @@
 \alias{recruitment}
 \title{Recruitment}
 \usage{
-recruitment(
-  t,
-  cr,
-  NM,
-  fdr,
-  SSB,
-  A = 5,
-  R0 = 1e+05,
-  H,
-  B0,
-  Eps,
-  Sigma_R,
-  Rec_age,
-  Recruitment_mode,
-  LDP = 0.1
-)
+recruitment(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+05, H, B0, Eps,
+  Sigma_R, Rec_age, Recruitment_mode, LDP = 0.1)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step .}

@@ -4,30 +4,9 @@
 \alias{pop_dynamics}
 \title{Population Dynamics}
 \usage{
-pop_dynamics(
-  t,
-  cr,
-  NM,
-  fdr,
-  Rec_age,
-  Max_age,
-  SSB,
-  N,
-  W,
-  Mat,
-  A = 5,
-  Fb,
-  E,
-  S,
-  FM,
-  A50_mat,
-  Biomass,
-  Abundance,
-  Fishing = T,
-  Nat_mortality,
-  R,
-  Ind_sampled = "all"
-)
+pop_dynamics(t, cr, NM, fdr, Rec_age, Max_age, SSB, N, W, Mat, A = 5, Fb,
+  E, S, FM, A50_mat, Biomass, Abundance, Fishing = T, Nat_mortality, R,
+  Ind_sampled = "all")
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
