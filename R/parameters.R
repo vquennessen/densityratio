@@ -17,7 +17,7 @@
 parameters = function(Species) {
 
   species_list <- c('BR_CA_2003', 'BR_OR_2015', 'CAB_CA_2005', 'CAB_OR_2019',
-                    'LING_OW_2017', 'CR_OR_2015', 'ES_COW_2013')
+                    'LING_OW_2017', 'CR_OR_2015', 'China_OR_2015')
 
   ###### Error handling ########################################################
 
@@ -235,6 +235,40 @@ parameters = function(Species) {
     A50_down <- c(10, 50, 7, 11, 30)        # A50 value for downcurve
     Cf       <- c(0.3908, 0.3122, 0.2246,   # fraction of fishery caught / fleet
                   0.0295, 0.0429)           #       from upcurve to 1
+  }
+
+  ##### China Rockfsh (Northern OR) 2015 assessment #####
+  # source: Cope et al. 2015
+  if (Species == 'China_OR_2015') {
+    Max_age  <- 79                          # maximum age
+    M        <- 0.07                        # natural mortality
+    Rec_age  <- 5                           # age at recruitment
+    WA       <- 7.79E-06;   WB   <- 3.177   # weight at length parameters (f) #
+    A1       <- 10;         L1   <- 30.5;   # growth parameters (f)
+    A2       <- 30;         L2   <- 36.85;
+    K        <- 0.147
+    L50      <- 27                          # length at 50% maturity
+    K_mat    <- -0.467                      # slope of maturity curve
+    H        <- 0.773                       # steepness
+    Phi      <- 1.1                         # unfished recruits per spawner
+    Sigma_R  <- 0.5                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.2                         # adult movement proportion
+    D        <- 0.6149                      # depletion
+    Fb       <- 0.07                        # fishing mortality to cause D
+    P        <- 0.77                        # Proportion of positive transects
+                                            #       in PISCO monitoring data
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
+    Fleets   <- c('Commercial', 'Rec_PC',
+                  'Rec_PR')                 # names of fleets
+    Alpha    <- c(1.05, 0.45, 0.45)         # slope of upcurve per fleet
+    Beta     <- c(1, 1, 1)                  # slope of downcurve per fleet
+    F_fin    <- c(1, 1, 1)                  # final selectivity if dome-shaped
+    A50_up   <- c(10, 12, 12)               # A50 value for upcurve
+    A50_down <- c(79, 79, 79)               # A50 value for downcurve
+    Cf       <- c(0.02, 0.54, 0.44)         # fraction of fishery caught / fleet
+
   }
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat, H,
