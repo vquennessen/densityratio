@@ -106,6 +106,14 @@ effort_allocation <- function(t, cr, NM, fdr, Allocation = 'IFD', E, Yield,
   } else if (t != Time1 & Allocation == 'IFD') {
 
     yield <- Yield[, t - 1, cr, , fdr]
+
+    # if yield gets too low, get NaN for prop_yield - so if the sum of all
+    # values in yield is below 1, set yield to outside areas to yield + 1
+    if (sum(yield) < 1) {
+      yield <- yield + 1
+      yield[Inside, ] <- 0 }
+
+    # calculate proportion of yield in each area and reallocate effort by yield
     prop_yield <- sweep(yield, MARGIN = 2, STATS = colSums(yield), FUN = '/')
     colSums_E <- array(rep(colSums(E[, t, cr, , fdr]), each = all), c(all, NM))
     E[, t, cr, , fdr] <- colSums_E * prop_yield

@@ -133,9 +133,9 @@ a list, containing numerical arrays of the relative biomass, yield,
    on Babcock & MacCall (2011).
 }
 \examples{
-base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-   Time2 = 20, Recruitment_mode = 'closed', M_Error = 0.05,
-   Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
+base_model(Species = 'CR_OR_2015', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
+   Time2 = 200, Recruitment_mode = 'closed', M_Error = 0.05,
+   Sampling_Var = TRUE, Recruitment_Var = FALSE, Surveys = TRUE,
    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
    Adult_movement = TRUE, Final_DRs = c(0.6, 0.8),
    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
