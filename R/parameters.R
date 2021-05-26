@@ -44,7 +44,6 @@ parameters = function(Species) {
     L50      <- 39.53                       # length at 50% maturity
     K_mat    <- -0.4103                     # slope of maturity curve
     H        <- 0.65                        # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
@@ -76,7 +75,6 @@ parameters = function(Species) {
     L50      <- 43.69                       # length at 50% maturity
     K_mat    <- -0.66                       # slope of maturity curve
     H        <- 0.77                        # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
@@ -112,7 +110,6 @@ parameters = function(Species) {
     L50      <- 25.702                      # length at 50% maturity
     K_mat    <- -0.743                      # slope of maturity curve
     H        <- 0.7                         # steepness
-    Phi      <- 0.71                        # unfished recruits per spawner
     Sigma_R  <- 1                           # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
@@ -148,7 +145,6 @@ parameters = function(Species) {
     L50      <- 43                          # length at 50% maturity
     K_mat    <- -0.7                        # slope of maturity curve
     H        <- 0.7                         # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
@@ -182,7 +178,6 @@ parameters = function(Species) {
     L50      <- 56.7                        # length at 50% maturity
     K_mat    <- -0.27                       # slope of maturity curve
     H        <- 0.7                         # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.55                        # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
@@ -216,7 +211,6 @@ parameters = function(Species) {
     L50      <- 42                          # length at 50% maturity
     K_mat    <- -0.25                       # slope of maturity curve
     H        <- 0.773                       # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
@@ -250,7 +244,6 @@ parameters = function(Species) {
     L50      <- 27                          # length at 50% maturity
     K_mat    <- -0.467                      # slope of maturity curve
     H        <- 0.773                       # steepness
-    Phi      <- 1.1                         # unfished recruits per spawner
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.2                         # adult movement proportion
@@ -272,7 +265,7 @@ parameters = function(Species) {
   }
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat, H,
-                 Phi, Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets, Alpha, Beta,
+                 Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets, Alpha, Beta,
                  F_fin, A50_up, A50_down, Cf)
 
   return(output)
