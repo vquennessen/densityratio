@@ -1,13 +1,13 @@
 Package: densityratio
 Title: Using Density Ratios to Help Manage Fisheries In And Around Marine Reserves
-Version: 3.0.0
+Version: 3.1.0
 Year: 2020
 Authors@R: 
     person(given = "Victoria",
            family = "Quennessen",
            role = c("aut", "cre"),
            email = "victoria.quennessen@oregonstate.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0003-3626-5089"))
 Description: This package runs an age-structured single-sex model to explore the 
    effects of different control rules on fished stock yield, biomass, and 
    spawning stock biomass. The model can be edited to run for different fished 
