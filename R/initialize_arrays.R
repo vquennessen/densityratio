@@ -66,7 +66,6 @@
 #' @param SP numeric value, the standard deviation of individuals seen during
 #'    positive transects.
 #' @param M numeric value, the natural mortality on the interval (0, 1).
-#' @param Phi numeric value, the unfished recruits per spawner.
 #' @param Recruitment_Var logical vector, does recruitment contain a stochastic
 #'    component? Default value is TRUE.
 #' @param D numeric value, the current depletion of the stock, on the interval
@@ -117,15 +116,15 @@
 #'    Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
 #'    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
 #'    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
-#'    SP = 16.97, M = 0.14, Phi = 1.1, Recruitment_Var = TRUE, D = 0.488,
-#'    Transects = 24, H = 0.65, Surveys = TRUE, Fishing = TRUE, M_Error = 0.05,
+#'    SP = 16.97, M = 0.14, Recruitment_Var = TRUE, D = 0.488, Transects = 24,
+#'    H = 0.65, Surveys = TRUE, Fishing = TRUE, M_Error = 0.05,
 #'    Sampling_Var = TRUE, Recruitment_mode = 'pool', LDP = 0.1,
 #'    Ind_sampled = 'all', BM = FALSE)
 initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
                               R0 = 1e+5, Rec_age, Max_age, A1, L1, A2, L2, K,
                               WA, WB, K_mat, Fb, L50, Sigma_R, Rho_R = 0,
                               Fleets, Alpha, A50_up, A50_down, F_fin, Beta, Cf,
-                              P, X, SP, M, Phi, Recruitment_Var = TRUE, D,
+                              P, X, SP, M, Recruitment_Var = TRUE, D,
                               Transects = 24, H, Surveys = TRUE, Fishing = TRUE,
                               M_Error, Sampling_Var = TRUE,
                               Recruitment_mode = 'pool', LDP = 0.1,
@@ -165,7 +164,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (!is.numeric(X)) {stop('X must be a numeric value.')}
   if (!is.numeric(SP)) {stop('SP must be a numeric value.')}
   if (!is.numeric(M)) {stop('M must be a numeric value.')}
-  if (!is.numeric(Phi)) {stop('Phi must be a numeric value.')}
   if (!is.logical(Recruitment_Var)) {
     stop('Recruitment_Var must be a logical value.')}
   if (!is.numeric(D)) {stop('D must be a numeric value.')}
@@ -214,7 +212,6 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   if (X < 0) {stop('X must be greater than or equal to 0.')}
   if (SP < 0) {stop('SP must be greater than or equal to 0.')}
   if (M <= 0 || M > 1) {stop('M must be between 0 and 1.')}
-  if (Phi <= 0) {stop('Phi must be greater than 0.')}
   if (D <= 0 || D > 1) {stop('D must be between 0 and 1.')}
   if (Transects <= 0) {stop('Transects must be greater than 0.')}
   if (H <= 0 || H > 1) {stop('H must be between 0 and 1.')}
@@ -335,7 +332,7 @@ initialize_arrays <- function(A = 5, MPA = 3, Final_DRs, Time1 = 50, Time2 = 20,
   Eps <- epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R)
 
   # Unfished spawning stock biomass
-  B0 <- R0 / Phi
+  B0 <- R0 * W[1]
 
   # Initialize count array
   # Dimensions = area * time * transects * 2 * CR * M * FDR values (3)
