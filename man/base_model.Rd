@@ -11,7 +11,7 @@ base_model(
   MPA = 3,
   Time1 = 50,
   Time2 = 20,
-  Recruitment_mode = "pool",
+  Recruitment_mode = "regional_DD",
   M_Error = 0.05,
   Sampling_Var = TRUE,
   Recruitment_Var = TRUE,
@@ -65,7 +65,7 @@ marine reserve is implemented. Default value is 20.}
    settling evenly across all areas
 'local_DD' - larvae experience local density dependence before settling
    evely across all areas
-Default value is 'pool'.}
+Default value is 'regional_DD'.}
 
 \item{M_Error}{numeric value, the error between estimated and correct natural
 mortality.}
@@ -156,7 +156,7 @@ a list, containing numerical arrays of the relative biomass, yield,
 }
 \examples{
 base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-   Time2 = 20, Recruitment_mode = 'closed', M_Error = 0.05,
+   Time2 = 20, Recruitment_mode = 'regional_DD', M_Error = 0.05,
    Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
    Adult_movement = TRUE, Final_DRs = c(0.6, 0.8),
