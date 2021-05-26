@@ -4,9 +4,25 @@
 \alias{stable_AD}
 \title{Stable Age Distribution}
 \usage{
-stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb, S, M,
-  eq_time = 150, A50_mat, Recruitment_Var = FALSE, Rho_R,
-  Recruitment_mode = "pool", A = 5)
+stable_AD(
+  Rec_age,
+  Max_age,
+  W,
+  R0,
+  Mat,
+  H,
+  B0,
+  Sigma_R,
+  Fb,
+  S,
+  M,
+  eq_time = 150,
+  A50_mat,
+  Recruitment_Var = FALSE,
+  Rho_R,
+  Recruitment_mode = "pool",
+  A = 5
+)
 }
 \arguments{
 \item{Rec_age}{numeric value, the age at recruitment, in years.}

@@ -4,8 +4,17 @@
 \alias{management}
 \title{Management}
 \usage{
-management(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
-  effort_inc_allowed = 0.1, Time1)
+management(
+  t,
+  cr,
+  fdr,
+  E,
+  DR,
+  target_DR,
+  floor_DR = 0.2,
+  effort_inc_allowed = 0.1,
+  Time1
+)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}

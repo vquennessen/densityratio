@@ -4,13 +4,51 @@
 \alias{initialize_arrays}
 \title{Initialize arrays}
 \usage{
-initialize_arrays(A = 5, MPA = 3, Final_DRs, Time1 = 50,
-  Time2 = 20, R0 = 1e+05, Rec_age, Max_age, A1, L1, A2, L2, K, WA, WB,
-  K_mat, Fb, L50, Sigma_R, Rho_R = 0, Fleets, Alpha, A50_up, A50_down,
-  F_fin, Beta, Cf, P, X, SP, M, Phi, Recruitment_Var = TRUE, D,
-  Transects = 24, H, Surveys = TRUE, Fishing = TRUE, M_Error,
-  Sampling_Var = TRUE, Recruitment_mode = "pool", LDP = 0.1,
-  Ind_sampled = "all", BM = FALSE)
+initialize_arrays(
+  A = 5,
+  MPA = 3,
+  Final_DRs,
+  Time1 = 50,
+  Time2 = 20,
+  R0 = 1e+05,
+  Rec_age,
+  Max_age,
+  A1,
+  L1,
+  A2,
+  L2,
+  K,
+  WA,
+  WB,
+  K_mat,
+  Fb,
+  L50,
+  Sigma_R,
+  Rho_R = 0,
+  Fleets,
+  Alpha,
+  A50_up,
+  A50_down,
+  F_fin,
+  Beta,
+  Cf,
+  P,
+  X,
+  SP,
+  M,
+  Recruitment_Var = TRUE,
+  D,
+  Transects = 24,
+  H,
+  Surveys = TRUE,
+  Fishing = TRUE,
+  M_Error,
+  Sampling_Var = TRUE,
+  Recruitment_mode = "pool",
+  LDP = 0.1,
+  Ind_sampled = "all",
+  BM = FALSE
+)
 }
 \arguments{
 \item{A}{numeric value, the number of total areas in the model. Default value
@@ -94,8 +132,6 @@ positive transects.}
 
 \item{M}{numeric value, the natural mortality on the interval (0, 1).}
 
-\item{Phi}{numeric value, the unfished recruits per spawner.}
-
 \item{Recruitment_Var}{logical vector, does recruitment contain a stochastic
 component? Default value is TRUE.}
 
@@ -172,8 +208,8 @@ initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
    Fleets = c('sport', 'hook', 'trawl'), Alpha = c(0.33, 0.6, 0.64),
    A50_up = c(2, 5, 10), A50_down = c(6, 16, 35), F_fin = c(0.25, 0.06, 1),
    Beta = c(1.2, 0.6, 0), Cf = c(0.71, 0.28, 0.01), P = 0.77, X = 15.42,
-   SP = 16.97, M = 0.14, Phi = 1.1, Recruitment_Var = TRUE, D = 0.488,
-   Transects = 24, H = 0.65, Surveys = TRUE, Fishing = TRUE, M_Error = 0.05,
+   SP = 16.97, M = 0.14, Recruitment_Var = TRUE, D = 0.488, Transects = 24,
+   H = 0.65, Surveys = TRUE, Fishing = TRUE, M_Error = 0.05,
    Sampling_Var = TRUE, Recruitment_mode = 'pool', LDP = 0.1,
    Ind_sampled = 'all', BM = FALSE)
 }

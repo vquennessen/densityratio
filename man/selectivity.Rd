@@ -4,8 +4,22 @@
 \alias{selectivity}
 \title{Selectivity at age}
 \usage{
-selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up, A50_down,
-  Alpha, F_fin, Beta, Cf)
+selectivity(
+  Rec_age,
+  Max_age,
+  A1,
+  L1,
+  A2,
+  L2,
+  K,
+  Fleets,
+  A50_up,
+  A50_down,
+  Alpha,
+  F_fin,
+  Beta,
+  Cf
+)
 }
 \arguments{
 \item{Rec_age}{numeric value, the age at recruitment, in years.}
