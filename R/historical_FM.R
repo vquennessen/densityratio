@@ -72,19 +72,18 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
   L50                    <- par[[11]]       # length at 50% maturity
   K_mat                  <- par[[12]]       # slope of maturity curve
   H                      <- par[[13]]       # steepness
-  Phi                    <- par[[14]]       # unfished recruits per spawner
-  Sigma_R                <- par[[15]]       # recruitment standard deviation
-  Rho_R                  <- par[[16]]       # recruitment autocorrelation
+  Sigma_R                <- par[[14]]       # recruitment standard deviation
+  Rho_R                  <- par[[15]]       # recruitment autocorrelation
   #       in PISCO monitoring data
-  D                      <- par[[18]]
-  SP                     <- par[[22]]       # std of positive transects
-  Fleets                 <- par[[23]]       # fishery fleet names
-  Alpha                  <- par[[24]]       # slope for upcurve
-  Beta                   <- par[[25]]       # slope for downcurve
-  F_fin                  <- par[[26]]       # F_fin for fishery, 0 if asymptotic
-  A50_up                 <- par[[27]]       # L50 for upcurve
-  A50_down               <- par[[28]]       # L50 for downcurve
-  Cf                     <- par[[29]]       # fraction of fishery caught / fleet
+  D                      <- par[[17]]
+  SP                     <- par[[21]]       # std of positive transects
+  Fleets                 <- par[[22]]       # fishery fleet names
+  Alpha                  <- par[[23]]       # slope for upcurve
+  Beta                   <- par[[24]]       # slope for downcurve
+  F_fin                  <- par[[25]]       # F_fin for fishery, 0 if asymptotic
+  A50_up                 <- par[[26]]       # L50 for upcurve
+  A50_down               <- par[[27]]       # L50 for downcurve
+  Cf                     <- par[[28]]       # fraction of fishery caught / fleet
 
   ##### Calculate set values #####
   ages <- Rec_age:Max_age                            # applicable ages
@@ -98,7 +97,7 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
   # age at 50% mature
   A50_mat <- ages[min(which(Mat > 0.5))]
   # unfished biomass
-  B0 <- R0/Phi
+  B0 <- R0*W[1]
   # selectivity at age
   S <- selectivity(Rec_age, Max_age, A1, L1, A2, L2, K, Fleets, A50_up,
                    A50_down, Alpha, F_fin, Beta, Cf)
