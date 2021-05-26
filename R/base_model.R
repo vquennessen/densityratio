@@ -211,22 +211,21 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   L50                    <- par[[11]]       # length at 50% maturity
   K_mat                  <- par[[12]]       # slope of maturity curve
   H                      <- par[[13]]       # steepness
-  Phi                    <- par[[14]]       # unfished recruits per spawner
-  Sigma_R                <- par[[15]]       # recruitment standard deviation
-  Rho_R                  <- par[[16]]       # recruitment autocorrelation
-  AMP                    <- par[[17]]       # adult movement proportion
-  D                      <- par[[18]]       # depletion
-  Fb                     <- par[[19]]       # fishing mortality to cause D
-  P                      <- par[[20]]       # proportion of positive transects
-  X                      <- par[[21]]       # mean of positive transects
-  SP                     <- par[[22]]       # std of positive transects
-  Fleets                 <- par[[23]]       # fishery fleet names
-  Alpha                  <- par[[24]]       # slope for upcurve
-  Beta                   <- par[[25]]       # slope for downcurve
-  F_fin                  <- par[[26]]       # F_fin for fishery, 0 if asymptotic
-  A50_up                 <- par[[27]]       # A50 for upcurve
-  A50_down               <- par[[28]]       # A50 for downcurve
-  Cf                     <- par[[29]]       # fraction of fishery caught / fleet
+  Sigma_R                <- par[[14]]       # recruitment standard deviation
+  Rho_R                  <- par[[15]]       # recruitment autocorrelation
+  AMP                    <- par[[16]]       # adult movement proportion
+  D                      <- par[[17]]       # depletion
+  Fb                     <- par[[18]]       # fishing mortality to cause D
+  P                      <- par[[19]]       # proportion of positive transects
+  X                      <- par[[20]]       # mean of positive transects
+  SP                     <- par[[21]]       # std of positive transects
+  Fleets                 <- par[[22]]       # fishery fleet names
+  Alpha                  <- par[[23]]       # slope for upcurve
+  Beta                   <- par[[24]]       # slope for downcurve
+  F_fin                  <- par[[25]]       # F_fin for fishery, 0 if asymptotic
+  A50_up                 <- par[[26]]       # A50 for upcurve
+  A50_down               <- par[[27]]       # A50 for downcurve
+  Cf                     <- par[[28]]       # fraction of fishery caught / fleet
 
   ##### Population Dynamics - Non-Time Varying #################################
 
@@ -234,7 +233,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   IA <- initialize_arrays(A, MPA, Final_DRs, Time1, Time2, R0, Rec_age, Max_age,
                           A1, L1, A2, L2, K, WA, WB, K_mat, Fb, L50, Sigma_R,
                           Rho_R, Fleets, Alpha, A50_up, A50_down, F_fin, Beta,
-                          Cf, P, X, SP, M, Phi, Recruitment_Var, D, Transects, H,
+                          Cf, P, X, SP, M, Recruitment_Var, D, Transects, H,
                           Surveys, Fishing, M_Error, Sampling_Var,
                           Recruitment_mode, LDP, Ind_sampled, BM)
 
