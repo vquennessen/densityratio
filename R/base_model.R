@@ -24,7 +24,7 @@
 #'       settling evenly across all areas
 #'    'local_DD' - larvae experience local density dependence before settling
 #'       evely across all areas
-#'    Default value is 'pool'.
+#'    Default value is 'regional_DD'.
 #' @param M_Error numeric value, the error between estimated and correct natural
 #'    mortality.
 #' @param Sampling_Var logical value, is there any variability in sampling?
@@ -88,19 +88,19 @@
 #'
 #' @examples
 #' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-#'    Time2 = 20, Recruitment_mode = 'closed', M_Error = 0.05,
+#'    Time2 = 20, Recruitment_mode = 'regional_DD', M_Error = 0.05,
 #'    Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-#'    Adult_movement = TRUE, Final_DRs = c(0.6, 0.8),
-#'    Years_sampled = 1, Areas_sampled = 'all', Ind_sampled = 'all',
-#'    Floor_DR = 0.2, Allocation = 'IFD', BM = FALSE, LDP = 0.1,
-#'    Output.N = FALSE, Output.Abundance = FALSE,
-#'    Output.Biomass = FALSE, Output.SSB = FALSE, Output.Yield = FALSE,
-#'    Output.Effort = FALSE, Output.Density.Ratio = TRUE)
+#'    Adult_movement = TRUE, Final_DRs = c(0.8), Years_sampled = 1,
+#'    Areas_sampled = 'all', Ind_sampled = 'all', Floor_DR = 0.2,
+#'    Allocation = 'IFD', BM = FALSE, LDP = 0.1, Output.N = FALSE,
+#'    Output.Abundance = FALSE, Output.Biomass = FALSE, Output.SSB = FALSE,
+#'    Output.Yield = FALSE, Output.Effort = FALSE, Output.Density.Ratio = TRUE)
 base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
-                       Time2 = 20, Recruitment_mode = 'pool', M_Error = 0.05,
-                       Sampling_Var = TRUE, Recruitment_Var = TRUE,
-                       Surveys = TRUE, Fishery_management = TRUE, Fishing = TRUE,
+                       Time2 = 20, Recruitment_mode = 'regional_DD',
+                       M_Error = 0.05, Sampling_Var = TRUE,
+                       Recruitment_Var = TRUE, Surveys = TRUE,
+                       Fishery_management = TRUE, Fishing = TRUE,
                        Transects = 24, Adult_movement = TRUE, Final_DRs,
                        Years_sampled = 1, Areas_sampled = 'all',
                        Ind_sampled = 'all', Floor_DR = 0.2, Allocation = 'IFD',
