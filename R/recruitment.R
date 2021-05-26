@@ -112,16 +112,16 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
     recruits <- array(rep(0, A*NM), c(A, NM))
 
-      # closed recruitment indicates that recruits are only offspring of adults from
-      # the same area
+    # closed recruitment indicates that recruits are only offspring of adults
+    # from the same area
       if (Recruitment_mode == 'closed') {
 
         ssb <- SSB[, t - Rec_age, cr, , fdr]
 
         R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
 
-        # 'pool' recruitment indicates that recruits come from a larval pool produced
-        # by adults from all areas
+        # 'pool' recruitment indicates that recruits come from a larval pool
+        # produced by adults from all areas
       } else if (Recruitment_mode == 'pool') {
 
         ssb <- SSB[, t - Rec_age, cr, , fdr]
@@ -131,9 +131,9 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
         R1 <- nume / denom
 
-        # regional / stock larval density dependence and recruits distributed evenly
-        # across areas; OR larvae distributed evenly across areas then local density
-        # dependence in each area
+        # regional / stock larval density dependence and recruits distributed
+        # evenly across areas; OR larvae distributed evenly across areas then
+        # local density dependence in each area
       } else if (Recruitment_mode == 'regional_DD') {
 
         ssb <- colSums(SSB[, t - Rec_age, cr, , fdr])
@@ -144,8 +144,8 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
         R1 <- array(rep(nume / denom, each = A), c(A, NM))
         # R1 <- rep(nume / denom, each = A)
 
-        # larval density dependence within areas and recruitment in equal amounts
-        # in each area
+        # larval density dependence within areas and recruitment in equal
+        # amounts in each area
       } else if (Recruitment_mode == 'local_DD') {
 
         ssb <- SSB[, t - Rec_age, cr, , fdr]
@@ -178,16 +178,16 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
   } else if (NM == 1) {
 
-    # closed recruitment indicates that recruits are only offspring of adults from
-    # the same area
+    # closed recruitment indicates that recruits are only offspring of adults
+    # from the same area
     if (Recruitment_mode == 'closed') {
 
       ssb <- SSB[, t - Rec_age, cr, 1, fdr]
 
       R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
 
-      # 'pool' recruitment indicates that recruits come from a larval pool produced
-      # by adults from all areas
+      # 'pool' recruitment indicates that recruits come from a larval pool
+      # produced by adults from all areas
     } else if (Recruitment_mode == 'pool') {
 
       ssb <- SSB[, t - Rec_age, cr, 1, fdr]
@@ -196,9 +196,9 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
       R1 <- nume / denom
 
-      # regional / stock larval density dependence and recruits distributed evenly
-      # across areas; OR larvae distributed evenly across areas then local density
-      # dependence in each area
+      # regional / stock larval density dependence and recruits distributed
+      # evenly across areas; OR larvae distributed evenly across areas then
+      # local density dependence in each area
     } else if (Recruitment_mode == 'regional_DD') {
 
       # ssb <- colSums(SSB[, t - Rec_age, cr, , fdr])
