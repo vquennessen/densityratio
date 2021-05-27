@@ -101,7 +101,7 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     stop('Abundance has the wrong number of time steps.')}
   if (cr > dim(Abundance)[3]) {
     stop('Abundance has the wrong number of control rules.')}
-  if (fdr > dim(Abundance)[5]) {
+  if (fdr > dim(Abundance)[4]) {
     stop('Abundance has the wrong number of final density ratios.')}
 
   ##############################################################################
@@ -120,15 +120,15 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
     } else { years <- (t - Years_sampled):(t - 1) }
 
     # calculate density inside marine reserve
-    Inside_count <- sum(Abundance[Inside, years, cr, 1, fdr, ind])
+    Inside_count <- sum(Abundance[Inside, years, cr, fdr, ind])
 
     # calculate counts outside marine reserve
     if (Areas_sampled == 'far') {
       areas <- c(1, A)
-      Outside_count <- sum(Abundance[areas, years, cr, 1, fdr, ind])
+      Outside_count <- sum(Abundance[areas, years, cr, fdr, ind])
     } else if (Areas_sampled == 'all') {
       areas <- Outside
-      Outside_count <- sum(Abundance[areas, years, cr, 1, fdr, ind])
+      Outside_count <- sum(Abundance[areas, years, cr, fdr, ind])
     }
 
     # Density of fish outside marine reserve(s)
@@ -140,10 +140,10 @@ true_DR <- function(t, cr, fdr, Abundance, Inside = 3, Outside = c(1, 2, 4, 5),
   } else {
 
     # Density of fish outside marine reserve(s)
-    Outside_density <- sum(Abundance[Outside, t, cr, 1, fdr, 1]) / length(Outside)
+    Outside_density <- sum(Abundance[Outside, t, cr, fdr, 1]) / length(Outside)
 
     # Density of fish inside marine reserve(s)
-    Inside_density <- sum(Abundance[Inside, t, cr, 1, fdr, 1]) / length(Inside)
+    Inside_density <- sum(Abundance[Inside, t, cr, fdr, 1]) / length(Inside)
 
   }
 
