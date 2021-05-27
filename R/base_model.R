@@ -248,26 +248,25 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   A50_mat          <- IA[[9]]     # Age at which fraction mature > 0.5
   CR               <- IA[[10]]    # Number of control rules
   Nat_mortality    <- IA[[11]]    # Range of potential natural mortality values
-  NM               <- IA[[12]]    # Number of potential natural mortality values
-  N                <- IA[[13]]    # Population size, dim = age*area*time
-  SSB              <- IA[[14]]    # Spawning stock biomass, dim = area*time
-  Biomass          <- IA[[15]]    # Biomass, dim = area*time
-  Eps              <- IA[[16]]    # Epsilon vector, dim = area*time*CR
-  B0               <- IA[[17]]    # Unfished spawning stock biomass
-  FM               <- IA[[18]]    # Fishing mortality rate, dim = age*area*time
-  E                <- IA[[19]]    # nominal fishing effort in each area
-  Catch            <- IA[[20]]    # Catch at age
-  Yield            <- IA[[21]]    # Yield per area
-  Density_ratio    <- IA[[22]]    # Density ratios
-  Abundance        <- IA[[23]]    # Abundance of all and/or mature individuals
-  Transects        <- IA[[24]]    # Species count when sampling, dim = area*time
-  Count            <- IA[[25]]    # Species count when sampling, dim = area*time
+  N                <- IA[[12]]    # Population size, dim = age*area*time
+  SSB              <- IA[[13]]    # Spawning stock biomass, dim = area*time
+  Biomass          <- IA[[14]]    # Biomass, dim = area*time
+  Eps              <- IA[[15]]    # Epsilon vector, dim = area*time*CR
+  B0               <- IA[[16]]    # Unfished spawning stock biomass
+  FM               <- IA[[17]]    # Fishing mortality rate, dim = age*area*time
+  E                <- IA[[18]]    # nominal fishing effort in each area
+  Catch            <- IA[[19]]    # Catch at age
+  Yield            <- IA[[20]]    # Yield per area
+  Density_ratio    <- IA[[21]]    # Density ratios
+  Abundance        <- IA[[22]]    # Abundance of all and/or mature individuals
+  Transects        <- IA[[23]]    # Species count when sampling, dim = area*time
+  Count            <- IA[[24]]    # Species count when sampling, dim = area*time
 
   if (Sampling_Var == TRUE) {
-    Sigma_S          <- IA[[26]]  # Sampling normal standard deviation
-    NuS              <- IA[[27]]  # Sampling normal variable, dim = area*time*CR
-    Delta            <- IA[[28]]  # Constant of proportionality
-    Gamma            <- IA[[29]]  # Gamma
+    Sigma_S          <- IA[[25]]  # Sampling normal standard deviation
+    NuS              <- IA[[26]]  # Sampling normal variable, dim = area*time*CR
+    Delta            <- IA[[27]]  # Constant of proportionality
+    Gamma            <- IA[[28]]  # Gamma
   }
 
   ##### Population Dynamics - Time Varying #####################################
@@ -278,39 +277,39 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
       for (t in (Rec_age + 1):TimeT) {
 
         # effort allocation
-        E[, t, cr, , fdr] <- effort_allocation(t, cr, NM, fdr, Allocation, E,
-                                               Yield, Time1, Inside, Outside)
+        E[, t, cr, fdr] <- effort_allocation(t, cr, fdr, Allocation, E, Yield,
+                                             Time1, Inside, Outside)
 
         # If there is adult movement, add movement
         if (Adult_movement == TRUE) {
-          N[, , t, cr, , fdr] <- movement(t, cr, NM, fdr, N, A, AMP)
+          N[, , t, cr, fdr] <- movement(t, cr, fdr, N, A, AMP)
         }
 
         # Recruitment / larval movement (if applicable)
-        R <- recruitment(t, cr, NM, fdr, SSB, A, R0, H, B0, Eps, Sigma_R,
-                         Rec_age, Recruitment_mode, LDP)
+        R <- recruitment(t, cr, fdr, SSB, A, R0, H, B0, Eps, Sigma_R, Rec_age,
+                         Recruitment_mode, LDP)
 
         # biology
-        PD <- pop_dynamics(t, cr, NM, fdr, Rec_age, Max_age, SSB,
-                           N, W, Mat, A, Fb, E, S, FM, A50_mat, Biomass,
-                           Abundance, Fishing, Nat_mortality, R, Ind_sampled)
+        PD <- pop_dynamics(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat, A, Fb,
+                           E, S, FM, A50_mat, Biomass, Abundance, Fishing,
+                           Nat_mortality, R, Ind_sampled)
 
-        FM[, , t, cr, , fdr]               <- PD[[1]]
-        N[, , t, cr, , fdr]                <- PD[[2]]
-        Biomass[, t, cr, , fdr]            <- PD[[3]]
-        SSB[, t, cr, , fdr]                <- PD[[4]]
-        Abundance[, t, cr, , fdr, ]        <- PD[[5]]
+        FM[, , t, cr, fdr]               <- PD[[1]]
+        N[, , t, cr, fdr]                <- PD[[2]]
+        Biomass[, t, cr, fdr]            <- PD[[3]]
+        SSB[, t, cr, fdr]                <- PD[[4]]
+        Abundance[, t, cr, fdr, ]        <- PD[[5]]
 
         # fishing
         if (Fishing == TRUE) {
-          Catch[, , t, cr, , fdr] <- catch(t, cr, NM, fdr, FM, Nat_mortality,
-                                           N, A, Fb, E, Catch)
-          Yield[, t, cr, , fdr] <- colSums(Catch[, , t, cr, , fdr]*W)
+          Catch[, , t, cr, fdr] <- catch(t, cr, fdr, FM, Nat_mortality, N, A,
+                                         Fb, E, Catch)
+          Yield[, t, cr, fdr] <- colSums(Catch[, , t, cr, fdr]*W)
         }
 
         # sampling
         if (Surveys == TRUE & Sampling_Var == TRUE) {
-          Count[, t, , , cr, , fdr] <- sampling(t, cr, NM, fdr, Delta, Gamma,
+          Count[, t, , , cr, fdr] <- sampling(t, cr, fdr, Delta, Gamma,
                                                 Abundance, Transects, X, Count,
                                                 NuS, A, Ind_sampled)
         }
@@ -320,7 +319,7 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
                                              Outside, Density_ratio)
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
-          E[, t + 1, cr, , fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
+          E[, t + 1, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
                                                 TimeT, Transects, Nat_mortality,
                                                 Final_DRs, Inside, Outside,
                                                 Years_sampled, Areas_sampled,
@@ -338,15 +337,15 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
   ######## initialize output list ##############################################
   output <- list()
 
-  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , 1, ] }
+  if (Output.N == TRUE) { output$N <- N[, , Time1:TimeT, , ] }
   if (Output.Abundance == TRUE) {
-    output$Abundance <- Abundance[, Time1:TimeT, , 1, , ] }
+    output$Abundance <- Abundance[, Time1:TimeT, , , ] }
   if (Output.Biomass == TRUE) {
-    output$Biomass <- Biomass[, Time1:TimeT, , 1, ] }
-  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , 1, ] }
+    output$Biomass <- Biomass[, Time1:TimeT, , ] }
+  if (Output.SSB == TRUE) { output$SSB <- SSB[, Time1:TimeT, , ] }
   if (Output.Yield == TRUE) {
-    output$Yield <- colSums(Yield[, Time1:TimeT, , 1, ]) }
-  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , 1, ]) }
+    output$Yield <- colSums(Yield[, Time1:TimeT, , ]) }
+  if (Output.Effort == TRUE) { output$Effort <- colSums(E[, , , ]) }
   if (Output.Density.Ratio == TRUE) {
     output$Density_ratio <- Density_ratio[Time1:TimeT, , ] }
 
