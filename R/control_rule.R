@@ -160,14 +160,10 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
          control rules.')}
   if(dim(E)[4] != dim(Count)[6] | dim(E)[4] != dim(Abundance)[4]) {
     stop('E, Count, Density_ratio, or Abundance has an incorrect number of
-         natural mortality estimates.')}
-  if(dim(E)[5] != dim(Count)[7] | dim(E)[5] != dim(Density_ratio)[3] |
-     dim(E)[5] != dim(Abundance)[5]) {
-    stop('E, Count, Density_ratio, or Abundance has an incorrect number of final
-         density ratios.')}
+         final density ratios.')}
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
+  if (fdr > dim(E)[4]) {stop('The given "fdr" value is too high for E.')}
   if (Floor_DR > min(Final_DRs)) {
     stop('Floor_DR must be less than or equal to the minimum final density
          ratio.')}
