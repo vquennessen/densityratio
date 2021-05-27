@@ -172,16 +172,14 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat,
     FM[, , t, cr, fdr] <- f_mortality(t, cr, fdr, FM, A, Fb, E, S)
   } else { FM[, , t, cr, fdr] <- 0 }
 
-  ##### Step population foward in time
+  ##### Step population forward in time
 
   # Calculate recruitment and add recruits to population
-    N[1, , t, cr, fdr] <- R[1:A, ]
-  } else {
     N[1, , t, cr, fdr] <- R[1:A]
 
   # natural mortality array
     j <- ceiling(cr / 2)
-    ms <- c(Nat_mortality[1], Nat_mortality[j])
+    m <- c(Nat_mortality[1], Nat_mortality[j])
 
   # Ages rec_age + 1 to max_age - 1
   for (i in 2:(num - 1)) {
