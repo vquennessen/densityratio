@@ -4,14 +4,12 @@
 \alias{catch}
 \title{Catch at age}
 \usage{
-catch(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch)
+catch(t, cr, fdr, FM, Nat_mortality, N, A, Fb, E, Catch)
 }
 \arguments{
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
-
-\item{NM}{numeric value, the total number of natural mortality estimate.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -40,7 +38,7 @@ natural mortality.}
 }
 \value{
 a numeric array with an updated vector of catch at ages given the
-   current area, timestep, control rule, and estimate of natural mortality.
+   current area, timestep, and control rule.
 }
 \description{
 \code{catch} returns the catch at age vector. It is based on the continuous
@@ -49,11 +47,11 @@ natural mortality (M) are proportional to fish abundance (N) and act
 simultaneously  and uniformly throughout the year, i.e. dN/dt = -(M+F)*N.
 }
 \examples{
-n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
-FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Catch <- array(rep(2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-catch(t = 1, cr = 1, NM, fdr = 1, FM, Nat_mortality = c(0.14, 0.09, 0.19),
+n = 34; A = 5; TimeT = 70; CR = 6; FDR = 4
+FM <- array(rep(0.2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
+N <- array(rep(10, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
+E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+Catch <- array(rep(2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
+catch(t = 1, cr = 1, fdr = 1, FM, Nat_mortality = c(0.14, 0.09, 0.19),
    N, A = 5, Fb = 0.2, E, Catch)
 }
