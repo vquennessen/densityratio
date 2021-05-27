@@ -7,7 +7,6 @@
 effort_allocation(
   t,
   cr,
-  NM,
   fdr,
   Allocation = "IFD",
   E,
@@ -21,8 +20,6 @@ effort_allocation(
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
-
-\item{NM}{numeric value, the total number of natural mortality estimates.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -57,9 +54,9 @@ a numeric array updated with the fishing effort allocation for the
 \code{effort_allocation} redistributes fishing effort for the next timestep.
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
-E <- array(rep(0.2, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-Yield <- array(rep(2458, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-effort_allocation(t = 51, cr = 1, NM, fdr = 1, Allocation = 'IFD', E,
+A = 5; TimeT = 70; CR = 6; FDR = 4
+E <- array(rep(0.2, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+Yield <- array(rep(2458, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+effort_allocation(t = 51, cr = 1, fdr = 1, Allocation = 'IFD', E,
    Yield, Time1 = 50, Inside = 3, Outside = c(1, 2, 4, 5))
 }

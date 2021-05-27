@@ -72,12 +72,10 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
   if(dim(E)[3] != dim(Yield)[3]) {
     stop('E or Yield has an incorrect number of control rules.')}
   if(dim(E)[4] != dim(Yield)[4]) {
-    stop('E or Yield has an incorrect number of natural mortality estimates.')}
-  if(dim(E)[5] != dim(Yield)[5]) {
     stop('E or Yield has an incorrect number of final target density ratios.')}
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
+  if (fdr > dim(E)[4]) {stop('The given "fdr" value is too high for E.')}
   if (sum(intersect(Inside, Outside)) > 0) {
     stop('Areas cannot both be inside and outside the marine reserve.')}
 
@@ -90,9 +88,8 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
 
   if (t == Time1) {
 
-    E[Outside, t, cr, fdr] <- array(rep(colSums(E[, t - 1, cr, fdr]) / outs,
-                                        outs), outs)
-    E[Inside, t, cr, , fdr] <- 0
+    E[Outside, t, cr, fdr] <- rep(sum(E[, t - 1, cr, fdr]) / outs, outs)
+    E[Inside, t, cr, fdr] <- 0
 
     # If effort is allocated using the ideal free distribution, effort for one
     # year depends on the distribution of yield from the previous year
@@ -108,20 +105,19 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
       yield[Inside, ] <- 0 }
 
     # calculate proportion of yield in each area and reallocate effort by yield
-    prop_yield <- sweep(yield, MARGIN = 2, STATS = colSums(yield), FUN = '/')
-    colSums_E <- array(rep(colSums(E[, t, cr, fdr]), each = all), all)
-    E[, t, cr, fdr] <- colSums_E * prop_yield
+    prop_yield <- yield / sum(yield)
+    sums_E <- rep(sum(E[, t, cr, fdr]), each = all)
+    E[, t, cr, fdr] <- sums_E * prop_yield
 
     # Otherwise, distribute effort equally between the four areas outside the
     # marine reserve, regardless of yield
   } else if (t < Time1 & Allocation == 'equal') {
 
-    E[, t, cr, fdr] <- array(rep(colSums(E[, t, cr, fdr])/all, each = all), all)
+    E[, t, cr, fdr] <- rep(sum(E[, t, cr, fdr])/all, each = all)
 
   } else if (t > Time1 & Allocation == 'equal') {
 
-    E[Outside, t, cr, fdr] <- array(rep(colSums(E[, t, cr, fdr])/outs,
-                                        each = outs), outs)
+    E[Outside, t, cr, fdr] <- rep(sum(E[, t, cr, fdr])/outs, each = outs)
     E[Inside, t, cr, fdr] <- 0
 
   }
