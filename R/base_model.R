@@ -91,7 +91,7 @@
 #'    Time2 = 20, Recruitment_mode = 'regional_DD', M_Error = 0.05,
 #'    Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
-#'    Adult_movement = TRUE, Final_DRs = c(0.8), Years_sampled = 1,
+#'    Adult_movement = TRUE, Final_DRs = c(0.6, 0.8), Years_sampled = 1,
 #'    Areas_sampled = 'all', Ind_sampled = 'all', Floor_DR = 0.2,
 #'    Allocation = 'IFD', BM = FALSE, LDP = 0.1, Output.N = FALSE,
 #'    Output.Abundance = FALSE, Output.Biomass = FALSE, Output.SSB = FALSE,
@@ -310,8 +310,8 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         # sampling
         if (Surveys == TRUE & Sampling_Var == TRUE) {
           Count[, t, , , cr, fdr] <- sampling(t, cr, fdr, Delta, Gamma,
-                                                Abundance, Transects, X, Count,
-                                                NuS, A, Ind_sampled)
+                                              Abundance, Transects, X, Count,
+                                              NuS, A, Ind_sampled)
         }
 
         # calculate true density ratio
@@ -320,12 +320,12 @@ base_model <- function(Species, R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
         # management
         if (Fishery_management == TRUE && t >= Time1 && t < TimeT) {
           E[, t + 1, cr, fdr] <- control_rule(t, cr, fdr, A, E, Count, Time1,
-                                                TimeT, Transects, Nat_mortality,
-                                                Final_DRs, Inside, Outside,
-                                                Years_sampled, Areas_sampled,
-                                                Ind_sampled, Floor_DR, BM,
-                                                Sampling_Var, Density_ratio,
-                                                Abundance)
+                                              TimeT, Transects, Nat_mortality,
+                                              Final_DRs, Inside, Outside,
+                                              Years_sampled, Areas_sampled,
+                                              Ind_sampled, Floor_DR, BM,
+                                              Sampling_Var, Density_ratio,
+                                              Abundance)
         }
 
       }
