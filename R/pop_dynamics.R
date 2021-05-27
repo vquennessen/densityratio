@@ -143,20 +143,18 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   if(dim(N)[4] != dim(SSB)[3] || dim(N)[4] != dim(FM)[4]|| dim(N)[4] != dim(E)[3]) {
     stop('N, SSB, FM, or E has an incorrect number of control rules.')}
   if(dim(N)[5] != dim(SSB)[4] || dim(N)[5] != dim(FM)[5]|| dim(N)[5] != dim(E)[4]) {
-    stop('N, SSB, FM, or E has an incorrect number of values in Nat_mortality.')}
-  if(dim(N)[6] != dim(SSB)[5] || dim(N)[6] != dim(FM)[6]|| dim(N)[6] != dim(E)[5]) {
     stop('N, SSB, FM, or E has an incorrect number of final density ratios.')}
   if (dim(N)[2] != A) {stop('N has the wrong number of areas.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (fdr > dim(N)[6]) {stop('The given "fdr" value is too high for N.')}
+  if (fdr > dim(N)[5]) {stop('The given "fdr" value is too high for N.')}
   if (dim(Abundance)[1] != A) {
     stop('Abundance has an incorrect number of areas.')}
   if (t > dim(Abundance)[2]) {
     stop('Given "t" value is too high for Abundance.')}
   if (cr > dim(Abundance)[3]) {
     stop('Given "cr" value is too high for Abundance.')}
-  if (fdr > dim(Abundance)[5]) {
+  if (fdr > dim(Abundance)[4]) {
     stop('Given "fdr" value is too high for Abundance.')}
   if (length(W) != length(S) || length(W) != length(Mat)) {
     stop('W, S, or Mat has the wrong number of age classes.')}
@@ -175,11 +173,11 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   ##### Step population forward in time
 
   # Calculate recruitment and add recruits to population
-    N[1, , t, cr, fdr] <- R[1:A]
+  N[1, , t, cr, fdr] <- R[1:A]
 
   # natural mortality array
-    j <- ceiling(cr / 2)
-    m <- c(Nat_mortality[1], Nat_mortality[j])
+  j <- ceiling(cr / 2)
+  m <- Nat_mortality[j]
 
   # Ages rec_age + 1 to max_age - 1
   for (i in 2:(num - 1)) {
