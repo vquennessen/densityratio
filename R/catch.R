@@ -7,7 +7,6 @@
 #'
 #' @param t temporary numeric value, the current time step.
 #' @param cr temporary numeric value, the current control rule.
-#' @param NM numeric value, the total number of natural mortality estimate.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param FM numeric array that corresponds to the fishing mortality at each
 #'    age in each area, at each timestep, under all control rules, with all
@@ -27,26 +26,25 @@
 #'    natural mortality.
 #'
 #' @return a numeric array with an updated vector of catch at ages given the
-#'    current area, timestep, control rule, and estimate of natural mortality.
+#'    current area, timestep, and control rule.
 #' @export
 #'
 #' @examples
-#' n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
-#' FM <- array(rep(0.2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-#' N <- array(rep(10, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-#' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-#' Catch <- array(rep(2, n*A*TimeT*CR*NM*FDR), c(n, A, TimeT, CR, NM, FDR))
-#' catch(t = 1, cr = 1, NM, fdr = 1, FM, Nat_mortality = c(0.14, 0.09, 0.19),
+#' n = 34; A = 5; TimeT = 70; CR = 6; FDR = 4
+#' FM <- array(rep(0.2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
+#' N <- array(rep(10, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
+#' E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+#' Catch <- array(rep(2, n*A*TimeT*CR*FDR), c(n, A, TimeT, CR, FDR))
+#' catch(t = 1, cr = 1, fdr = 1, FM, Nat_mortality = c(0.14, 0.09, 0.19),
 #'    N, A = 5, Fb = 0.2, E, Catch)
 
-catch <- function(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
+catch <- function(t, cr, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
 
   ###### Error handling ########################################################
 
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
-  if (NM %% 1 != 0) {stop('NM must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.numeric(FM)) {stop('FM must be a numeric array.')}
   if (!is.numeric(Nat_mortality)) {
@@ -60,8 +58,6 @@ catch <- function(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (NM <= 0 || NM > 3) {
-    stop('NM must be greater than 0 and less than or equal to 3.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(FM < 0) > 0) {
     stop('All values in FM must be greater than or equal to 0.')}
@@ -94,27 +90,32 @@ catch <- function(t, cr, NM, fdr, FM, Nat_mortality, N, A, Fb, E, Catch) {
          estimates.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (NM > dim(N)[5]) {stop('The given "NM" value is too high for N.')}
 
   ##############################################################################
 
   # natural mortality array
-  if (NM > 1) {
+  if (length(Nat_mortality) > 1) {
     j <- ceiling(cr / 2)
     ms <- c(Nat_mortality[1], Nat_mortality[j])
-  } else { ms <- Nat_mortality }
+  } else {
+    ms <- Nat_mortality
+    }
 
   num <- dim(FM)[1]
 
-  if (NM > 1) { m <- array(rep(ms, each = num*A), c(num, A, NM))
-  } else { m <- array(rep(ms, num*A), c(num, A)) }
+  if (length(Nat_mortality) > 1) {
+    m <- array(rep(ms, each = num*A), c(num, A))
+  } else {
+    m <- array(rep(ms, num*A), c(num, A))
+    }
 
   # calculate the coefficient
-  coeff <- FM[ , , t, cr, , fdr]/(m + FM[ , , t, cr, , fdr])
+  coeff <- FM[ , , t, cr, fdr]/(m + FM[ , , t, cr, fdr])
 
   # calculate catch at age
-  Catch[ , , t, cr, , fdr] <- coeff * N[ , , t, cr, , fdr] * exp(-1*m - FM[ , , t, cr, , fdr])
+  Catch[ , , t, cr, fdr] <- coeff * N[ , , t, cr, fdr] *
+    exp(-1*m - FM[ , , t, cr, fdr])
 
-  return(Catch[, , t, cr, , fdr])
+  return(Catch[, , t, cr, fdr])
 
 }
