@@ -72,11 +72,9 @@ f_mortality <- function(t, cr, fdr, FM, A, Fb, E, S) {
     stop('FM or E has an incorrect number of control rules.')}
   if(dim(FM)[5] != dim(E)[4]) {
     stop('FM or E has an incorrect number of natural mortality estimates.')}
-  if(dim(FM)[6] != dim(E)[5]) {
-    stop('FM or E has an incorrect number of final density ratios.')}
   if (t > dim(FM)[3]) {stop('The given "t" value is too high for FM.')}
   if (cr > dim(FM)[4]) {stop('The given "cr" value is too high for FM.')}
-  if (fdr > dim(FM)[6]) {stop('The given "fdr" value is too high for FM.')}
+  if (fdr > dim(FM)[5]) {stop('The given "fdr" value is too high for FM.')}
 
   ##############################################################################
 
