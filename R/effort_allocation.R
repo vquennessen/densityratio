@@ -102,7 +102,7 @@ effort_allocation <- function(t, cr, fdr, Allocation = 'IFD', E, Yield,
     # values in yield is below 1, set yield to outside areas to yield + 1
     if (sum(yield) < 1) {
       yield <- yield + 1
-      yield[Inside, ] <- 0 }
+      yield[Inside] <- 0 }
 
     # calculate proportion of yield in each area and reallocate effort by yield
     prop_yield <- yield / sum(yield)
