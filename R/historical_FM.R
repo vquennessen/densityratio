@@ -103,12 +103,12 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
                    A50_down, Alpha, F_fin, Beta, Cf)
 
   # Recruitment error = 0 without Recruitment_Var
-  Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
+  Eps2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
 
   ##### Initialize arrays #####
 
   # Fishing effort stays constant
-  E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1, 1))
+  E2 <- array(rep(1, eq_time), c(1, eq_time, 1, 1))
 
   # Initialize FM and depletion levels
   FM_values <- seq(from = 0, to = 1, by = 0.01)
@@ -119,12 +119,12 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
 
   # Initialize population size and catch arrays
   # Dimensions = age * 1 * time * 1
-  N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1, 1, 1))
+  N2 <- catch2 <- array(rep(0, num*eq_time), c(num, 1, eq_time, 1,  1))
 
   # Initialize biomass, SSB, and recruitment error
   # Dimensions = 1 * time * 1
-  SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
-  abundance2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1, 1))
+  SSB2 <- biomass2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1))
+  abundance2 <- array(rep(0, eq_time), c(1, eq_time, 1, 1, 1))
 
   # calculate stable age distribution
   SAD <- stable_AD(Rec_age, Max_age, W, R0, Mat, H, B0, Sigma_R, Fb = 0, S, M,
@@ -153,10 +153,9 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
       R <- recruitment(t, cr = 1, fdr = 1, SSB2, A = 1, R0, H, B0, Eps2,
                        Sigma_R, Rec_age, Recruitment_mode, LDP)
 
-      PD <- pop_dynamics(t, cr = 1, fdr = 1, Rec_age, Max_age,
-                         SSB2, N2, W, Mat, A = 1, Fb = 0, E2, S, FM2, A50_mat,
-                         biomass2, abundance2, Fishing = T,
-                         Nat_mortality = c(M), R)
+      PD <- pop_dynamics(t, cr = 1, fdr = 1, Rec_age, Max_age, SSB2, N2, W, Mat,
+                         A = 1, Fb = 0, E2, S, FM2, A50_mat, biomass2,
+                         abundance2, Fishing = T, Nat_mortality = M, R)
 
       FM2[, , t, 1, 1]               <- rep(FM_values[i], num)
       N2[, , t, 1, 1]                <- PD[[2]]
