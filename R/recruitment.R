@@ -5,7 +5,6 @@
 #'
 #' @param t temporary numeric value, the current time step .
 #' @param cr temporary numeric value, the current control rule .
-#' @param NM  numeric value, the total number of natural mortality estimates.
 #' @param fdr temporary numeric value, the current final target density ratio.
 #' @param SSB numeric array, the spawning stock biomass of the whole stock for
 #'    each area, at each timestep, under each control rule, and for each
@@ -33,19 +32,18 @@
 #'    Default value is 0.1.
 #'
 #' @return a numeric value representing the number of new recruits coming into
-#'    the population in area a, at timestep t, under control rule cr, with an
-#'    estimate of natural mortality of nm.
+#'    the population in area a, at timestep t, under control rule cr.
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
-#' SSB <- array(rep(10, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-#' NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
-#' Eps <- epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
-#' recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A, R0 = 1e+5, H = 0.65,
+#' A = 5; TimeT = 70; CR = 6; FDR = 4
+#' SSB <- array(rep(10, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+#' NuR <- array(rnorm(A*TimeT*CR*FDR, 0, 0.5), c(A, TimeT, CR, FDR))
+#' Eps <- epsilon(A, TimeT, CR, FDR, NuR, Rho_R = 0)
+#' recruitment(t = 3, cr = 1, fdr = 1, SSB, A, R0 = 1e+5, H = 0.65,
 #'    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
 #'    LDP = 0.1)
-recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
+recruitment = function(t, cr, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
                        Sigma_R, Rec_age, Recruitment_mode, LDP = 0.1) {
 
   ###### Error handling ########################################################
@@ -53,7 +51,6 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   # classes of variables
   if (t %% 1 != 0) {stop('t must be an integer value.')}
   if (cr %% 1 != 0) {stop('cr must be an integer value.')}
-  if (NM %% 1 != 0) {stop('NM must be an integer value.')}
   if (fdr %% 1 != 0) {stop('fdr must be an integer value.')}
   if (!is.numeric(SSB)) {stop('SSB must be a numeric array.')}
   if (A %% 1 != 0) {stop('A must be an integer value.')}
@@ -70,8 +67,6 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   # acceptable values
   if (t <= 0) {stop('t must be greater than 0.')}
   if (cr <= 0) {stop('cr must be greater than 0.')}
-  if (NM <= 0 || NM > 2) {
-    stop('NM must be greater than 0 and less than or equal to 2.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
   if (sum(SSB < 0) > 0) {
     stop('All values in SSB must be greater than or equal to 0.')}
@@ -100,7 +95,6 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
     stop('SSB or Eps has an incorrect number of final density ratios.')}
   if (t > dim(SSB)[2]) {stop('The given "t" value is too high for SSB.')}
   if (cr > dim(SSB)[3]) {stop('The given "cr" value is too high for SSB.')}
-  if (NM > dim(SSB)[4]) {stop('The given "nm" value is too high for SSB.')}
   if (fdr > dim(SSB)[5]) {stop('The given "fdr" value is too high for SSB.')}
   ##############################################################################
 
@@ -108,15 +102,13 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
   adjR0 <- R0 / A
   adjB0 <- B0 / A
 
-  if (NM > 1) {
-
-    recruits <- array(rep(0, A*NM), c(A, NM))
+    recruits <- array(rep(0, A), A)
 
     # closed recruitment indicates that recruits are only offspring of adults
     # from the same area
       if (Recruitment_mode == 'closed') {
 
-        ssb <- SSB[, t - Rec_age, cr, , fdr]
+        ssb <- SSB[, t - Rec_age, cr, fdr]
 
         R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
 
@@ -125,7 +117,7 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
       } else if (Recruitment_mode == 'pool') {
 
         ssb <- SSB[, t - Rec_age, cr, , fdr]
-        sum_ssb <- array(rep(colSums(ssb), each = A), c(A, NM))
+        sum_ssb <- array(rep(colSums(ssb), each = A), A)
         nume <- 0.8 * adjR0 * H * sum_ssb / A
         denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
@@ -136,19 +128,17 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
         # local density dependence in each area
       } else if (Recruitment_mode == 'regional_DD') {
 
-        ssb <- colSums(SSB[, t - Rec_age, cr, , fdr])
-        # ssb <- sum(SSB[, t - Rec_age, cr, nm, fdr])
+        ssb <- colSums(SSB[, t - Rec_age, cr, fdr])
         nume <- 0.8 * R0 * H * ssb
         denom <- A * (0.2 * B0 * (1 - H) + (H - 0.2) * ssb)
 
-        R1 <- array(rep(nume / denom, each = A), c(A, NM))
-        # R1 <- rep(nume / denom, each = A)
+        R1 <- rep(nume / denom, each = A)
 
         # larval density dependence within areas and recruitment in equal
         # amounts in each area
       } else if (Recruitment_mode == 'local_DD') {
 
-        ssb <- SSB[, t - Rec_age, cr, , fdr]
+        ssb <- SSB[, t - Rec_age, cr, fdr]
         nume <- 0.8 * adjR0 * H * ssb
         denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
 
@@ -156,7 +146,7 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
 
       }
 
-      recruits <- R1 * (exp(Eps[, t, cr, , fdr] - Sigma_R^2 / 2))
+      recruits <- R1 * (exp(Eps[, t, cr, fdr] - Sigma_R^2 / 2))
 
 
       # larval movement if there are multiple areas and LDP != 0
@@ -175,73 +165,6 @@ recruitment = function(t, cr, NM, fdr, SSB, A = 5, R0 = 1e+5, H, B0, Eps,
         recruits[A, ] <- (1 - LDP)*recruits[A, ] + LDP*recruits[A - 1, ]
 
       }
-
-  } else if (NM == 1) {
-
-    # closed recruitment indicates that recruits are only offspring of adults
-    # from the same area
-    if (Recruitment_mode == 'closed') {
-
-      ssb <- SSB[, t - Rec_age, cr, 1, fdr]
-
-      R1 <- (0.8 * adjR0 * H * ssb) / (0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb)
-
-      # 'pool' recruitment indicates that recruits come from a larval pool
-      # produced by adults from all areas
-    } else if (Recruitment_mode == 'pool') {
-
-      ssb <- SSB[, t - Rec_age, cr, 1, fdr]
-      nume <- 0.8 * adjR0 * H * sum(ssb) / A
-      denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
-
-      R1 <- nume / denom
-
-      # regional / stock larval density dependence and recruits distributed
-      # evenly across areas; OR larvae distributed evenly across areas then
-      # local density dependence in each area
-    } else if (Recruitment_mode == 'regional_DD') {
-
-      # ssb <- colSums(SSB[, t - Rec_age, cr, , fdr])
-      ssb <- sum(SSB[, t - Rec_age, cr, 1, fdr])
-      nume <- 0.8 * R0 * H * ssb
-      denom <- A * (0.2 * B0 * (1 - H) + (H - 0.2) * ssb)
-
-      # R1 <- array(rep(nume / denom, each = A), c(A, NM))
-      R1 <- rep(nume / denom, each = A)
-
-      # larval density dependence within areas and recruitment in equal amounts
-      # in each area
-    } else if (Recruitment_mode == 'local_DD') {
-
-      ssb <- SSB[, t - Rec_age, cr, 1, fdr]
-      nume <- 0.8 * adjR0 * H * ssb
-      denom <- 0.2 * adjB0 * (1 - H) + (H - 0.2) * ssb
-
-      R1 <- 1/A * sum(nume / denom)
-
-    }
-
-    recruits <- R1 * (exp(Eps[, t, cr, 1, fdr] - Sigma_R^2 / 2))
-
-
-    # larval movement if there are multiple areas and LDP != 0
-    if (A > 1 && dim(SSB)[1] > 1) {
-
-      # First area to second area
-      recruits[1] <- (1 - LDP)*recruits[1] + LDP*recruits[2]
-
-      # Intermediate areas to adjacent areas
-      for (a in 2:(A-1)) {
-        recruits[a] <- (1 - 2*LDP)*recruits[a] +
-          LDP*(recruits[a - 1] + recruits[a + 1])
-      }
-
-      # Last area to next to last area
-      recruits[A] <- (1 - LDP)*recruits[A] + LDP*recruits[A - 1]
-
-    }
-
-  }
 
   return(recruits)
 
