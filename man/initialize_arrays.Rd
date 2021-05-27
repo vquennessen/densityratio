@@ -180,7 +180,7 @@ Default value is FALSE.}
 \value{
 initalizes arrays necessary for other functions in the base model,
    including Inside, Outside, FDR, TimeT, L, W, S, Mat, A50_mat, CR,
-   Nat_mortality, NM, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
+   Nat_mortality, N, SSB, Biomass, Eps, B0, Count, Sigma_S, NuS, Delta,
    Gamma, FM, E, Catch, Yield, Density_ratio, Abundance
 }
 \description{
@@ -189,16 +189,16 @@ initalizes arrays necessary for other functions in the base model,
    W (weight at age), S (selectivity at age), Mat (maturity at age), A50_mat
    (the first age at which 50\% or more of individuals are expected to be
    mature), CR (number of control rules to be compared), Nat_mortality
-   (values of estimated natural mortality), NM (number of estimates of
-   natural mortality), N (numbers at age array), SSB (spawning stock biomass
-   array), Abundance (abundance of all/mature individuals array),
-   Eps (recruitment error), B0 (unfished biomass), Count (estimated counts
-   based on sampling array), Sigma_S (sampling random variable standard
-   deviation), NuS (sampling random variable), Delta (constant of
-   proportionality), Gamma, FM (fishing mortality), E (effort), Catch, Yield,
-   Rel_Biomass (relative biomass after reserve implementation),
-   Rel_yield (relative yield after reserve implementation), Rel_SSB (relative
-   spawning stock biomass after reserve implementation), Density_ratio.
+   (values of estimated natural mortality), N (numbers at age array), SSB
+   (spawning stock biomass array), Abundance (abundance of all/mature
+   individuals array), Eps (recruitment error), B0 (unfished biomass),
+   Count (estimated counts based on sampling array), Sigma_S (sampling random
+   variable standard deviation), NuS (sampling random variable),
+   Delta (constant of proportionality), Gamma, FM (fishing mortality),
+   E (effort), Catch, Yield, Rel_Biomass (relative biomass after reserve
+   implementation), Rel_yield (relative yield after reserve implementation),
+   Rel_SSB (relative spawning stock biomass after reserve implementation),
+   Density_ratio.
 }
 \examples{
 initialize_arrays(A = 5,  MPA = 3, Final_DRs = c(0.2), Time1 = 50,
