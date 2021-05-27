@@ -7,7 +7,6 @@
 recruitment(
   t,
   cr,
-  NM,
   fdr,
   SSB,
   A = 5,
@@ -25,8 +24,6 @@ recruitment(
 \item{t}{temporary numeric value, the current time step .}
 
 \item{cr}{temporary numeric value, the current control rule .}
-
-\item{NM}{numeric value, the total number of natural mortality estimates.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -66,19 +63,18 @@ Default value is 0.1.}
 }
 \value{
 a numeric value representing the number of new recruits coming into
-   the population in area a, at timestep t, under control rule cr, with an
-   estimate of natural mortality of nm.
+   the population in area a, at timestep t, under control rule cr.
 }
 \description{
 \code{recruitment} calculates the number of new recruits entering the
    population
 }
 \examples{
-A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4
-SSB <- array(rep(10, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-NuR <- array(rnorm(A*TimeT*CR*NM*FDR, 0, 0.5), c(A, TimeT, CR, NM, FDR))
-Eps <- epsilon(A, TimeT, CR, NM, FDR, NuR, Rho_R = 0)
-recruitment(t = 3, cr = 1, NM, fdr = 1, SSB, A, R0 = 1e+5, H = 0.65,
+A = 5; TimeT = 70; CR = 6; FDR = 4
+SSB <- array(rep(10, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+NuR <- array(rnorm(A*TimeT*CR*FDR, 0, 0.5), c(A, TimeT, CR, FDR))
+Eps <- epsilon(A, TimeT, CR, FDR, NuR, Rho_R = 0)
+recruitment(t = 3, cr = 1, fdr = 1, SSB, A, R0 = 1e+5, H = 0.65,
    B0 = 1e+5/1.1, Eps, Sigma_R = 0.5, Rec_age = 2, Recruitment_mode = 'pool',
    LDP = 0.1)
 }
