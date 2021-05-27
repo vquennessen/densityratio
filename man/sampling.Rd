@@ -7,7 +7,6 @@
 sampling(
   t,
   cr,
-  NM,
   fdr,
   Delta,
   Gamma,
@@ -24,8 +23,6 @@ sampling(
 \item{t}{temporary numeric value, the current time step.}
 
 \item{cr}{temporary numeric value, the current control rule.}
-
-\item{NM}{numeric value, the total number of natural mortality estimates.}
 
 \item{fdr}{temporary numeric value, the current final target density ratio.}
 
@@ -64,21 +61,19 @@ Default value is 'all'.}
 \value{
 a two-dimentional numeric array with updated observed counts for the
    fished species in this particular area, at this particular timestep,
-   under this particular control rule, with this particular estimate of
-   natural mortality.
+   under this particular control rule.
 }
 \description{
 \code{sampling} samples from the current population to update the Count
    array.
 }
 \examples{
-n = 34; A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Transects = 24
-Abundance <- array(rep(340, A*TimeT*CR*NM*FDR*1),
-   c(A, TimeT, CR, NM, FDR, 1))
-Count <- array(rep(50, A*TimeT*Transects*2*CR*NM*FDR),
-   c(A, TimeT, Transects, 2, CR, NM, FDR))
-NuS <- array(rnorm(A*TimeT*Transects*1*CR*NM*FDR, 0, 0.89),
-   c(A, TimeT, Transects, 1, CR, NM, FDR))
-sampling(t = 51, cr = 1, NM, fdr = 1, Delta = 1.6, Gamma = 31.6,
+n = 34; A = 5; TimeT = 70; CR = 6; FDR = 4; Transects = 24
+Abundance <- array(rep(340, A*TimeT*CR*FDR*1), c(A, TimeT, CR, FDR, 1))
+Count <- array(rep(50, A*TimeT*Transects*2*CR*FDR),
+   c(A, TimeT, Transects, 2, CR, FDR))
+NuS <- array(rnorm(A*TimeT*Transects*1*CR*FDR, 0, 0.89),
+   c(A, TimeT, Transects, 1, CR, FDR))
+sampling(t = 51, cr = 1, fdr = 1, Delta = 1.6, Gamma = 31.6,
    Abundance, Transects, X = 15.42, Count, NuS, A, Ind_sampled = 'all')
 }

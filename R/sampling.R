@@ -90,7 +90,7 @@ sampling <- function(t, cr, fdr, Delta, Gamma, Abundance, Transects = 24,
     stop('The given "t" value is too high for Abundance or Count.')}
   if (cr > dim(Abundance)[3]|| cr > dim(Count)[5]) {
     stop('The given "cr" value is too high for Abundance or Count.')}
-  if (fdr > dim(Abundance)[5] || fdr > dim(Count)[7]) {
+  if (fdr > dim(Abundance)[4] || fdr > dim(Count)[6]) {
     stop('The given "fdr" value is too high for Abundance or Count.')}
 
   ##############################################################################
