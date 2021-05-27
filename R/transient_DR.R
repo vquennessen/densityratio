@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' transient_DR(Time1 = 50, TimeT = 70, Final_DRs = c(0.6, 0.8),
-#'    Nat_mortality = c(0.17, 0.12, 0.22), cr = 1, fdr = 1)
+#'    Nat_mortality = c(0.17, 0.12, 0.22), cr = 2, fdr = 1)
 transient_DR <- function(Time1 = 50, TimeT = 70, Final_DRs, Nat_mortality, cr,
                          fdr) {
 
@@ -39,8 +39,9 @@ transient_DR <- function(Time1 = 50, TimeT = 70, Final_DRs, Nat_mortality, cr,
     stop('All values in Final_DRs must be greater than 0.')}
   if (sum(Nat_mortality <= 0) > 0 || sum(Nat_mortality > 1) > 0) {
     stop('All values in Nat_mortality must be between 0 and 1.')}
-  if (cr <= 0 || cr > 3) {
-    stop('cr must be greater than 0 and less than or equal to 3.')}
+  if (cr <= 0 || cr > 6) {
+    stop('cr must be greater than 0 and less than or equal to 6.')}
+  if (cr %% 2 != 0) {stop('cr must be an even number.')}
   if (fdr <= 0) {stop('fdr must be greater than 0.')}
 
   # relational values
@@ -50,8 +51,8 @@ transient_DR <- function(Time1 = 50, TimeT = 70, Final_DRs, Nat_mortality, cr,
 
   # calculate target_DR based on transient timescales
 
-  # set whether control rule uses correct (1, 2), low (3, 4), or high (5, 6)
-  # estimate of natural mortality
+  # set whether control rule uses correct (cr = 2), low (cr = 4),
+  # or high (cr = 6) estimate of natural mortality
   j <- cr / 2
 
   # set timesteps
