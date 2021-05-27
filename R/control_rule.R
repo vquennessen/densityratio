@@ -54,13 +54,12 @@
 #' @export
 #'
 #' @examples
-#' A = 5; TimeT = 70; CR = 6; NM = 2; FDR = 4; Transects = 24
-#' E <- array(rep(1, A*TimeT*CR*NM*FDR), c(A, TimeT, CR, NM, FDR))
-#' Count <- array(rep(5, A*TimeT*Transects*2*CR*NM*FDR),
-#'    c(A, TimeT, Transects, 2, CR, NM, FDR))
+#' A = 5; TimeT = 70; CR = 6; FDR = 4; Transects = 24
+#' E <- array(rep(1, A*TimeT*CR*FDR), c(A, TimeT, CR, FDR))
+#' Count <- array(rep(5, A*TimeT*Transects*2*CR*FDR),
+#'    c(A, TimeT, Transects, 2, CR, FDR))
 #' Density_Ratio <- array(rep(0.5, TimeT*CR*FDR), c(TimeT, CR, FDR))
-#' Abundance <- array(rep(3400, A*TimeT*CR*NM*FDR*1),
-#'    c(A, TimeT, CR, NM, FDR, 1))
+#' Abundance <- array(rep(3400, A*TimeT*CR*FDR*1), c(A, TimeT, CR, FDR, 1))
 #' control_rule(t = 51, cr = 1, fdr = 1, A = 5, E, Count, Time1 = 50,
 #'    TimeT = 70, Transects = 24, Nat_mortality = c(0.14, 0.09, 0.19),
 #'    Final_DRs = c(0.2, 0.4, 0.6, 0.8), Inside = 3, Outside = c(1, 2, 4, 5),
@@ -181,11 +180,10 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
 
   if (BM == FALSE) {
 
-    nm <- ifelse(cr < 3, 1, 2)
     j <- ceiling(cr / 2)
 
     if (Sampling_Var == TRUE) {
-        DR <- density_ratio(t, cr, nm, fdr, A, Count, Years_sampled,
+        DR <- density_ratio(t, cr, fdr, A, Count, Years_sampled,
                           Areas_sampled, Ind_sampled, Transects, Inside,
                           Outside)
       } else { DR <- True_DR }
@@ -194,22 +192,21 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
     if (cr %% 2 == 1) {
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
-                                          target_DR = Final_DRs[fdr],
-                                          floor_DR = Floor_DR,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr, E, DR,
+                                        target_DR = Final_DRs[fdr],
+                                        floor_DR = Floor_DR,
+                                        effort_inc_allowed = 0.1, Time1)
 
       # transient control rules with shifting target DRs (cr = 2, 4, 6)
     } else if (cr %% 2 == 0) {
 
-      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = j,
-                             fdr)
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, cr, fdr)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, , fdr] <- management(t, cr, fdr, E, DR,
-                                          target_DR = target[t - Time1 + 1],
-                                          floor_DR = Floor_DR,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr, E, DR,
+                                        target_DR = target[t - Time1 + 1],
+                                        floor_DR = Floor_DR,
+                                        effort_inc_allowed = 0.1, Time1)
     }
 
   } else if (BM == TRUE) {
@@ -219,7 +216,7 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
     if (cr == 1) {
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- 1.1*E[, t, cr, 1, fdr]
+      E[, t + 1, cr, fdr] <- 1.1*E[, t, cr, fdr]
 
     } else if (cr == 2) {
 
@@ -228,9 +225,9 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     Ind_sampled = 'all', A = 5)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 0.6, floor_DR = 0.2,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = 0.6, floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 3) {
 
@@ -239,9 +236,9 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     Ind_sampled = 'all', A = 5)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 0.6, floor_DR = 0.2,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = 0.6, floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 4) {
 
@@ -250,9 +247,9 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     Ind_sampled = 'all', A = 5)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                           target_DR = 0.6, floor_DR = 0.2,
-                                           effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = 0.6, floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 5) {
 
@@ -261,9 +258,9 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     Ind_sampled = 'mature', A = 5)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 0.6, floor_DR = 0.2,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = 0.6, floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 6) {
 
@@ -272,14 +269,14 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     Ind_sampled = 'all', A = 5)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 0.8, floor_DR = 0.2,
-                                          effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = 0.8, floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 7) {
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- E[, t, cr, 1, fdr]
+      E[, t + 1, cr, fdr] <- E[, t, cr, fdr]
 
     } else if (cr == 8) {
 
@@ -288,9 +285,9 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     Ind_sampled = 'all', A = 5)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                          target_DR = 0.6, floor_DR = 0.2,
-                                          effort_inc_allowed = 0, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = 0.6, floor_DR = 0.2,
+                                        effort_inc_allowed = 0, Time1)
 
     } else if (cr == 9) {
 
@@ -298,14 +295,14 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
 
-      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = 1,
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, cr = 1,
                              fdr = 1)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                           target_DR = target[t - Time1 + 1],
-                                           floor_DR = 0.2,
-                                           effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = target[t - Time1 + 1],
+                                        floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 10) {
 
@@ -313,14 +310,14 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
 
-      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = 1,
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, cr = 1,
                              fdr = 2)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                           target_DR = target[t - Time1 + 1],
-                                           floor_DR = 0.2,
-                                           effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = target[t - Time1 + 1],
+                                        floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     } else if (cr == 11) {
 
@@ -328,18 +325,18 @@ control_rule <- function(t, cr, fdr, A = 5, E, Count, Time1 = 50,
                     BM = TRUE, Years_sampled = 1, Areas_sampled = 'all',
                     Ind_sampled = 'all', A = 5)
 
-      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, nm = 1,
+      target <- transient_DR(Time1, TimeT, Final_DRs, Nat_mortality, cr = 1,
                              fdr = 3)
 
       # calculate effort at the next timestep
-      E[, t + 1, cr, 1, fdr] <- management(t, cr, fdr = 1, E, DR,
-                                           target_DR = target[t - Time1 + 1],
-                                           floor_DR = 0.2,
-                                           effort_inc_allowed = 0.1, Time1)
+      E[, t + 1, cr, fdr] <- management(t, cr, fdr = 1, E, DR,
+                                        target_DR = target[t - Time1 + 1],
+                                        floor_DR = 0.2,
+                                        effort_inc_allowed = 0.1, Time1)
 
     }
   }
 
-  return(E[, t + 1, cr, , fdr])
+  return(E[, t + 1, cr, fdr])
 
 }
