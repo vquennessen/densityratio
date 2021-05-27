@@ -47,7 +47,7 @@ movement <- function(t, cr, fdr, N, A, AMP = 0.1) {
   if (A != dim(N)[2]) {stop('N has the wrong number of areas.')}
   if (t > dim(N)[3]) {stop('The given "t" value is too high for N.')}
   if (cr > dim(N)[4]) {stop('The given "cr" value is too high for N.')}
-  if (fdr > dim(N)[6]) {stop('The given "fdr" value is too high for N.')}
+  if (fdr > dim(N)[5]) {stop('The given "fdr" value is too high for N.')}
 
   ##############################################################################
 
