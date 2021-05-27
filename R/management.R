@@ -64,7 +64,7 @@ management <- function(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
   # relational values
   if (t > dim(E)[2]) {stop('The given "t" value is too high for E.')}
   if (cr > dim(E)[3]) {stop('The given "cr" value is too high for E.')}
-  if (fdr > dim(E)[5]) {stop('The given "fdr" value is too high for E.')}
+  if (fdr > dim(E)[4]) {stop('The given "fdr" value is too high for E.')}
 
   ##############################################################################
 
@@ -72,23 +72,23 @@ management <- function(t, cr, fdr, E, DR, target_DR, floor_DR = 0.2,
   # in each area to increase by the amount allowed (typically 10%)
   if (DR > target_DR) {
 
-    E[, t + 1, cr, , fdr] <- E[, t, cr, , fdr]*(1 + effort_inc_allowed)
+    E[, t + 1, cr, fdr] <- E[, t, cr, fdr]*(1 + effort_inc_allowed)
 
   # If the density ratio is lower than the target density ratio but
   # greater than the floor density ratio, allow effort in each area to decrease
   # by the allowed effort increase value (set to 10% here)
   } else if (DR <= target_DR & DR > floor_DR) {
 
-    E[, t + 1, cr, , fdr] <- 0.90 * E[, t, cr, , fdr]
+    E[, t + 1, cr, fdr] <- 0.90 * E[, t, cr, fdr]
 
   # Finally, if the density ratio is below the floor density ratio, effort is
   # decreased back down to 10% of the original value
   } else if (DR <= floor_DR) {
 
-    E[, t + 1, cr, , fdr] <- E[, Time1, cr, , fdr]*0.10
+    E[, t + 1, cr, fdr] <- E[, Time1, cr, fdr]*0.10
 
   }
 
-  return(E[, t + 1, cr, , fdr])
+  return(E[, t + 1, cr, fdr])
 
 }
