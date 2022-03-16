@@ -5,7 +5,7 @@
 #'
 #' @param Species character value, the species to analyze. Species names are in
 #'    the format species abbreviation.state or stock.year assessed. Example:
-#'    BR.CA.2003 is the California black rockfish stock assessed in 2003.
+#'    BR_CA_2003 is the California black rockfish stock assessed in 2003.
 #' @param R0 numeric value, the unfished recruitment, set arbitrarily. Default
 #'    value is 1e+5.
 #' @param A numeric value, the number of total areas in the model. Default value

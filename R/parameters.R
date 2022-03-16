@@ -17,7 +17,8 @@
 parameters = function(Species) {
 
   species_list <- c('BR_CA_2003', 'BR_OR_2015', 'CAB_CA_2005', 'CAB_OR_2019',
-                    'LING_OW_2017', 'CR_OR_2015', 'China_OR_2015')
+                    'LING_OW_2017', 'CR_OR_2015', 'China_OR_2015',
+                    'BR_OR_2015_overfished')
 
   ###### Error handling ########################################################
 
