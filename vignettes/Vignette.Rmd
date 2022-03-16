@@ -44,8 +44,8 @@ MPA = 3
 Time1 = 50
 Time2 = 50
 M_Error = 0
-Sampling_Error = FALSE
-Stochasticity = FALSE
+Sampling_Var = FALSE
+Recruitment_Var = FALSE
 Surveys = TRUE
 Fishery_management = TRUE
 Fishing = TRUE
@@ -69,43 +69,43 @@ Output.Density.Ratio = FALSE
 
 # Run the scenarios across all recruitment modes, adult movemement rates, and effort allocations. 
 ```{r, cache = TRUE}
-Rmodes <- c('closed', 'regional_DD', 'local_DD', 'pool', 'closed')
-LDPs <- c(0, 0, 0, 0, 0.10)
-Adult_M <- c(TRUE, FALSE)
-Allocations <- c('IFD', 'equal')
-S <- length(Rmodes) * length(Adult_M) * length(Allocations)
-
-for (r in 1:length(Rmodes)) {
-  for (am in 1:length(Adult_M)) {
-    for (a in 1:length(Allocations)) {
-      
-      LDP <- LDPs[r]
-      Recruitment_mode <- Rmodes[r]
-      Adult_movement <- Adult_M[am]
-      Allocation <- Allocations[a]
-      
-      output <- base_model(Species, R0, A, MPA, Time1, Time2, Recruitment_mode, 
-                           M_Error, Sampling_Var, Recruitment_Var, Surveys, 
-                           Fishery_management, Fishing, Transects, 
-                           Adult_movement, Final_DRs, Years_sampled, 
-                           Areas_sampled, Ind_sampled, Floor_DR, Allocation, BM, 
-                           LDP, Output.N, Output.Abundance, Output.Biomass, 
-                           Output.SSB, Output.Yield, Output.Effort, 
-                           Output.Density.Ratio)
-      
-      # save the relative SSB and yield as a sum across all areas,
-      # times after reserve implementation, control rules, and scenarios
-      if (r == 1 && am == 1 && a == 1) {
-        sims_SSB <- colSums(output$SSB)
-        sims_yield <- output$Yield
-        sims_effort <- output$Effort
-      } else {
-        sims_SSB <- abind(sims_SSB, colSums(output$SSB), along = 3)
-        sims_yield <- abind(sims_yield, output$Yield, along = 3)
-        sims_effort <- abind(sims_effort, output$Effort, along = 3) }
-    }
-  }
-}
+# Rmodes <- c('closed', 'regional_DD', 'local_DD', 'pool', 'closed')
+# LDPs <- c(0, 0, 0, 0, 0.10)
+# Adult_M <- c(TRUE, FALSE)
+# Allocations <- c('IFD', 'equal')
+# S <- length(Rmodes) * length(Adult_M) * length(Allocations)
+# 
+# for (r in 1:length(Rmodes)) {
+#   for (am in 1:length(Adult_M)) {
+#     for (a in 1:length(Allocations)) {
+#       
+#       LDP <- LDPs[r]
+#       Recruitment_mode <- Rmodes[r]
+#       Adult_movement <- Adult_M[am]
+#       Allocation <- Allocations[a]
+#       
+#       output <- base_model(Species, R0, A, MPA, Time1, Time2, Recruitment_mode, 
+#                            M_Error, Sampling_Var, Recruitment_Var, Surveys, 
+#                            Fishery_management, Fishing, Transects, 
+#                            Adult_movement, Final_DRs, Years_sampled, 
+#                            Areas_sampled, Ind_sampled, Floor_DR, Allocation, BM, 
+#                            LDP, Output.N, Output.Abundance, Output.Biomass, 
+#                            Output.SSB, Output.Yield, Output.Effort, 
+#                            Output.Density.Ratio)
+#       
+#       # save the relative SSB and yield as a sum across all areas,
+#       # times after reserve implementation, control rules, and scenarios
+#       if (r == 1 && am == 1 && a == 1) {
+#         sims_SSB <- colSums(output$SSB)
+#         sims_yield <- output$Yield
+#         sims_effort <- output$Effort
+#       } else {
+#         sims_SSB <- abind(sims_SSB, colSums(output$SSB), along = 3)
+#         sims_yield <- abind(sims_yield, output$Yield, along = 3)
+#         sims_effort <- abind(sims_effort, output$Effort, along = 3) }
+#     }
+#   }
+# }
 ```
 
 \newpage
