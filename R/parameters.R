@@ -262,6 +262,42 @@ parameters = function(Species) {
     A50_down <- c(79, 79, 79)               # A50 value for downcurve
     Cf       <- c(0.02, 0.54, 0.44)         # fraction of fishery caught / fleet
 
+    ##### Black Rockfish (OR) 2015 assessment, overfished #####
+    # source: Cope et al. 2016
+    if (Species == 'BR_OR_2015_overfished') { #####
+      Max_age  <- 40                          # maximum age
+      M        <- 0.17                        # natural mortality
+      Rec_age  <- 3                           # age at recruitment
+      WA       <- 2.6e-5;   WB <- 2.88        # weight at length parameters (f)
+      A1       <- 1;        L1 <- 20.32       # growth parameters (f)
+      A2       <- 40;       L2 <- 49.67
+      K        <- 0.21
+      L50      <- 43.69                       # length at 50% maturity
+      K_mat    <- -0.66                       # slope of maturity curve
+      H        <- 0.77                        # steepness
+      Sigma_R  <- 0.5                         # recruitment standard deviation
+      Rho_R    <- 0                           # recruitment autocorrelation
+      AMP      <- 0.1                         # adult movement proportion
+      D        <- 0.604                       # depletion
+      Fb       <- 0.23                        # fishing mortality to cause D
+      P        <- 0.77                        # Proportion of positive transects
+      #       in PISCO monitoring data
+      X        <- 15.42                       # mean of positive transects
+      SP       <- 16.97                       # std of positive transects
+      Fleets   <- c('trawl', 'live', 'dead',  # names of fleets
+                    'ocean', 'shore')
+      Alpha    <- c(0.325, 0.4, 0.35,
+                    0.65, 0.425)              # slope of upcurve per fleet
+      Beta     <- c(0.25, 0.5, 0.4, 1.1, 0.5) # slope of downcurve per fleet
+      F_fin    <- c(0.325, 0.05, -0.11,
+                    -0.025, 0.135)            # final selectivity if dome-shaped
+      A50_up   <- c(7, 5, 5, 5, 3)            # A50 value for upcurve
+      A50_down <- c(15, 13, 13, 12, 6)        # A50 value for downcurve
+      Cf       <- c(0.0001, 0.1679, 0.0982,   # fraction of fishery caught / fleet
+                    0.6979, 0.0358)
+    }
+
+
   }
 
   output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat, H,
