@@ -63,9 +63,9 @@ parameters = function(Species) {
     Cf       <- c(0.71, 0.28, 0.01)         # fraction of fishery caught / fleet
   }
 
-  ##### Black Rockfish (OR) 2015 assessment #####
+  ##### Black Rockfish (OR) 2015 assessment, overfished #####
   # source: Cope et al. 2016
-  if (Species == 'BR_OR_2015') { #####
+  if (Species == 'BR_OR_2015_overfished') { #####
     Max_age  <- 40                          # maximum age
     M        <- 0.17                        # natural mortality
     Rec_age  <- 3                           # age at recruitment
@@ -79,7 +79,7 @@ parameters = function(Species) {
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.604                       # depletion
+    D        <- 0.2                         # depletion
     Fb       <- 0.16                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
@@ -265,9 +265,9 @@ parameters = function(Species) {
 
   }
 
-  ##### Black Rockfish (OR) 2015 assessment, overfished #####
+  ##### Black Rockfish (OR) 2015 assessment, actual #####
   # source: Cope et al. 2016
-  if (Species == 'BR_OR_2015_overfished') { #####
+  if (Species == 'BR_OR_2015') { #####
     Max_age  <- 40                          # maximum age
     M        <- 0.17                        # natural mortality
     Rec_age  <- 3                           # age at recruitment
@@ -281,9 +281,9 @@ parameters = function(Species) {
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.325                       # depletion
-    Fb       <- 0.23                        # fishing mortality to cause
-                                            #       overfishing (D = 0.325)
+    D        <- 0.604                       # depletion
+    Fb       <- 0.05                        # fishing mortality to cause
+                                            #       overfishing (D = 0.)
     P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
