@@ -82,7 +82,7 @@ parameters = function(Species) {
     D        <- 0.604                       # depletion
     Fb       <- 0.16                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'live', 'dead',  # names of fleets
