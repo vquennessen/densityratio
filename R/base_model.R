@@ -87,7 +87,7 @@
 #' @export
 #'
 #' @examples
-#' base_model(Species = 'BR_CA_2003', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
+#' base_model(Species = 'BR_OR_2015', R0 = 1e+5, A = 5, MPA = 3, Time1 = 50,
 #'    Time2 = 20, Recruitment_mode = 'regional_DD', M_Error = 0.05,
 #'    Sampling_Var = TRUE, Recruitment_Var = TRUE, Surveys = TRUE,
 #'    Fishery_management = TRUE, Fishing = TRUE, Transects = 24,
