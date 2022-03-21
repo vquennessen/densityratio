@@ -32,37 +32,6 @@ parameters = function(Species) {
   }
 
 
-  ##### Black Rockfish (CA) 2003 assessment #####
-  # source: Ralston & Dick 2003
-  if (Species == 'BR_CA_2003') {
-    Max_age  <- 35                          # maximum age
-    M        <- 0.14                        # natural mortality
-    Rec_age  <- 2                           # age at recruitment
-    WA       <- 1.68e-5;   WB   <- 3        # weight at length parameters (f)
-    A1       <- 5;         L1   <- 32.21;   # growth parameters (f)
-    A2       <- 15;        L2   <- 47.95;
-    K        <- 0.2022
-    L50      <- 39.53                       # length at 50% maturity
-    K_mat    <- -0.4103                     # slope of maturity curve
-    H        <- 0.65                        # steepness
-    Sigma_R  <- 0.5                         # recruitment standard deviation
-    Rho_R    <- 0                           # recruitment autocorrelation
-    AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.488                       # depletion
-    Fb       <- 0.07                        # fishing mortality to cause D
-    P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
-    X        <- 15.42                       # mean of positive transects
-    SP       <- 16.97                       # std of positive transects
-    Fleets   <- c('sport', 'hook', 'trawl') # names of fleets
-    Alpha    <- c(0.33, 0.6, 0.64)          # slope of upcurve per fleet
-    Beta     <- c(1.2, 0.6, 0)              # slope of downcurve per fleet
-    F_fin    <- c(0.25, 0.06, 1)            # final selectivity if dome-shaped
-    A50_up   <- c(2, 5, 10)                 # A50 value for upcurve
-    A50_down <- c(6, 16, 35)                # A50 value for downcurve
-    Cf       <- c(0.71, 0.28, 0.01)         # fraction of fishery caught / fleet
-  }
-
   ##### Black Rockfish (OR) 2015 assessment, overfished #####
   # source: Cope et al. 2016
   if (Species == 'BR_OR_2015_overfished') { #####
@@ -98,42 +67,7 @@ parameters = function(Species) {
                   0.6979, 0.0358)
   }
 
-  ##### Cabezon (CA) 2005 assessment #####
-  # source: Cope & Punt 2005
-  if (Species == 'CAB_CA_2005') {
-    Max_age  <- 17                          # maximum age
-    M        <- 0.275                       # natural mortality
-    Rec_age  <- 1                           # age at recruitment
-    WA       <- 1.24e-5;  WB  <- 3.113      # weight at length parameters (f)
-    A1       <- 5;        L1  <- 41.3       # growth parameters (f)
-    A2       <- 30;       L2  <- 61.9
-    K <- 0.18
-    L50      <- 25.702                      # length at 50% maturity
-    K_mat    <- -0.743                      # slope of maturity curve
-    H        <- 0.7                         # steepness
-    Sigma_R  <- 1                           # recruitment standard deviation
-    Rho_R    <- 0                           # recruitment autocorrelation
-    AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.4                         # depletion
-    Fb       <- 0.08                        # fishing mortality to cause D
-    P        <- 0.27                        # Proportion of positive transects
-    #       in PISCO monitoring data
-    X        <- 3.27                        # mean of positive transects
-    SP       <- 3.32                        # std of positive transects
-    Fleets   <- c('dead', 'live', 'manmade',# names of fleets
-                  'shore', 'PBR', 'CPFV')
-    Alpha    <- c(0.4, 0.25, 5, 0.15,
-                  0.35, 0.25)               # slope of upcurve per fleet
-    Beta     <- c(0, 0.35, 0.5, 0.26, 0, 0) # slope of downcurve per fleet
-    F_fin    <- c(1, 0.7, 0.38, 0.43, 1, 1) # final selectivity if dome-shaped
-    A50_up   <- c(2, 3, 1, 1, 2, 1)         # A50 value for upcurve
-    A50_down <- c(1, 17, 5, 4, 1, 1)        # A50 value for downcurve
-    Cf       <- c(0.0186, 0.3389, 0.1208,   # fraction of fishery caught / fleet
-                  0.0241, 0.1971, 0.3006)
-
-  }
-
-  ##### Cabezon (OR) 2019 assessment #####
+  ##### Cabezon (OR) 2019 assessment, overfished #####
   # source: Cope et al. 2019
   if (Species == 'CAB_OR_2019') {
     Max_age  <- 20                          # maximum age
@@ -149,7 +83,7 @@ parameters = function(Species) {
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.528                       # depletion
+    D        <- 0.2                       # depletion
     Fb       <- 0.24                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
     #       in PISCO monitoring data
@@ -306,5 +240,39 @@ parameters = function(Species) {
                  F_fin, A50_up, A50_down, Cf)
 
   return(output)
+
+  ##### Cabezon (OR) 2019 assessment #####
+  # source: Cope et al. 2019
+  if (Species == 'CAB_OR_2019') {
+    Max_age  <- 20                          # maximum age
+    M        <- 0.26                        # natural mortality
+    Rec_age  <- 4                           # age at recruitment
+    WA       <- 1.90e-5;  WB  <- 2.99       # weight at length parameters (f)
+    A1       <- 4;        L1  <- 44.30      # growth parameters (f)
+    A2       <- 20;       L2  <- 63.35
+    K <- 0.225
+    L50      <- 43                          # length at 50% maturity
+    K_mat    <- -0.7                        # slope of maturity curve
+    H        <- 0.7                         # steepness
+    Sigma_R  <- 0.5                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.528                       # depletion
+    Fb       <- 0.17                        # fishing mortality to cause D
+    P        <- 0.77                        # Proportion of positive transects
+    #       in PISCO monitoring data
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
+    Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
+                  'shore')
+    Alpha    <- c(0.4, 0.33, 0.35, 0.9)     # slope of upcurve per fleet
+    Beta     <- c(0.35, 0, 0, 0.2)          # slope of downcurve per fleet
+    F_fin    <- c(0.7, 1, 1, 0.07)          # final select. if dome-shaped
+    A50_up   <- c(3, 4, 2, 1)               # A50 value for upcurve
+    A50_down <- c(17, 1, 1, 3)              # A50 value for downcurve
+    Cf       <- c(0.6033, 0.0415, 0.3423,   # fraction of fishery
+                  0.0130)
+  }
+
 
 }
