@@ -103,7 +103,7 @@ parameters = function(Species) {
 
   ##### Lingcod (OR and WA) 2017 assessment, overfished #####
   # source: Haltuch et al. 2018
-  if (Species == 'LING_OW_2017') {
+  if (Species == 'LING_OW_2017_overfished') {
     Max_age  <- 25                          # maximum age
     M        <- 0.28                        # natural mortality
     Rec_age  <- 3                           # age at recruitment
