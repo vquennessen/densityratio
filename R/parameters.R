@@ -101,7 +101,7 @@ parameters = function(Species) {
                   0.0130)
   }
 
-  ##### Lingcod (OR and WA) 2017 assessment #####
+  ##### Lingcod (OR and WA) 2017 assessment, overfished #####
   # source: Haltuch et al. 2018
   if (Species == 'LING_OW_2017') {
     Max_age  <- 25                          # maximum age
@@ -117,10 +117,10 @@ parameters = function(Species) {
     Sigma_R  <- 0.55                        # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.579                       # depletion
-    Fb       <- 0.16                        # fishing mortality to cause D
+    D        <- 0.42                        # depletion
+    Fb       <- 0.08                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
@@ -273,6 +273,40 @@ parameters = function(Species) {
     A50_down <- c(17, 1, 1, 3)              # A50 value for downcurve
     Cf       <- c(0.6033, 0.0415, 0.3423,   # fraction of fishery
                   0.0130)
+  }
+
+
+  ##### Lingcod (OR and WA) 2017 assessment #####
+  # source: Haltuch et al. 2018
+  if (Species == 'LING_OW_2017') {
+    Max_age  <- 25                          # maximum age
+    M        <- 0.28                        # natural mortality
+    Rec_age  <- 3                           # age at recruitment
+    WA       <- 2.76e-6;  WB <- 3.28        # weight at length parameters (f)
+    A1       <- 1;        L1 <- 17.28;      # growth parameters (f)
+    A2       <- 20;       L2 <- 120;
+    K        <- 0.128
+    L50      <- 56.7                        # length at 50% maturity
+    K_mat    <- -0.27                       # slope of maturity curve
+    H        <- 0.7                         # steepness
+    Sigma_R  <- 0.55                        # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.579                       # depletion
+    Fb       <- 0.08                        # fishing mortality to cause D
+    P        <- 0.77                        # Proportion of positive transects
+    #       in PISCO monitoring data
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
+    Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
+                  'WArec', 'ORrec')
+    Alpha    <- c(0.25, 0.25, 0.55, 1)      # slope of upcurve per fleet
+    Beta     <- c(0.09, 0.3, 0.17, 0.15)    # slope of downcurve per fleet
+    F_fin    <- c(0.07, 0, 0, 0)            # final select. if dome-shaped
+    A50_up   <- c(3, 5, 5, 3)               # A50 value for upcurve
+    A50_down <- c(15, 12, 10, 9)            # A50 value for downcurve
+    Cf       <- c(0.2872, 0.1379, 0.3253,   # fraction of fishery
+                  0.2496)
   }
 
 
