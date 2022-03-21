@@ -281,10 +281,11 @@ parameters = function(Species) {
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.604                       # depletion
-    Fb       <- 0.23                        # fishing mortality to cause D
+    D        <- 0.325                       # depletion
+    Fb       <- 0.23                        # fishing mortality to cause
+                                            #       overfishing (D = 0.325)
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'live', 'dead',  # names of fleets
