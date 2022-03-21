@@ -136,7 +136,7 @@ parameters = function(Species) {
 
   ##### Canary Rockfish (OR) 2015 assessment, overfished #####
   # source: Thorson & Wetzel 2015
-  if (Species == 'CR_OR_2015') {
+  if (Species == 'CR_OR_2015_overfished') {
     Max_age  <- 84                          # maximum age
     M        <- 0.0521                      # natural mortality
     Rec_age  <- 3                           # age at recruitment
