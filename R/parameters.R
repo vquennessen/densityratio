@@ -153,7 +153,7 @@ parameters = function(Species) {
     D        <- 0.4                         # depletion
     Fb       <- 0.04                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
@@ -186,7 +186,7 @@ parameters = function(Species) {
     D        <- 0.6149                      # depletion
     Fb       <- 0.07                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('Commercial', 'Rec_PC',
@@ -261,7 +261,7 @@ parameters = function(Species) {
     D        <- 0.528                       # depletion
     Fb       <- 0.17                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
@@ -295,7 +295,7 @@ parameters = function(Species) {
     D        <- 0.579                       # depletion
     Fb       <- 0.08                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'fixed_gear',    # names of fleets
@@ -329,7 +329,7 @@ parameters = function(Species) {
     D        <- 0.555                       # depletion
     Fb       <- 0.02                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('trawl', 'non-trawl',     # names of fleets
