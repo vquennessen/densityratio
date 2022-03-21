@@ -69,7 +69,7 @@ parameters = function(Species) {
 
   ##### Cabezon (OR) 2019 assessment, overfished #####
   # source: Cope et al. 2019
-  if (Species == 'CAB_OR_2019') {
+  if (Species == 'CAB_OR_2019_overfished') {
     Max_age  <- 20                          # maximum age
     M        <- 0.26                        # natural mortality
     Rec_age  <- 4                           # age at recruitment
@@ -83,10 +83,10 @@ parameters = function(Species) {
     Sigma_R  <- 0.5                         # recruitment standard deviation
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
-    D        <- 0.2                       # depletion
+    D        <- 0.2                         # depletion
     Fb       <- 0.24                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
-    #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
     SP       <- 16.97                       # std of positive transects
     Fleets   <- c('live', 'dead', 'ocean',  # names of fleets
