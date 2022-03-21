@@ -74,7 +74,7 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
   H                      <- par[[13]]       # steepness
   Sigma_R                <- par[[14]]       # recruitment standard deviation
   Rho_R                  <- par[[15]]       # recruitment autocorrelation
-  #       in PISCO monitoring data
+                                            #       in PISCO monitoring data
   D                      <- par[[17]]
   SP                     <- par[[21]]       # std of positive transects
   Fleets                 <- par[[22]]       # fishery fleet names
@@ -131,8 +131,8 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
                    eq_time = 150, A50_mat, Recruitment_Var, Rho_R,
                    Recruitment_mode, A = 1)
 
-  # initial final biomass with no fishing
-  FM0_biomass <- sum(W*SAD)
+  # initial spawning stock biomass with no fishing
+  FM0_SSB <- sum(W*SAD*Mat)
 
   for (t in 1:Rec_age) {
     N2[, 1, t, 1, 1] <- SAD
@@ -165,7 +165,7 @@ historical_FM <- function(Species, eq_time = 150, R0 = 1e+5, LDP = 0.1,
 
     }
 
-    dep[i] <- 1 - (biomass2[1, eq_time, 1, 1] / FM0_biomass)
+    dep[i] <- SSB2[1, eq_time, 1, 1] / FM0_SSB
 
   }
 
