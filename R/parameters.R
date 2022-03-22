@@ -32,6 +32,36 @@ parameters = function(Species) {
          region, and/or year.')
   }
 
+  ##### Black Rockfish (CA) 2003 assessment #####
+  # source: Ralston & Dick 2003
+  if (Species == 'BR_CA_2003') {
+    Max_age  <- 35                          # maximum age
+    M        <- 0.14                        # natural mortality
+    Rec_age  <- 2                           # age at recruitment
+    WA       <- 1.68e-5;   WB   <- 3        # weight at length parameters (f)
+    A1       <- 5;         L1   <- 32.21;   # growth parameters (f)
+    A2       <- 15;        L2   <- 47.95;
+    K        <- 0.2022
+    L50      <- 39.53                       # length at 50% maturity
+    K_mat    <- -0.4103                     # slope of maturity curve
+    H        <- 0.65                        # steepness
+    Sigma_R  <- 0.5                         # recruitment standard deviation
+    Rho_R    <- 0                           # recruitment autocorrelation
+    AMP      <- 0.1                         # adult movement proportion
+    D        <- 0.488                       # depletion
+    Fb       <- 0.07                        # fishing mortality to cause D
+    P        <- 0.77                        # Proportion of positive transects
+    #       in PISCO monitoring data
+    X        <- 15.42                       # mean of positive transects
+    SP       <- 16.97                       # std of positive transects
+    Fleets   <- c('sport', 'hook', 'trawl') # names of fleets
+    Alpha    <- c(0.33, 0.6, 0.64)          # slope of upcurve per fleet
+    Beta     <- c(1.2, 0.6, 0)              # slope of downcurve per fleet
+    F_fin    <- c(0.25, 0.06, 1)            # final selectivity if dome-shaped
+    A50_up   <- c(2, 5, 10)                 # A50 value for upcurve
+    A50_down <- c(6, 16, 35)                # A50 value for downcurve
+    Cf       <- c(0.71, 0.28, 0.01)         # fraction of fishery caught / fleet
+  }
 
   ##### Black Rockfish (OR) 2015 assessment, overfished #####
   # source: Cope et al. 2016
