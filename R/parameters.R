@@ -266,12 +266,6 @@ parameters = function(Species) {
                   0.6979, 0.0358)
   }
 
-  output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat, H,
-                 Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets, Alpha, Beta,
-                 F_fin, A50_up, A50_down, Cf)
-
-  return(output)
-
   ##### Cabezon (OR) 2019 assessment #####
   # source: Cope et al. 2019
   if (Species == 'CAB_OR_2019') {
@@ -373,5 +367,13 @@ parameters = function(Species) {
                   0.0295, 0.0429)           #       from upcurve to 1
   }
 
+
+  ##### final output ###########################################################
+
+  output <- list(Max_age, M, Rec_age, WA, WB, A1, L1, A2, L2, K, L50, K_mat, H,
+                 Sigma_R, Rho_R, AMP, D, Fb, P, X, SP, Fleets, Alpha, Beta,
+                 F_fin, A50_up, A50_down, Cf)
+
+  return(output)
 
 }
