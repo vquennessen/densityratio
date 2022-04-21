@@ -104,7 +104,8 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   if (A50_mat %% 1 != 0) {stop('A50_mat must be an integer value.')}
   if (!is.numeric(Abundance)) {stop('Abundance must be a numeric array.')}
   if (!is.numeric(Biomass)) {stop('Biomass must be a numeric array.')}
-  if (!is.logical(Fishing)) {stop('Fishing must be a logical value.')}
+  if (!is.logical(Fishing) && (Fishing < 0 | Fishing > 1)) {
+    stop('Fishing must be a logical value, or between 0 and 1.')}
   if (!is.numeric(Nat_mortality)) {stop('Nat_mortality must be a numeric vector.')}
 
   # acceptable values
@@ -168,7 +169,9 @@ pop_dynamics <- function(t, cr, fdr, Rec_age, Max_age, SSB, N, W, Mat,
   # Calculate fishing mortality
   if (Fishing == T) {
     FM[, , t, cr, fdr] <- f_mortality(t, cr, fdr, FM, A, Fb, E, S)
-  } else { FM[, , t, cr, fdr] <- 0 }
+  } else if (Fishing == F) { FM[, , t, cr, fdr] <- 0
+  } else if (Fishing >= 0 & Fishing <= 1) { FM[, , t, cr, fdr] <- Fishing
+  }
 
   ##### Step population forward in time
 
