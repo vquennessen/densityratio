@@ -186,7 +186,7 @@ parameters = function(Species) {
     Rho_R    <- 0                           # recruitment autocorrelation
     AMP      <- 0.1                         # adult movement proportion
     D        <- 0.5665                      # depletion
-    Fb       <- 0.17                        # fishing mortality to cause D
+    Fb       <- 0.15                        # fishing mortality to cause D
     P        <- 0.77                        # Proportion of positive transects
                                             #       in PISCO monitoring data
     X        <- 15.42                       # mean of positive transects
